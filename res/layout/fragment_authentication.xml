@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="This is the Authentication Fragment."
+        android:text="@string/desc_loginprompt"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
-        android:text="Login" />
+        android:text="@string/action_login" />
 
 </RelativeLayout>
