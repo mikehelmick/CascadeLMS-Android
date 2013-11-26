@@ -1,6 +1,5 @@
 package org.cascadelms;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,11 +20,11 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        
+
         // TODO: Make this better.
         SharedPreferences preferences = getSharedPreferences(PREFS_AUTH, 0);
         boolean loggedIn = preferences.getBoolean("loggedIn", false);
-        
+
         if (loggedIn)
             setContentView(R.layout.activity_main);
         else
@@ -54,7 +53,7 @@ public class MainActivity extends ActionBarActivity
             return super.onOptionsItemSelected(item);
         }
     }
-    
+
     private void logOut()
     {
         // TODO: Make this better.
@@ -62,34 +61,20 @@ public class MainActivity extends ActionBarActivity
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("loggedIn", false);
         editor.commit();
-        
+
+        Toast.makeText(getApplicationContext(), R.string.toast_logout,
+                Toast.LENGTH_SHORT).show();
+
         openLoginActivity();
     }
+
     private void openLoginActivity()
     {
         Intent intent = new Intent(this, LoginActivity.class);
-        
+
         // Make Back leave the app.
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
         finish();
-    }
-
-    /* Helper function to display a Toast */
-    private void doToast(int stringId)
-    {
-        Context context = getApplicationContext();
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, stringId, duration);
-        toast.show();
-    }
-    private void doToast(String message)
-    {
-        Context context = getApplicationContext();
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, message, duration);
-        toast.show();
     }
 }
