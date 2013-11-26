@@ -9,6 +9,9 @@
     <string name="action_login">Log in</string>
     <string name="action_logout">Log out</string>
     
+    <!-- Heading strings -->
+    <string name="title_loginprompt">Please log in</string>
+    
     <!-- Content strings -->
     <string name="desc_loginprompt">TODO: This is the authentication fragment.</string>
     <string name="desc_helloworld">TODO: This is the container activity.</string>
@@ -16,6 +19,8 @@
     <!-- Toasts -->
     <string name="toast_login">Successfully logged in!</string>
     <string name="toast_logout">Successfully logged out!</string>
+    <string name="text_username">Username</string>
+    <string name="text_password">Password</string>
     
 
 </resources>

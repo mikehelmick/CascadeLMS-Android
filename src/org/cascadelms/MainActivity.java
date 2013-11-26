@@ -1,11 +1,10 @@
 package org.cascadelms;
 
-import org.cascadelms.AuthenticationFragment.OnLoginListener;
-
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -14,33 +13,25 @@ import android.widget.Toast;
  * MainActivity is the container for each fragment that will be displayed in the
  * Cascade app.
  */
-public class MainActivity extends ActionBarActivity implements OnLoginListener
+public class MainActivity extends ActionBarActivity
 {
-    /*
-     * This flag should eventually be replaced with a better method for tracking
-     * login status.
-     */
-    private boolean userLoggedIn;
+    private static final String PREFS_AUTH = "AuthenticationData";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        userLoggedIn = false;
-    }
-
-    @Override
-    protected void onResume()
-    {
-        /* Checks login status every time the Activity resumes. */
-        if (!userLoggedIn)
+        
+        // TODO: Make this better.
+        SharedPreferences preferences = getSharedPreferences(PREFS_AUTH, 0);
+        boolean loggedIn = preferences.getBoolean("loggedIn", false);
+        
+        if (loggedIn)
+            setContentView(R.layout.activity_main);
+        else
         {
-            /* Shows the AuthenticationDialog. */
-            new AuthenticationFragment().show(this.getSupportFragmentManager(),
-                    AuthenticationFragment.TAG);
+            openLoginActivity();
         }
-        super.onResume();
     }
 
     @Override
@@ -57,29 +48,31 @@ public class MainActivity extends ActionBarActivity implements OnLoginListener
         switch (item.getItemId())
         {
         case R.id.action_logout:
-            onLogout();
+            logOut();
             return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
-
-    /* Called to perform the login */
-    public void onLogin()
+    
+    private void logOut()
     {
-        this.userLoggedIn = true;
-
-        Log.i(MainActivity.class.getName(), "User is now logged in.");
-        doToast(R.string.toast_login);
+        // TODO: Make this better.
+        SharedPreferences preferences = getSharedPreferences(PREFS_AUTH, 0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("loggedIn", false);
+        editor.commit();
+        
+        openLoginActivity();
     }
-
-    /* Called to perform the logout */
-    private void onLogout()
+    private void openLoginActivity()
     {
-        this.userLoggedIn = false;
-
-        Log.i(MainActivity.class.getName(), "User is now logged out.");
-        doToast(R.string.toast_logout);
+        Intent intent = new Intent(this, LoginActivity.class);
+        
+        // Make Back leave the app.
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        finish();
     }
 
     /* Helper function to display a Toast */
@@ -89,6 +82,14 @@ public class MainActivity extends ActionBarActivity implements OnLoginListener
         int duration = Toast.LENGTH_SHORT;
 
         Toast toast = Toast.makeText(context, stringId, duration);
+        toast.show();
+    }
+    private void doToast(String message)
+    {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, message, duration);
         toast.show();
     }
 }
