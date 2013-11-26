@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -157,8 +158,7 @@ public class LoginActivity extends Activity
     }
 
     /**
-     * Represents an asynchronous login task used to authenticate
-     * the user.
+     * Represents an asynchronous login task used to authenticate the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean>
     {
@@ -189,13 +189,18 @@ public class LoginActivity extends Activity
             if (success)
             {
                 // TODO: Make this better.
-                SharedPreferences preferences = getSharedPreferences(PREFS_AUTH, 0);
+                SharedPreferences preferences = getSharedPreferences(
+                        PREFS_AUTH, 0);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean("loggedIn", true);
                 editor.commit();
-                
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                
+
+                Toast.makeText(getApplicationContext(), R.string.toast_login,
+                        Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(LoginActivity.this,
+                        MainActivity.class);
+
                 // Make Back leave the app.
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
@@ -203,8 +208,7 @@ public class LoginActivity extends Activity
             }
             else
             {
-                mPasswordView
-                        .setError(getString(R.string.error_general));
+                mPasswordView.setError(getString(R.string.error_general));
                 mPasswordView.requestFocus();
             }
         }
