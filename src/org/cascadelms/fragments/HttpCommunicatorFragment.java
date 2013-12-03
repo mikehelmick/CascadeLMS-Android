@@ -1,4 +1,4 @@
-package org.cascadelms;
+package org.cascadelms.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,9 +29,12 @@ public class HttpCommunicatorFragment extends Fragment
     {
         Bundle arguments = getArguments();
         
-        mBaseUrl = arguments.getString("baseUrl");
-        String cookie = arguments.getString("cookie"); // TODO
-        mCourseId = arguments.getInt("courseId", -1);
+        if (arguments != null)
+        {
+            mBaseUrl = arguments.getString("baseUrl");
+            String cookie = arguments.getString("cookie"); // TODO
+            mCourseId = arguments.getInt("courseId", -1);
+        }
         
         return super.onCreateView(inflater, container, savedInstanceState);
     }
