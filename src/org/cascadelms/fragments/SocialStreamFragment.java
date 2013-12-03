@@ -18,16 +18,22 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
         super.onCreateView(inflater, container, savedInstanceState);
         
         View view = inflater.inflate( R.layout.fragment_socialstream, null );
-        Bundle arguments = getArguments();
+        TextView label = (TextView)view.findViewById(R.id.textView1);
         
-        if (arguments != null)
-        {
-            TextView label = (TextView)view.findViewById(R.id.textView1);
-            
-            label.append(" " + arguments.getInt("courseId", -1));
-        }
+        label.append(" " + getCourseId());
         
         return view;
+    }
+
+    @Override
+    protected String getSubpageLocation()
+    {
+        int courseId = getCourseId();
+        
+        if (courseId == -1)
+            return "home";
+        else
+            return "course/" + courseId;
     }
     
 }
