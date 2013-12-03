@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class SocialStreamFragment extends HttpCommunicatorFragment
 {
@@ -16,7 +17,17 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
         
-        return inflater.inflate( R.layout.fragment_socialstream, null );
+        View view = inflater.inflate( R.layout.fragment_socialstream, null );
+        Bundle arguments = getArguments();
+        
+        if (arguments != null)
+        {
+            TextView label = (TextView)view.findViewById(R.id.textView1);
+            
+            label.append(" " + arguments.getInt("courseId", -1));
+        }
+        
+        return view;
     }
     
 }
