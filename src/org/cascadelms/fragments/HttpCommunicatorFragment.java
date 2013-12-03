@@ -18,7 +18,7 @@ import android.view.ViewGroup;
  *                   corresponds to.
  *
  */
-public class HttpCommunicatorFragment extends Fragment
+public abstract class HttpCommunicatorFragment extends Fragment
 {
     private String mBaseUrl;
     private int mCourseId;
@@ -38,4 +38,18 @@ public class HttpCommunicatorFragment extends Fragment
         
         return super.onCreateView(inflater, container, savedInstanceState);
     }
+    
+    /** Returns the course ID used by this fragment. **/
+    protected int getCourseId()
+    {
+        return mCourseId;
+    }
+    
+    /** Must be implemented in subclasses to determine the full URL of the
+     *  page to visit. The return value of this function is combined with
+     *  the base URL like so:
+     *  
+     *  URL = baseURL/subpageURL
+     */
+    protected abstract String getSubpageLocation();
 }
