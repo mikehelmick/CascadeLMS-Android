@@ -2,8 +2,6 @@ package org.cascadelms;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.ListIterator;
-
 import org.cascadelms.fragments.HttpCommunicatorFragment;
 import org.cascadelms.fragments.SocialStreamFragment;
 
@@ -13,9 +11,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.TypedValue;
@@ -34,7 +32,8 @@ import android.widget.Toast;
  * MainActivity is the container for each fragment that will be displayed in the
  * Cascade app.
  */
-public class MainActivity extends ActionBarActivity implements FragmentManager.OnBackStackChangedListener
+public class MainActivity extends ActionBarActivity implements
+        FragmentManager.OnBackStackChangedListener
 {
     private static final String PREFS_AUTH = "AuthenticationData";
     private static final int FRAGMENT_HOME = -1;
@@ -206,22 +205,25 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
             return super.onOptionsItemSelected(item);
         }
     }
-    
+
     @Override
     public void onBackStackChanged()
     {
         updateActionBar();
     }
-    
+
     private void setupNavigation(Bundle savedInstanceState)
     {
         // Needed to update subtitle in ActionBar when fragments change.
         getSupportFragmentManager().addOnBackStackChangedListener(this);
-        
+
         setContentView(R.layout.activity_main);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+                GravityCompat.START);
 
         // Add some dummy courses
         mCourseList = new ArrayList<CourseEntry>();
@@ -232,8 +234,7 @@ public class MainActivity extends ActionBarActivity implements FragmentManager.O
         CourseNavAdapter adapter = new CourseNavAdapter(this, mCourseList);
 
         mDrawerList.setAdapter(adapter);
-        mDrawerList
-                .setOnItemClickListener(new CourseNavItemClickListener());
+        mDrawerList.setOnItemClickListener(new CourseNavItemClickListener());
 
         // Set up drawer toggle
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
