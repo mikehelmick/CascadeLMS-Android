@@ -302,8 +302,8 @@ public class MainActivity extends ActionBarActivity
 
         FragmentTransaction transaction = manager.beginTransaction();
 
-        transaction.add(R.id.content_frame, fragment);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+        transaction.replace(R.id.content_frame, fragment);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
         // Add to back stack but only if this is not the home fragment.
         if (courseId != COURSE_NONE)
