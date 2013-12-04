@@ -2,8 +2,13 @@ package org.cascadelms;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.cascadelms.fragments.AssignmentsFragment;
+import org.cascadelms.fragments.CourseBlogFragment;
+import org.cascadelms.fragments.DocumentsFragment;
 import org.cascadelms.fragments.HttpCommunicatorFragment;
 import org.cascadelms.fragments.SocialStreamFragment;
+import org.cascadelms.fragments.SocialStreamFragment.SubpageNavListener;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +21,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,15 +39,26 @@ import android.widget.Toast;
  * Cascade app.
  */
 public class MainActivity extends ActionBarActivity implements
-        FragmentManager.OnBackStackChangedListener
+        FragmentManager.OnBackStackChangedListener, SubpageNavListener
 {
     private static final String PREFS_AUTH = "AuthenticationData";
-    private static final int FRAGMENT_HOME = -1;
+    private static final String BACKTAG_COURSEHOME = "CourseHome";
+    private static final String BACKTAG_COURSESUBPAGE = "CourseSubpage";
+    private static final int FRAGMENT_HOME = 0;
     private static final int COURSE_NONE = -1;
+    private static final int COURSE_EXISTING = -2;
+    private static final int COURSE_UNSET = -3;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
+
+    private String[] mSubpageNames;
+
+    private enum SubpageClass
+    {
+        SOCIAL_STREAM, COURSE_BLOG, DOCUMENTS, ASSIGNMENTS
+    }
 
     private class CourseEntry
     {
@@ -214,6 +231,8 @@ public class MainActivity extends ActionBarActivity implements
 
     private void setupNavigation(Bundle savedInstanceState)
     {
+        mSubpageNames = getResources().getStringArray(R.array.subpage_names);
+
         // Needed to update subtitle in ActionBar when fragments change.
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
@@ -226,7 +245,7 @@ public class MainActivity extends ActionBarActivity implements
                 GravityCompat.START);
 
         // Add some dummy courses
-        mCourseList = new ArrayList<CourseEntry>();
+        clearCourses();
         registerCourse(2, "CS App");
         registerCourse(5, "CS5001 - Senior Design");
         registerCourse(8, "Artificial Intelligence");
@@ -279,8 +298,19 @@ public class MainActivity extends ActionBarActivity implements
         finish();
     }
 
+    private void clearCourses()
+    {
+        if (mCourseList == null)
+            mCourseList = new ArrayList<CourseEntry>();
+
+        mCourseList.clear();
+    }
+
     private void registerCourse(int id, String name)
     {
+        if (mCourseList == null)
+            mCourseList = new ArrayList<CourseEntry>();
+
         mCourseList.add(new CourseEntry(id, name));
     }
 
@@ -293,6 +323,44 @@ public class MainActivity extends ActionBarActivity implements
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
+    @Override
+    public void handleSubpageNavItem(int subpageId)
+    {
+        setFragment(subpageId, COURSE_EXISTING);
+    }
+
+    private HttpCommunicatorFragment subpageClassFactory(int fragmentId)
+    {
+        HttpCommunicatorFragment fragment;
+
+        // Check length
+        if (fragmentId < 0 || fragmentId >= SubpageClass.values().length)
+        {
+            Log.e(MainActivity.class.getName(),
+                    "Uh oh, the chosen fragment ID is out of range! Defaulting to Social Stream.");
+            fragmentId = FRAGMENT_HOME;
+        }
+        // Convert int to enum
+        SubpageClass classId = SubpageClass.values()[fragmentId];
+
+        switch (classId)
+        {
+        case COURSE_BLOG:
+            fragment = new CourseBlogFragment();
+            break;
+        case DOCUMENTS:
+            fragment = new DocumentsFragment();
+            break;
+        case ASSIGNMENTS:
+            fragment = new AssignmentsFragment();
+            break;
+        default:
+            fragment = new SocialStreamFragment();
+        }
+
+        return fragment;
+    }
+
     private void setFragment(int fragmentId, int courseId)
     {
         FragmentManager manager = getSupportFragmentManager();
@@ -301,19 +369,46 @@ public class MainActivity extends ActionBarActivity implements
         HttpCommunicatorFragment topFragment = (HttpCommunicatorFragment) manager
                 .findFragmentById(R.id.content_frame);
 
-        // Only switch if we aren't already on the subpage.
-        if (topFragment == null || topFragment.getCourseId() != courseId)
-        {
-            // Remove existing fragment from back stack if we aren't navigating
-            // away from the home page.
-            if (topFragment != null && topFragment.getCourseId() != COURSE_NONE)
-                manager.popBackStack();
+        int oldCourseId;
 
-            // Jump to default fragment. TODO: Other fragments.
-            SocialStreamFragment fragment = new SocialStreamFragment();
+        if (topFragment == null)
+            oldCourseId = COURSE_UNSET;
+        else
+            oldCourseId = topFragment.getCourseId();
+
+        // Only switch if we aren't already on the subpage.
+        if (oldCourseId != courseId || courseId == COURSE_EXISTING)
+        {
+            String backstackTag = "";
+
+            // Remove existing fragments up to the proper landing page, and
+            // tag the new fragment as appropriate.
+            if (courseId != COURSE_NONE)
+            {
+                if (fragmentId == FRAGMENT_HOME)
+                {
+                    backstackTag = BACKTAG_COURSEHOME;
+                    manager.popBackStack(BACKTAG_COURSEHOME,
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                }
+                else
+                {
+                    backstackTag = BACKTAG_COURSESUBPAGE;
+                    manager.popBackStack(BACKTAG_COURSESUBPAGE,
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                }
+            }
+
+            // Instantiate the appropriate fragment.
+            HttpCommunicatorFragment fragment = subpageClassFactory(fragmentId);
+
             Bundle bundle = new Bundle();
 
-            bundle.putInt("courseId", courseId);
+            // Reuse existing courseId
+            if (courseId == COURSE_EXISTING)
+                bundle.putInt("courseId", oldCourseId);
+            else
+                bundle.putInt("courseId", courseId);
 
             fragment.setArguments(bundle);
 
@@ -325,7 +420,7 @@ public class MainActivity extends ActionBarActivity implements
 
             // Add to back stack but only if this is not the home fragment.
             if (courseId != COURSE_NONE)
-                transaction.addToBackStack(null);
+                transaction.addToBackStack(backstackTag);
 
             transaction.commit();
         }

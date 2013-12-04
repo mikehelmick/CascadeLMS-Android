@@ -5,21 +5,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <GridView
+    <android.support.v7.widget.GridLayout
         android:id="@+id/subpageCategoryGrid"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="auto_fit"
-        android:columnWidth="150dp"
-        android:gravity="center">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-    </GridView>
+    </android.support.v7.widget.GridLayout>
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TODO: Social Stream placeholder"
+        android:text="TODO: Course Blog placeholder"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </LinearLayout>
