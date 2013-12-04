@@ -180,7 +180,10 @@ public class MainActivity extends ActionBarActivity implements
 
         // Save course ID in case the orientation changes or whatever.
         if (topFragment != null)
+        {
             outState.putInt("courseId", topFragment.getCourseId());
+            outState.putInt("fragmentId", topFragment.getFragmentId());
+        }
 
         super.onSaveInstanceState(outState);
     }
@@ -266,12 +269,16 @@ public class MainActivity extends ActionBarActivity implements
         getSupportActionBar().setHomeButtonEnabled(true);
 
         int courseId = COURSE_NONE;
+        int fragmentId = FRAGMENT_HOME;
 
         if (savedInstanceState != null)
+        {
             courseId = savedInstanceState.getInt("courseId", COURSE_NONE);
+            fragmentId = savedInstanceState.getInt("fragmentId", FRAGMENT_HOME);
+        }
 
         // Jump to fragment.
-        setFragment(FRAGMENT_HOME, courseId);
+        setFragment(fragmentId, courseId);
     }
 
     private void logOut()
@@ -409,6 +416,8 @@ public class MainActivity extends ActionBarActivity implements
                 bundle.putInt("courseId", oldCourseId);
             else
                 bundle.putInt("courseId", courseId);
+            // For saved configs.
+            bundle.putInt("fragmentId", fragmentId);
 
             fragment.setArguments(bundle);
 

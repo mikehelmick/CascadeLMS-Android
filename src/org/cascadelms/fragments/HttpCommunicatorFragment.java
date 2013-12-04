@@ -16,12 +16,14 @@ import android.view.ViewGroup;
  * cookie  (string): Needed for transactions with the server.
  * courseId   (int): Optional, used to indicate which course this view
  *                   corresponds to.
+ * fragmentId (int): Corresponds to the type of fragment created.
  *
  */
 public abstract class HttpCommunicatorFragment extends Fragment
 {
     private String mBaseUrl;
     private int mCourseId;
+    private int mFragmentId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +36,9 @@ public abstract class HttpCommunicatorFragment extends Fragment
             mBaseUrl = arguments.getString("baseUrl");
             String cookie = arguments.getString("cookie"); // TODO
             mCourseId = arguments.getInt("courseId", -1);
+            // TODO: Better-coupled design than just setting the fragment ID
+            //  manually.
+            mFragmentId = arguments.getInt("fragmentId", -1);
         }
         
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -43,6 +48,12 @@ public abstract class HttpCommunicatorFragment extends Fragment
     public int getCourseId()
     {
         return mCourseId;
+    }
+    
+    /** Returns the fragment ID used by this fragment. **/
+    public int getFragmentId()
+    {
+        return mFragmentId;
     }
     
     /** Must be implemented in subclasses to determine the full URL of the
