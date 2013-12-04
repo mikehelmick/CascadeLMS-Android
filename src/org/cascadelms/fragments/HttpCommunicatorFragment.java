@@ -40,7 +40,7 @@ public abstract class HttpCommunicatorFragment extends Fragment
     }
     
     /** Returns the course ID used by this fragment. **/
-    protected int getCourseId()
+    public int getCourseId()
     {
         return mCourseId;
     }
