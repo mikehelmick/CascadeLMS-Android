@@ -50,6 +50,9 @@ public abstract class HttpCommunicatorFragment extends Fragment
      *  the base URL like so:
      *  
      *  URL = baseURL/subpageURL
+     *  
+     *  If there is no valid sub URL (for example, a valid courseID is needed),
+     *  return null.
      */
     protected abstract String getSubpageLocation();
 }
