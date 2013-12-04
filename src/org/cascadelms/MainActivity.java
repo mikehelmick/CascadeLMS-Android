@@ -1,6 +1,8 @@
 package org.cascadelms;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import org.cascadelms.fragments.HttpCommunicatorFragment;
 import org.cascadelms.fragments.SocialStreamFragment;
@@ -11,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -31,7 +34,7 @@ import android.widget.Toast;
  * MainActivity is the container for each fragment that will be displayed in the
  * Cascade app.
  */
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends ActionBarActivity implements FragmentManager.OnBackStackChangedListener
 {
     private static final String PREFS_AUTH = "AuthenticationData";
     private static final int FRAGMENT_HOME = -1;
@@ -105,9 +108,8 @@ public class MainActivity extends ActionBarActivity
             View newView = null;
 
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            newView = inflater.inflate(
-                    android.R.layout.simple_list_item_1, parent,
-                    false);
+            newView = inflater.inflate(android.R.layout.simple_list_item_1,
+                    parent, false);
             TextView label = (TextView) newView
                     .findViewById(android.R.id.text1);
 
@@ -147,46 +149,11 @@ public class MainActivity extends ActionBarActivity
         boolean loggedIn = preferences.getBoolean("loggedIn", false);
 
         if (loggedIn)
-        {
-            setContentView(R.layout.activity_main);
-
-            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-            // Add some dummy courses
-            mCourseList = new ArrayList<CourseEntry>();
-            registerCourse(2, "CS App");
-            registerCourse(5, "CS5001 - Senior Design");
-            registerCourse(8, "Artificial Intelligence");
-
-            CourseNavAdapter adapter = new CourseNavAdapter(this, mCourseList);
-
-            mDrawerList.setAdapter(adapter);
-            mDrawerList
-                    .setOnItemClickListener(new CourseNavItemClickListener());
-
-            // Set up drawer toggle
-            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, R.string.drawer_open,
-                    R.string.drawer_close);
-
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-            
-            int courseId = COURSE_NONE;
-            
-            if (savedInstanceState != null)
-                courseId = savedInstanceState.getInt("courseId", COURSE_NONE);
-
-            // Jump to fragment.
-            setFragment(FRAGMENT_HOME, courseId);
-        }
+            setupNavigation(savedInstanceState);
         else
             openLoginActivity();
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
@@ -198,7 +165,7 @@ public class MainActivity extends ActionBarActivity
         // Save course ID in case the orientation changes or whatever.
         if (topFragment != null)
             outState.putInt("courseId", topFragment.getCourseId());
-        
+
         super.onSaveInstanceState(outState);
     }
 
@@ -239,6 +206,53 @@ public class MainActivity extends ActionBarActivity
             return super.onOptionsItemSelected(item);
         }
     }
+    
+    @Override
+    public void onBackStackChanged()
+    {
+        updateActionBar();
+    }
+    
+    private void setupNavigation(Bundle savedInstanceState)
+    {
+        // Needed to update subtitle in ActionBar when fragments change.
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        
+        setContentView(R.layout.activity_main);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Add some dummy courses
+        mCourseList = new ArrayList<CourseEntry>();
+        registerCourse(2, "CS App");
+        registerCourse(5, "CS5001 - Senior Design");
+        registerCourse(8, "Artificial Intelligence");
+
+        CourseNavAdapter adapter = new CourseNavAdapter(this, mCourseList);
+
+        mDrawerList.setAdapter(adapter);
+        mDrawerList
+                .setOnItemClickListener(new CourseNavItemClickListener());
+
+        // Set up drawer toggle
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_drawer, R.string.drawer_open,
+                R.string.drawer_close);
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        int courseId = COURSE_NONE;
+
+        if (savedInstanceState != null)
+            courseId = savedInstanceState.getInt("courseId", COURSE_NONE);
+
+        // Jump to fragment.
+        setFragment(FRAGMENT_HOME, courseId);
+    }
 
     private void logOut()
     {
@@ -275,41 +289,72 @@ public class MainActivity extends ActionBarActivity
 
         setFragment(FRAGMENT_HOME, newCourseId);
 
-        mDrawerList.setSelection(position);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     private void setFragment(int fragmentId, int courseId)
     {
-        // Jump to default fragment. TODO: Other fragments.
-        SocialStreamFragment fragment = new SocialStreamFragment();
-        Bundle bundle = new Bundle();
-
-        bundle.putInt("courseId", courseId);
-
-        fragment.setArguments(bundle);
-
         FragmentManager manager = getSupportFragmentManager();
-        
+
         // Get current top fragment
         HttpCommunicatorFragment topFragment = (HttpCommunicatorFragment) manager
                 .findFragmentById(R.id.content_frame);
 
-        // Remove existing fragment from back stack if we aren't navigating away
-        //  from the home page.
+        // Only switch if we aren't already on the subpage.
+        if (topFragment == null || topFragment.getCourseId() != courseId)
+        {
+            // Remove existing fragment from back stack if we aren't navigating
+            // away from the home page.
+            if (topFragment != null && topFragment.getCourseId() != COURSE_NONE)
+                manager.popBackStack();
+
+            // Jump to default fragment. TODO: Other fragments.
+            SocialStreamFragment fragment = new SocialStreamFragment();
+            Bundle bundle = new Bundle();
+
+            bundle.putInt("courseId", courseId);
+
+            fragment.setArguments(bundle);
+
+            FragmentTransaction transaction = manager.beginTransaction();
+
+            transaction.replace(R.id.content_frame, fragment);
+            transaction
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+            // Add to back stack but only if this is not the home fragment.
+            if (courseId != COURSE_NONE)
+                transaction.addToBackStack(null);
+
+            transaction.commit();
+        }
+    }
+
+    private void updateActionBar()
+    {
+        FragmentManager manager = getSupportFragmentManager();
+
+        // Get current top fragment
+        HttpCommunicatorFragment topFragment = (HttpCommunicatorFragment) manager
+                .findFragmentById(R.id.content_frame);
+
         if (topFragment != null && topFragment.getCourseId() != COURSE_NONE)
-            manager.popBackStack();
+        {
+            // Find course with this ID and grab its name for the Action Bar
+            // subtitle.
+            for (Iterator<CourseEntry> iter = mCourseList.iterator(); iter
+                    .hasNext();)
+            {
+                CourseEntry entry = iter.next();
 
-        FragmentTransaction transaction = manager.beginTransaction();
-
-        transaction.replace(R.id.content_frame, fragment);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
-        // Add to back stack but only if this is not the home fragment.
-        if (courseId != COURSE_NONE)
-            transaction.addToBackStack(null);
-        
-        transaction.commit();
-
+                if (entry.id == topFragment.getCourseId())
+                {
+                    getSupportActionBar().setSubtitle(entry.name);
+                    break;
+                }
+            }
+        }
+        else
+            getSupportActionBar().setSubtitle(null);
     }
 }
