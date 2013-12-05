@@ -22,7 +22,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +41,7 @@ public class MainActivity extends ActionBarActivity implements
         FragmentManager.OnBackStackChangedListener, SubpageNavListener
 {
     private static final String PREFS_AUTH = "AuthenticationData";
+    private static final String BACKTAG_HOME = "Home";
     private static final String BACKTAG_COURSEHOME = "CourseHome";
     private static final String BACKTAG_COURSESUBPAGE = "CourseSubpage";
     private static final int FRAGMENT_HOME = 0;
@@ -71,12 +71,27 @@ public class MainActivity extends ActionBarActivity implements
             name = courseName;
         }
     }
+    
+    private class FragmentCoursePair
+    {
+        public final int fragment;
+        public final int course;
+
+        public FragmentCoursePair(int fragmentId, int courseId)
+        {
+            fragment = fragmentId;
+            course = courseId;
+        }
+    }
 
     private ArrayList<CourseEntry> mCourseList;
 
     // Used to map and list courses and subpages.
     private class CourseNavAdapter extends BaseAdapter
     {
+        private final int SECTION_HOME = 0;
+        private final int SECTION_COURSE_START = 1;
+
         private Context mContext;
         private ArrayList<CourseEntry> mCourseListRef;
 
@@ -90,32 +105,22 @@ public class MainActivity extends ActionBarActivity implements
         @Override
         public int getCount()
         {
-            return mCourseListRef.size() + 1;
+            return mCourseListRef.size() + SECTION_COURSE_START;
         }
 
         @Override
         public Object getItem(int position)
         {
-            if (position == 0)
-                return -1;
+            if (position == SECTION_HOME)
+                return COURSE_NONE;
             else
-                return mCourseListRef.get(position - 1).id;
+                return mCourseListRef.get(position - SECTION_COURSE_START).id;
         }
 
         @Override
         public long getItemId(int position)
         {
             return position;
-        }
-
-        @Override
-        public boolean isEnabled(int position)
-        {
-            // Don't make headers selectable
-            if (position == 0)
-                return false;
-            else
-                return true;
         }
 
         @Override
@@ -129,16 +134,11 @@ public class MainActivity extends ActionBarActivity implements
             TextView label = (TextView) newView
                     .findViewById(android.R.id.text1);
 
-            if (position == 0)
-            {
-                label.setText("COURSES");
-                // Extremely bad method of restyling for a header but
-                // "good enough"
-                label.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        (float) (label.getTextSize() * 0.7));
-            }
+            if (position == SECTION_HOME)
+                label.setText("Home");
             else
-                label.setText(mCourseListRef.get(position - 1).name);
+                label.setText(mCourseListRef.get(position
+                        - SECTION_COURSE_START).name);
 
             return newView;
         }
@@ -171,24 +171,6 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        FragmentManager manager = getSupportFragmentManager();
-        // Get current top fragment
-        HttpCommunicatorFragment topFragment = (HttpCommunicatorFragment) manager
-                .findFragmentById(R.id.content_frame);
-
-        // Save course ID in case the orientation changes or whatever.
-        if (topFragment != null)
-        {
-            outState.putInt("courseId", topFragment.getCourseId());
-            outState.putInt("fragmentId", topFragment.getFragmentId());
-        }
-
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     protected void onPostCreate(Bundle savedInstanceState)
     {
         super.onPostCreate(savedInstanceState);
@@ -218,6 +200,9 @@ public class MainActivity extends ActionBarActivity implements
 
         switch (item.getItemId())
         {
+        case android.R.id.home:
+            goUp();
+            return true;
         case R.id.action_logout:
             logOut();
             return true;
@@ -229,6 +214,15 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void onBackStackChanged()
     {
+        // Update upon navigation
+        updateActionBar();
+    }
+
+    @Override
+    protected void onResumeFragments()
+    {
+        super.onResumeFragments();
+        // (Re)update upon device orientation change
         updateActionBar();
     }
 
@@ -268,17 +262,9 @@ public class MainActivity extends ActionBarActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        int courseId = COURSE_NONE;
-        int fragmentId = FRAGMENT_HOME;
-
-        if (savedInstanceState != null)
-        {
-            courseId = savedInstanceState.getInt("courseId", COURSE_NONE);
-            fragmentId = savedInstanceState.getInt("fragmentId", FRAGMENT_HOME);
-        }
-
-        // Jump to fragment.
-        setFragment(fragmentId, courseId);
+        // Jump to home fragment.
+        if (savedInstanceState == null)
+            setFragment(FRAGMENT_HOME, COURSE_NONE);
     }
 
     private void logOut()
@@ -367,8 +353,8 @@ public class MainActivity extends ActionBarActivity implements
 
         return fragment;
     }
-
-    private void setFragment(int fragmentId, int courseId)
+    
+    private FragmentCoursePair getCurrentFragmentCourse()
     {
         FragmentManager manager = getSupportFragmentManager();
 
@@ -376,34 +362,67 @@ public class MainActivity extends ActionBarActivity implements
         HttpCommunicatorFragment topFragment = (HttpCommunicatorFragment) manager
                 .findFragmentById(R.id.content_frame);
 
-        int oldCourseId;
+        int fragmentId;
+        int courseId;
 
         if (topFragment == null)
-            oldCourseId = COURSE_UNSET;
+        {
+            fragmentId = FRAGMENT_HOME;
+            courseId = COURSE_UNSET;
+        }
         else
-            oldCourseId = topFragment.getCourseId();
+        {
+            fragmentId = topFragment.getFragmentId();
+            courseId = topFragment.getCourseId();
+        }
+        
+        return new FragmentCoursePair(fragmentId, courseId);
+    }
+    
+    private void goUp()
+    {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentCoursePair old = getCurrentFragmentCourse();
+        
+        if (old.course != COURSE_NONE)
+        {
+            if (old.fragment == FRAGMENT_HOME)
+                manager.popBackStack(BACKTAG_COURSEHOME,
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            else
+                manager.popBackStack(BACKTAG_COURSESUBPAGE,
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+    }
+
+    private void setFragment(int fragmentId, int courseId)
+    {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentCoursePair old = getCurrentFragmentCourse();
+        
+        int oldCourseId = old.course;
+        int oldFragmentId = old.fragment;
 
         // Only switch if we aren't already on the subpage.
-        if (oldCourseId != courseId || courseId == COURSE_EXISTING)
+        if (oldCourseId != courseId || oldFragmentId != fragmentId)
         {
-            String backstackTag = "";
+            String backstackTag;
 
-            // Remove existing fragments up to the proper landing page, and
-            // tag the new fragment as appropriate.
+            // Tag fragments for up functionality.
             if (courseId != COURSE_NONE)
             {
                 if (fragmentId == FRAGMENT_HOME)
-                {
                     backstackTag = BACKTAG_COURSEHOME;
-                    manager.popBackStack(BACKTAG_COURSEHOME,
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                }
                 else
-                {
                     backstackTag = BACKTAG_COURSESUBPAGE;
-                    manager.popBackStack(BACKTAG_COURSESUBPAGE,
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                }
+            }
+            else
+            {
+                backstackTag = BACKTAG_HOME;
+                
+                // If we're at home, clear stack.
+                manager.popBackStack(BACKTAG_COURSEHOME,
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
 
             // Instantiate the appropriate fragment.
@@ -437,14 +456,17 @@ public class MainActivity extends ActionBarActivity implements
 
     private void updateActionBar()
     {
-        FragmentManager manager = getSupportFragmentManager();
+        boolean useDrawerIndicator = true;
+        
+        FragmentCoursePair old = getCurrentFragmentCourse();
+        
+        int courseId = old.course;
+        int fragmentId = old.fragment;
 
-        // Get current top fragment
-        HttpCommunicatorFragment topFragment = (HttpCommunicatorFragment) manager
-                .findFragmentById(R.id.content_frame);
-
-        if (topFragment != null && topFragment.getCourseId() != COURSE_NONE)
+        if (courseId != COURSE_NONE)
         {
+            boolean foundCourse = false;
+
             // Find course with this ID and grab its name for the Action Bar
             // subtitle.
             for (Iterator<CourseEntry> iter = mCourseList.iterator(); iter
@@ -452,14 +474,32 @@ public class MainActivity extends ActionBarActivity implements
             {
                 CourseEntry entry = iter.next();
 
-                if (entry.id == topFragment.getCourseId())
+                if (entry.id == courseId)
                 {
-                    getSupportActionBar().setSubtitle(entry.name);
+                    getSupportActionBar().setTitle(entry.name);
+                    foundCourse = true;
                     break;
                 }
             }
+
+            int subpageId = fragmentId - 1;
+
+            if (foundCourse && subpageId >= 0
+                    && subpageId < mSubpageNames.length)
+            {
+                getSupportActionBar().setSubtitle(mSubpageNames[subpageId]);
+                useDrawerIndicator = false;
+            }
+            else
+                getSupportActionBar().setSubtitle(null);
         }
         else
+        {
+            getSupportActionBar().setTitle(getTitle());
             getSupportActionBar().setSubtitle(null);
+        }
+        
+        // Up navigation when inside a course subpage.
+        mDrawerToggle.setDrawerIndicatorEnabled(useDrawerIndicator);
     }
 }
