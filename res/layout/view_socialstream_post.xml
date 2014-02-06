@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/socialstream_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="User avatar"
+        android:padding="5dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/abc_ic_clear" />
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/background_postbar" >
+
+            <TextView
+                android:id="@+id/socialstream_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Michael Helmick" />
+
+            <TextView
+                android:id="@+id/socialstream_date_course"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="right"
+                android:padding="5dp"
+                android:text="Feb 4 - Senior Design II" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/socialstream_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:singleLine="false"
+            android:text="Hi, everyone. This is a test post!\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eros justo, tristique quis lectus sed, feugiat dictum nulla. Integer tristique quis lectus a porttitor. Ut vel accumsan tortor." />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_postbar" >
+
+            <Button
+                android:id="@+id/socialstream_aplus_button"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A+" />
+
+            <TextView
+                android:id="@+id/socialstream_aplus_count"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp" >
+
+                <ImageView
+                    android:id="@+id/socialstream_commentor1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="User avatar"
+                    android:padding="5dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/abc_ic_clear" />
+                
+                <ImageView
+                    android:id="@+id/socialstream_commentor2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="User avatar"
+                    android:padding="5dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/abc_ic_clear" />
+                
+                <ImageView
+                    android:id="@+id/socialstream_commentor3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="User avatar"
+                    android:padding="5dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/abc_ic_clear" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/socialstream_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="2 comments" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
