@@ -18,11 +18,9 @@
             android:background="@color/background_postbar" >
 
             <ImageView
+                style="@style/SocialStreamAvatar"
                 android:id="@+id/socialstream_avatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
                 android:contentDescription="User avatar"
-                android:scaleType="centerInside"
                 android:src="@drawable/avatar_example_1" />
 
             <TextView
@@ -31,11 +29,11 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="Michael Helmick"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/socialstream_date_course"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:gravity="right"
@@ -58,13 +56,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp" >
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp" >
 
             <Button
                 android:id="@+id/socialstream_aplus_button"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:text="A+" />
 
             <TextView
@@ -83,38 +82,31 @@
                 android:paddingLeft="5dp" >
 
                 <ImageView
+                    style="@style/SocialStreamAvatarSmall"
                     android:id="@+id/socialstream_commentor1"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
                     android:contentDescription="User avatar"
-                    android:padding="2dp"
-                    android:scaleType="centerInside"
                     android:src="@drawable/avatar_example_1" />
                 
                 <ImageView
+                    style="@style/SocialStreamAvatarSmall"
                     android:id="@+id/socialstream_commentor2"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
                     android:contentDescription="User avatar"
-                    android:padding="2dp"
-                    android:scaleType="centerInside"
                     android:src="@drawable/avatar_example_2" />
                 
                 <ImageView
+                    style="@style/SocialStreamAvatarSmall"
                     android:id="@+id/socialstream_commentor3"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
                     android:contentDescription="User avatar"
-                    android:padding="2dp"
-                    android:scaleType="centerInside"
                     android:src="@drawable/avatar_example_3" />
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/socialstream_comment_count"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="right"
                 android:paddingLeft="10dp"
                 android:text="2 comments" />
 
