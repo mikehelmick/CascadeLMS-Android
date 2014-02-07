@@ -1,6 +1,10 @@
 package org.cascadelms.fragments;
 
+import java.util.ArrayList;
+
 import org.cascadelms.R;
+import org.cascadelms.socialstream.SocialStreamAdapter;
+import org.cascadelms.socialstream.SocialStreamPost;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class SocialStreamFragment extends HttpCommunicatorFragment
@@ -42,15 +47,12 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_socialstream, null);
-        TextView label = (TextView) view.findViewById(R.id.textView1);
-
-        label.append(" " + getCourseId());
 
         // We're in a course, construct the subnavigation.
         if (getCourseId() != -1)
         {
             GridView subpageGrid = (GridView) view
-                    .findViewById(R.id.subpageCategoryGrid);
+                    .findViewById(R.id.subpage_category_grid);
             mSubpageNames = getResources()
                     .getStringArray(R.array.subpage_names);
 
@@ -64,6 +66,18 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
             else
                 Log.e(SocialStreamFragment.class.getName(),
                         "Could not get subpage data.");
+        }
+        
+        ListView socialstreamList = (ListView) view.findViewById(R.id.socialstream_list);
+        
+        if (socialstreamList != null)
+        {
+            ArrayList<SocialStreamPost> postList = new ArrayList<SocialStreamPost>();
+            
+            for (int i = 0; i < 10; ++i)
+                postList.add(new SocialStreamPost());
+            
+            socialstreamList.setAdapter(new SocialStreamAdapter(view.getContext(), postList));
         }
 
         return view;

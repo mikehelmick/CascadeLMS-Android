@@ -18,7 +18,7 @@ public class CourseBlogFragment extends HttpCommunicatorFragment
         super.onCreateView(inflater, container, savedInstanceState);
         
         View view = inflater.inflate( R.layout.fragment_courseblog, null );
-        TextView label = (TextView)view.findViewById(R.id.textView1);
+        TextView label = (TextView)view.findViewById(R.id.placeholder);
         
         label.append(" " + getCourseId());
         
