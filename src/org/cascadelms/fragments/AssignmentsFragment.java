@@ -18,7 +18,7 @@ public class AssignmentsFragment extends HttpCommunicatorFragment
         super.onCreateView(inflater, container, savedInstanceState);
         
         View view = inflater.inflate( R.layout.fragment_assignments, null );
-        TextView label = (TextView)view.findViewById(R.id.textView1);
+        TextView label = (TextView)view.findViewById(R.id.placeholder);
         
         label.append(" " + getCourseId());
         
