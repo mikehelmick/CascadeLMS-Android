@@ -3,10 +3,11 @@ package org.cascadelms.socialstream;
 public class SocialStreamPost
 {
     private int mPostId = -1;
-    private int mAuthorId;
+    private int mAuthorId = -1;
     private String mAuthorName;
+    private String mDate;
     private String mQuickUrl;
-    private String mPostContent;
+    private String mContent;
     private int mScore = 0;
     private int mCommentCount = 0;
     
@@ -34,6 +35,14 @@ public class SocialStreamPost
     {
         mAuthorName = authorName;
     }
+    public String getPostDate()
+    {
+        return mDate;
+    }
+    public void setDate(String date)
+    {
+        mDate = date;
+    }
     public String getQuickUrl()
     {
         return mQuickUrl;
@@ -42,13 +51,13 @@ public class SocialStreamPost
     {
         mQuickUrl = quickUrl;
     }
-    public String getPostContent()
+    public String getContent()
     {
-        return mPostContent;
+        return mContent;
     }
-    public void setPostContent(String postContent)
+    public void setContent(String content)
     {
-        mPostContent = postContent;
+        mContent = content;
     }
     public int getScore()
     {

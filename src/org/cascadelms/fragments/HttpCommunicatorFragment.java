@@ -22,8 +22,8 @@ import android.view.ViewGroup;
 public abstract class HttpCommunicatorFragment extends Fragment
 {
     private String mBaseUrl;
-    private int mCourseId;
-    private int mFragmentId;
+    private int mCourseId = -1;
+    private int mFragmentId = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +55,11 @@ public abstract class HttpCommunicatorFragment extends Fragment
     {
         return mFragmentId;
     }
+    
+    /** Must be implemented in subclasses to provide a display name for this
+     *  Fragment that will appear, for example, inside the Action Bar.
+     */
+    public abstract String getFragmentTitle();
     
     /** Must be implemented in subclasses to determine the full URL of the
      *  page to visit. The return value of this function is combined with

@@ -26,5 +26,8 @@
         <item>Documents</item>
         <item>Assignments</item>
     </string-array>
+    
+    <!-- Other fragments -->
+    <string name="fragment_viewpost">View Post</string>
 
 </resources>

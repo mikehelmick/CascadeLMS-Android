@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity implements
     private static final String BACKTAG_HOME = "Home";
     private static final String BACKTAG_COURSEHOME = "CourseHome";
     private static final String BACKTAG_COURSESUBPAGE = "CourseSubpage";
+    private static final int FRAGMENT_OTHER = -1;
     private static final int FRAGMENT_HOME = 0;
     private static final int COURSE_NONE = -1;
     private static final int COURSE_EXISTING = -2;
@@ -53,9 +54,7 @@ public class MainActivity extends ActionBarActivity implements
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
 
-    private String[] mSubpageNames;
-
-    private enum SubpageClass
+    public enum SubpageFragment
     {
         SOCIAL_STREAM, COURSE_BLOG, DOCUMENTS, ASSIGNMENTS
     }
@@ -72,15 +71,17 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
     
-    private class FragmentCoursePair
+    private class FragmentCourseInfo
     {
         public final int fragment;
         public final int course;
+        public final String title;
 
-        public FragmentCoursePair(int fragmentId, int courseId)
+        public FragmentCourseInfo(int fragmentId, int courseId, String fragmentTitle)
         {
             fragment = fragmentId;
             course = courseId;
+            title = fragmentTitle;
         }
     }
 
@@ -228,8 +229,6 @@ public class MainActivity extends ActionBarActivity implements
 
     private void setupNavigation(Bundle savedInstanceState)
     {
-        mSubpageNames = getResources().getStringArray(R.array.subpage_names);
-
         // Needed to update subtitle in ActionBar when fragments change.
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
@@ -327,14 +326,14 @@ public class MainActivity extends ActionBarActivity implements
         HttpCommunicatorFragment fragment;
 
         // Check length
-        if (fragmentId < 0 || fragmentId >= SubpageClass.values().length)
+        if (fragmentId < 0 || fragmentId >= SubpageFragment.values().length)
         {
             Log.e(MainActivity.class.getName(),
                     "Uh oh, the chosen fragment ID is out of range! Defaulting to Social Stream.");
             fragmentId = FRAGMENT_HOME;
         }
         // Convert int to enum
-        SubpageClass classId = SubpageClass.values()[fragmentId];
+        SubpageFragment classId = SubpageFragment.values()[fragmentId];
 
         switch (classId)
         {
@@ -354,7 +353,7 @@ public class MainActivity extends ActionBarActivity implements
         return fragment;
     }
     
-    private FragmentCoursePair getCurrentFragmentCourse()
+    private FragmentCourseInfo getCurrentFragmentCourse()
     {
         FragmentManager manager = getSupportFragmentManager();
 
@@ -362,43 +361,39 @@ public class MainActivity extends ActionBarActivity implements
         HttpCommunicatorFragment topFragment = (HttpCommunicatorFragment) manager
                 .findFragmentById(R.id.content_frame);
 
-        int fragmentId;
-        int courseId;
+        int fragmentId = FRAGMENT_OTHER;
+        int courseId = COURSE_UNSET;
+        String fragmentTitle = null;
 
-        if (topFragment == null)
-        {
-            fragmentId = FRAGMENT_HOME;
-            courseId = COURSE_UNSET;
-        }
-        else
+        if (topFragment != null)
         {
             fragmentId = topFragment.getFragmentId();
             courseId = topFragment.getCourseId();
+            fragmentTitle = topFragment.getFragmentTitle();
         }
         
-        return new FragmentCoursePair(fragmentId, courseId);
+        return new FragmentCourseInfo(fragmentId, courseId, fragmentTitle);
     }
     
     private void goUp()
     {
         FragmentManager manager = getSupportFragmentManager();
-        FragmentCoursePair old = getCurrentFragmentCourse();
+        FragmentCourseInfo old = getCurrentFragmentCourse();
         
-        if (old.course != COURSE_NONE)
-        {
-            if (old.fragment == FRAGMENT_HOME)
-                manager.popBackStack(BACKTAG_COURSEHOME,
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            else
-                manager.popBackStack(BACKTAG_COURSESUBPAGE,
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
+        if (old.fragment == FRAGMENT_OTHER)
+            manager.popBackStack();
+        else if (old.fragment == FRAGMENT_HOME)
+            manager.popBackStack(BACKTAG_COURSEHOME,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        else
+            manager.popBackStack(BACKTAG_COURSESUBPAGE,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     private void setFragment(int fragmentId, int courseId)
     {
         FragmentManager manager = getSupportFragmentManager();
-        FragmentCoursePair old = getCurrentFragmentCourse();
+        FragmentCourseInfo old = getCurrentFragmentCourse();
         
         int oldCourseId = old.course;
         int oldFragmentId = old.fragment;
@@ -456,12 +451,11 @@ public class MainActivity extends ActionBarActivity implements
 
     private void updateActionBar()
     {
-        boolean useDrawerIndicator = true;
-        
-        FragmentCoursePair old = getCurrentFragmentCourse();
+        FragmentCourseInfo old = getCurrentFragmentCourse();
         
         int courseId = old.course;
         int fragmentId = old.fragment;
+        String fragmentTitle = old.title;
 
         if (courseId != COURSE_NONE)
         {
@@ -482,24 +476,21 @@ public class MainActivity extends ActionBarActivity implements
                 }
             }
 
-            int subpageId = fragmentId - 1;
-
-            if (foundCourse && subpageId >= 0
-                    && subpageId < mSubpageNames.length)
-            {
-                getSupportActionBar().setSubtitle(mSubpageNames[subpageId]);
-                useDrawerIndicator = false;
-            }
+            if (foundCourse)
+                getSupportActionBar().setSubtitle(fragmentTitle);
             else
                 getSupportActionBar().setSubtitle(null);
         }
         else
         {
-            getSupportActionBar().setTitle(getTitle());
+            if (fragmentTitle != null)
+                getSupportActionBar().setTitle(fragmentTitle);
+            else
+                getSupportActionBar().setTitle(getTitle());
             getSupportActionBar().setSubtitle(null);
         }
         
         // Up navigation when inside a course subpage.
-        mDrawerToggle.setDrawerIndicatorEnabled(useDrawerIndicator);
+        mDrawerToggle.setDrawerIndicatorEnabled(fragmentId == FRAGMENT_HOME);
     }
 }
