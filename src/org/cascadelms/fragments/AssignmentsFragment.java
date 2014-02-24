@@ -1,5 +1,6 @@
 package org.cascadelms.fragments;
 
+import org.cascadelms.MainActivity.SubpageFragment;
 import org.cascadelms.R;
 
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 public class AssignmentsFragment extends HttpCommunicatorFragment
 {
+    private String mName = null; 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +36,18 @@ public class AssignmentsFragment extends HttpCommunicatorFragment
             return null;
         else
             return "course/" + courseId + "/assignments";
+    }
+
+    @Override
+    public String getFragmentTitle()
+    {
+        if (mName == null)
+        {
+            String[] subpageNames = getResources().getStringArray(R.array.subpage_names);
+            mName = subpageNames[SubpageFragment.ASSIGNMENTS.ordinal() - 1];
+        }
+        
+        return mName;
     }
 
 }

@@ -8,6 +8,8 @@ import org.cascadelms.socialstream.SocialStreamPost;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class SocialStreamFragment extends HttpCommunicatorFragment
 {
@@ -29,7 +30,7 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
     }
     
     private class SubpageGridItemClickListener implements
-        GridView.OnItemClickListener
+        AdapterView.OnItemClickListener
     {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -37,6 +38,16 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
         {
             if (mListener != null)
                 mListener.handleSubpageNavItem(position + 1);
+        }
+    }
+    
+    private class SocialStreamItemClickListener implements AdapterView.OnItemClickListener
+    {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            // TODO: Supply post object
+            goToPostDetail(null);
         }
     }
 
@@ -78,6 +89,7 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
                 postList.add(new SocialStreamPost());
             
             socialstreamList.setAdapter(new SocialStreamAdapter(view.getContext(), postList));
+            socialstreamList.setOnItemClickListener(new SocialStreamItemClickListener());
         }
 
         return view;
@@ -89,6 +101,23 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
         mListener = (SubpageNavListener)activity;
         super.onAttach(activity);
     }
+    
+    private void goToPostDetail(SocialStreamPost parentPost)
+    {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        
+        SocialStreamDetailFragment fragment = new SocialStreamDetailFragment();
+
+        transaction.replace(R.id.content_frame, fragment);
+        transaction
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+        // Add to back stack but only if this is not the home fragment.
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+    }
 
     @Override
     protected String getSubpageLocation()
@@ -99,6 +128,12 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
             return "home";
         else
             return "course/" + courseId;
+    }
+
+    @Override
+    public String getFragmentTitle()
+    {
+        return null;
     }
 
 }

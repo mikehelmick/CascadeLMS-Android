@@ -14,10 +14,10 @@ public class SocialStreamAdapter extends BaseAdapter
     private ArrayList<SocialStreamPost> mPostListRef;
 
     public SocialStreamAdapter(Context context,
-            ArrayList<SocialStreamPost> courseList)
+            ArrayList<SocialStreamPost> postList)
     {
         mContext = context;
-        mPostListRef = courseList;
+        mPostListRef = postList;
     }
 
     @Override
@@ -46,6 +46,7 @@ public class SocialStreamAdapter extends BaseAdapter
         LayoutInflater inflater = LayoutInflater.from(mContext);
         newView = inflater.inflate(org.cascadelms.R.layout.view_socialstream_post,
                 parent, false);
+        newView.setFocusable(false);
 
         return newView;
     }
