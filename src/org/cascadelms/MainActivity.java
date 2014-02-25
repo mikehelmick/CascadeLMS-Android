@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.cascadelms.fragments.AssignmentsFragment;
 import org.cascadelms.fragments.CourseBlogFragment;
 import org.cascadelms.fragments.DocumentsFragment;
+import org.cascadelms.fragments.GradesFragment;
 import org.cascadelms.fragments.HttpCommunicatorFragment;
 import org.cascadelms.fragments.SocialStreamFragment;
 import org.cascadelms.fragments.SocialStreamFragment.SubpageNavListener;
@@ -329,6 +330,9 @@ public class MainActivity extends ActionBarActivity implements
             break;
         case R.string.fragment_assignments:
             fragment = new AssignmentsFragment();
+            break;
+        case R.string.fragment_grades:
+            fragment = new GradesFragment();
             break;
         default:
             fragment = new SocialStreamFragment();
