@@ -29,7 +29,8 @@ public class SocialStreamFragment extends HttpCommunicatorFragment
     {
         R.string.fragment_courseblog,
         R.string.fragment_documents,
-        R.string.fragment_assignments
+        R.string.fragment_assignments,
+        R.string.fragment_grades
     };
     
     public interface SubpageNavListener

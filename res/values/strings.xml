@@ -24,6 +24,7 @@
     <string name="fragment_courseblog">Course Blog</string>
     <string name="fragment_documents">Documents</string>
     <string name="fragment_assignments">Assignments</string>
+    <string name="fragment_grades">Grades</string>
     
     <!-- Other fragments -->
     <string name="fragment_viewpost">View Post</string>
