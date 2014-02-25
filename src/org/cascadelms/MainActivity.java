@@ -21,7 +21,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,11 +52,6 @@ public class MainActivity extends ActionBarActivity implements
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
-
-    public enum SubpageFragment
-    {
-        SOCIAL_STREAM, COURSE_BLOG, DOCUMENTS, ASSIGNMENTS
-    }
 
     private class CourseEntry
     {
@@ -325,25 +319,15 @@ public class MainActivity extends ActionBarActivity implements
     {
         HttpCommunicatorFragment fragment;
 
-        // Check length
-        if (fragmentId < 0 || fragmentId >= SubpageFragment.values().length)
+        switch (fragmentId)
         {
-            Log.e(MainActivity.class.getName(),
-                    "Uh oh, the chosen fragment ID is out of range! Defaulting to Social Stream.");
-            fragmentId = FRAGMENT_HOME;
-        }
-        // Convert int to enum
-        SubpageFragment classId = SubpageFragment.values()[fragmentId];
-
-        switch (classId)
-        {
-        case COURSE_BLOG:
+        case R.string.fragment_courseblog:
             fragment = new CourseBlogFragment();
             break;
-        case DOCUMENTS:
+        case R.string.fragment_documents:
             fragment = new DocumentsFragment();
             break;
-        case ASSIGNMENTS:
+        case R.string.fragment_assignments:
             fragment = new AssignmentsFragment();
             break;
         default:

@@ -21,13 +21,12 @@
     <string name="text_password">Password</string>
     
     <!-- Subpage fragments -->
-    <string-array name="subpage_names">
-        <item>Course Blog</item>
-        <item>Documents</item>
-        <item>Assignments</item>
-    </string-array>
+    <string name="fragment_courseblog">Course Blog</string>
+    <string name="fragment_documents">Documents</string>
+    <string name="fragment_assignments">Assignments</string>
     
     <!-- Other fragments -->
     <string name="fragment_viewpost">View Post</string>
 
 </resources>
+
