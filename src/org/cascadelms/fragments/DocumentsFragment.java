@@ -1,7 +1,6 @@
 package org.cascadelms.fragments;
 
 import org.cascadelms.R;
-import org.cascadelms.MainActivity.SubpageFragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,8 +10,6 @@ import android.widget.TextView;
 
 public class DocumentsFragment extends HttpCommunicatorFragment
 {
-    private String mName = null;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
@@ -41,12 +38,6 @@ public class DocumentsFragment extends HttpCommunicatorFragment
     @Override
     public String getFragmentTitle()
     {
-        if (mName == null)
-        {
-            String[] subpageNames = getResources().getStringArray(R.array.subpage_names);
-            mName = subpageNames[SubpageFragment.DOCUMENTS.ordinal() - 1];
-        }
-        
-        return mName;
+        return getString(R.string.fragment_documents);
     }
 }
