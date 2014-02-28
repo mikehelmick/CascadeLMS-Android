@@ -3,6 +3,7 @@ package org.cascadelms;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.cascadelms.CourseFragment.CourseDataProvider;
 import org.cascadelms.fragments.AssignmentsFragment;
 import org.cascadelms.fragments.CourseBlogFragment;
 import org.cascadelms.fragments.DocumentsFragment;
@@ -38,7 +39,7 @@ import android.widget.Toast;
  * Cascade app.
  */
 public class MainActivity extends ActionBarActivity implements
-        FragmentManager.OnBackStackChangedListener, SubpageNavListener
+        FragmentManager.OnBackStackChangedListener, SubpageNavListener, CourseDataProvider
 {
     private static final String PREFS_AUTH = "AuthenticationData";
     private static final String BACKTAG_HOME = "Home";
@@ -46,13 +47,16 @@ public class MainActivity extends ActionBarActivity implements
     private static final String BACKTAG_COURSESUBPAGE = "CourseSubpage";
     private static final int FRAGMENT_OTHER = -1;
     private static final int FRAGMENT_HOME = 0;
-    private static final int COURSE_NONE = -1;
+    private static final int NO_COURSE_SELECTED = -1;
     private static final int COURSE_EXISTING = -2;
     private static final int COURSE_UNSET = -3;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
+    
+    private int selectedCourseId = MainActivity.NO_COURSE_SELECTED;
+    private String selectedCourseTitle = "";
 
     private class CourseEntry
     {
@@ -108,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements
         public Object getItem(int position)
         {
             if (position == SECTION_HOME)
-                return COURSE_NONE;
+                return NO_COURSE_SELECTED;
             else
                 return mCourseListRef.get(position - SECTION_COURSE_START).id;
         }
@@ -258,7 +262,7 @@ public class MainActivity extends ActionBarActivity implements
 
         // Jump to home fragment.
         if (savedInstanceState == null)
-            setFragment(FRAGMENT_HOME, COURSE_NONE);
+            setFragment(FRAGMENT_HOME, NO_COURSE_SELECTED);
     }
 
     private void logOut()
@@ -392,7 +396,7 @@ public class MainActivity extends ActionBarActivity implements
             String backstackTag;
 
             // Tag fragments for up functionality.
-            if (courseId != COURSE_NONE)
+            if (courseId != NO_COURSE_SELECTED)
             {
                 if (fragmentId == FRAGMENT_HOME)
                     backstackTag = BACKTAG_COURSEHOME;
@@ -430,7 +434,7 @@ public class MainActivity extends ActionBarActivity implements
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
             // Add to back stack but only if this is not the home fragment.
-            if (courseId != COURSE_NONE)
+            if (courseId != NO_COURSE_SELECTED)
                 transaction.addToBackStack(backstackTag);
 
             transaction.commit();
@@ -445,7 +449,7 @@ public class MainActivity extends ActionBarActivity implements
         int fragmentId = old.fragment;
         String fragmentTitle = old.title;
 
-        if (courseId != COURSE_NONE)
+        if (courseId != NO_COURSE_SELECTED)
         {
             boolean foundCourse = false;
 
@@ -481,4 +485,18 @@ public class MainActivity extends ActionBarActivity implements
         // Up navigation when inside a course subpage.
         mDrawerToggle.setDrawerIndicatorEnabled(fragmentId == FRAGMENT_HOME);
     }
+
+    /* CourseDataProvider Methods */
+    
+	@Override
+	public int getCourseId() 
+	{
+		return this.selectedCourseId;
+	}
+
+	@Override
+	public String getCourseTitle() 
+	{
+		return this.selectedCourseTitle;
+	}
 }
