@@ -2,6 +2,7 @@ package org.cascadelms;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 
 /**
  * A base class for Fragments whose data depends on the currently selected course.  Subclasses 
@@ -31,6 +32,7 @@ public class CourseFragment extends Fragment
 					+ " must implement " + CourseDataProvider.class.getName() 
 					+ " to host " + CourseFragment.class.getName() );
 		}
+		((ActionBarActivity)activity).getSupportActionBar().setTitle( mCourseDataProvider.getCourseTitle() );
 	}
 
 	/**
