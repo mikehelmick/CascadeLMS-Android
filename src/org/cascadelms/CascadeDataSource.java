@@ -1,49 +1,57 @@
 package org.cascadelms;
-import java.util.ArrayList;
+
 import java.util.List;
 
+import org.cascadelms.data_models.Assignment;
 import org.cascadelms.data_models.Course;
+import org.cascadelms.data_models.Document;
+import org.cascadelms.data_models.StreamItem;
 
-
-public class CascadeDataSource 
-{
-	//private HTTPRequester;
-	//private XMLReader;
+/**
+ * An interface for objects that provide access to Cascade LMS data.  This interface defines the signatures of methods
+ * used to retrieve model data from the Cascade server.  How that data is obtained is left up to the 
+ * implementer.
+ */
+public interface CascadeDataSource 
+{		
+	/**
+	 * Retrieves a listing of courses which user is currently registered for.
+	 * @return a {@link List} of {@link Course} objects.
+	 */
+	public abstract List<Course> getRegisteredCourses();
 	
 	/**
-	 * Constructs a new instance of {@link CascadeDataSource}.  No actual communications take 
-	 * place in the constructor, so it returns very quickly.
+	 * Retrieves course data based on its id in the Cascade database.
+	 * @param id the id of the course in the cascade database
+	 * @return a {@link Course} with the given id
 	 */
-	public CascadeDataSource()
-	{
-		/* Initialize HTTPRequester and XMLReader when implemented. TODO */
-	}
-	
-	
-	public List<Course> getAvailableCourses()
-	{
-		return CascadeDataSource.FakeData.courseList;
-	}
+	public abstract Course getCourseById( int id );
 	
 	/**
-	 * A class for storing test data.  CascadeDataSource should return data from this class 
-	 * until actual server communications are implemented. 
-	 * @author Alex
-	 *
+	 * Retrieves all the items from the user's social stream.
+	 * @return a {@link List} of {@link StreamItem} objects
 	 */
-	private static class FakeData
-	{
-		static ArrayList<Course> courseList;
-		
-		/* Static initializer */
-		{
-			courseList = new ArrayList<Course>();	
-			courseList.add( new Course( 0, "CS5002-Senior Design", null ) );
-			courseList.add( new Course( 1, "CS6037-Machine Learning", null ) );
-			courseList.add( new Course( 2, "CS6033-Artificial Intellegence", null ) );
-			courseList.add( new Course( 3, "CS6054-Info Retrieval", null ) );
-			courseList.add( new Course( 4, "CS6067-User Interface", null ) );
-		};
-		
-	}
+	public abstract List<StreamItem> getAllSocialStreamItems();
+	
+	/**
+	 * Retrieves only items from the user's social stream which are related to a specified
+	 * course.
+	 * @param courseId the id of the course to filter by
+	 * @return a {@link List} of {@link StreamItem} objects
+	 */
+	public abstract List<StreamItem> getAllSocialStreamItemsForCourse( int courseId );
+	
+	/**
+	 * Retrieves assignments for a given course from the database.  
+	 * @param courseId the id of the course to filter by
+	 * @return a {@link List} of {@link Assignment} objects
+	 */
+	public abstract List<Assignment> getAllAssignmentsForCourse( int courseId );
+	
+	/**
+	 * Retrieves an assignment given its database id
+	 * @param id the id of the assignment in the database
+	 * @return the {@link Assignment}
+	 */
+	public abstract Assignment getAssignmentById( int id );
 }

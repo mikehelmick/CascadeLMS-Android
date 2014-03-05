@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public class StreamItem 
 {
+	/* Required Attributes */
 	private final long id;
 	private final ItemType type;
 	private final Date summaryDate;

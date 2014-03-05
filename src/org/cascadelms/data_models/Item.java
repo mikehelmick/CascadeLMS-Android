@@ -6,8 +6,8 @@ package org.cascadelms.data_models;
  */
 public abstract class Item 
 {
-	private final long id;
-	private final String title;
+	protected final long id;
+	protected final String title;
 	
 	Item( long id, String title )
 	{
