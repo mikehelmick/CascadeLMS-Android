@@ -177,7 +177,7 @@ public class Assignment extends Item
 	public class Builder
 	{
 		/* Required Attributes */
-		private final long id;
+		private final int id;
 		private final String title;
 		private AssignmentCategory category;
 		private Date openDate;
@@ -190,7 +190,7 @@ public class Assignment extends Item
 		private String description;
 		private double pointsEarned = Double.NaN;
 		
-		public Builder( long id, String title, AssignmentCategory category, Date openDate, 
+		public Builder( int id, String title, AssignmentCategory category, Date openDate, 
 				Date dueDate, Date closeDate, boolean gradesReleased, double pointsPossible )
 		{
 			this.id = id;

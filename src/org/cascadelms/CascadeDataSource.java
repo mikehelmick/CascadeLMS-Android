@@ -3,6 +3,7 @@ package org.cascadelms;
 import java.util.List;
 
 import org.cascadelms.data_models.Assignment;
+import org.cascadelms.data_models.BlogPost;
 import org.cascadelms.data_models.Course;
 import org.cascadelms.data_models.Document;
 import org.cascadelms.data_models.StreamItem;
@@ -54,4 +55,33 @@ public interface CascadeDataSource
 	 * @return the {@link Assignment}
 	 */
 	public abstract Assignment getAssignmentById( int id );
+	
+	/**
+	 * Retrieves all documents associated with the given course id.
+	 * @param courseId the database id of a course to filter by
+	 * @return a {@link List} of {@link Document} objects
+	 */
+	public abstract List<Document> getAllDocumentsForCourse( int courseId );
+	
+//	/** TODO uncomment or remove after researching Android file transfer methods.
+//	 * Retrieves the file associated with a {@link Document}
+//	 * @deprecated until the Documents design is solidified.
+//	 * @param documentId
+//	 * @return
+//	 */
+//	public abstract File getDocumentFile( int documentId );
+	
+	/**
+	 * Retrieves all blog posts related to a specified course.
+	 * @param courseId the database id of course to filter by
+	 * @return a {@link List} of {@link BlogPost} objects
+	 */
+	public abstract List<BlogPost> getAllBlogPostsForCourse( int courseId );
+	
+	/**
+	 * Retrieves a blog post given its id
+	 * @param id the database id of the blog post
+	 * @return the {@link BlogPost}
+	 */
+	public abstract BlogPost getBlogPostById( int id );
 }
