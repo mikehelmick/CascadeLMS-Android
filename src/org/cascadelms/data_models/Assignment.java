@@ -174,7 +174,7 @@ public class Assignment extends Item
 	 * can be set with the <code>Builder</code>'s set methods.  Finally, create the 
 	 * <code>Assignment</code> by calling <code>Builder.build()</code>.
 	 */
-	public class Builder
+	public static class Builder
 	{
 		/* Required Attributes */
 		private final int id;

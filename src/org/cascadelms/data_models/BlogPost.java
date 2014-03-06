@@ -73,7 +73,7 @@ public class BlogPost extends Item
 		return comments;
 	}
 	
-	public class Builder
+	public static class Builder
 	{
 		/* Required Attributes */
 		private int id;

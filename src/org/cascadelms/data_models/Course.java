@@ -63,7 +63,7 @@ public class Course
 	 * can be set with the <code>Builder</code>'s set methods.  Finally, create the 
 	 * <code>Course</code> by calling <code>Builder.build()</code>.
 	 */
-	public class Builder
+	public static class Builder
 	{
 		private int id;
 		private String title;

@@ -1,12 +1,6 @@
-package org.cascadelms;
+package org.cascadelms.data_models;
 
 import java.util.List;
-
-import org.cascadelms.data_models.Assignment;
-import org.cascadelms.data_models.BlogPost;
-import org.cascadelms.data_models.Course;
-import org.cascadelms.data_models.Document;
-import org.cascadelms.data_models.StreamItem;
 
 /**
  * An interface for objects that provide access to Cascade LMS data.  This interface defines the signatures of methods
