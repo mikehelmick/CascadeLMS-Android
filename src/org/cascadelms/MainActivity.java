@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.cascadelms.CourseFragment.CourseDataProvider;
+import org.cascadelms.data_models.CascadeDataSource;
+import org.cascadelms.data_models.FakeDataSource;
 import org.cascadelms.fragments.AssignmentsFragment;
 import org.cascadelms.fragments.CourseBlogFragment;
 import org.cascadelms.fragments.DocumentsFragment;
@@ -57,6 +59,8 @@ public class MainActivity extends ActionBarActivity implements
     
     private int selectedCourseId = MainActivity.NO_COURSE_SELECTED;
     private String selectedCourseTitle = "";
+    
+    private CascadeDataSource dataSource;
 
     private class CourseEntry
     {
@@ -160,6 +164,8 @@ public class MainActivity extends ActionBarActivity implements
     {
         super.onCreate(savedInstanceState);
 
+        this.dataSource = new FakeDataSource();
+        
         // TODO: Make this better.
         SharedPreferences preferences = getSharedPreferences(PREFS_AUTH, 0);
         boolean loggedIn = preferences.getBoolean("loggedIn", false);
