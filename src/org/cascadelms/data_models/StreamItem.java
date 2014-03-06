@@ -5,6 +5,8 @@ import java.util.Date;
 
 /**
  * An immutable data model class representing a single stream item.
+ * <p>
+ * Note this class does not use the Builder pattern because all of its fields are mandatory.
  * 
  */
 public class StreamItem 
