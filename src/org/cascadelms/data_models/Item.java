@@ -11,6 +11,10 @@ public abstract class Item
 	
 	Item( long id, String title )
 	{
+		if( title == null )
+		{
+			throw new IllegalArgumentException( "Item cannot have a null title." );
+		}
 		this.id = id;
 		this.title = title;
 	}
