@@ -13,7 +13,7 @@ public class Document extends Item
 	private final long fileSize;
 	private final URL documentURL;
 	
-	public Document( long id, String title, String extension, long fileSize, URL documentURL )
+	public Document( int id, String title, String extension, long fileSize, URL documentURL )
 	{
 		super( id, title );
 		

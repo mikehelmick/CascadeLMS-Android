@@ -6,10 +6,10 @@ package org.cascadelms.data_models;
  */
 public abstract class Item 
 {
-	protected final long id;
+	protected final int id;
 	protected final String title;
 	
-	Item( long id, String title )
+	Item( int id, String title )
 	{
 		if( title == null )
 		{
@@ -19,7 +19,7 @@ public abstract class Item
 		this.title = title;
 	}
 	
-	public long getId()
+	public int getId()
 	{
 		return this.id;
 	}
