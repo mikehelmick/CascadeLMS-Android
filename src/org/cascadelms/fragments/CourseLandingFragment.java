@@ -17,6 +17,7 @@ import org.cascadelms.R;
 public class CourseLandingFragment extends Fragment
 {
     ViewPager mViewPager = null;
+    int mCourseId = -1;
 
     public void switchView(int position)
     {
@@ -44,7 +45,9 @@ public class CourseLandingFragment extends Fragment
                 case 4: fragment = new GradesFragment(); break;
             }
 
-            // TODO: Course IDs
+            Bundle bundle = new Bundle();
+            bundle.putInt("courseId", mCourseId);
+            fragment.setArguments(bundle);
 
             return fragment;
         }
@@ -61,6 +64,11 @@ public class CourseLandingFragment extends Fragment
                              Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        Bundle arguments = getArguments();
+
+        if (arguments != null)
+            mCourseId = arguments.getInt("courseId", -1);
 
         View view = inflater.inflate(R.layout.fragment_courselanding,
                 null);

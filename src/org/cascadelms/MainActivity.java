@@ -356,9 +356,6 @@ public class MainActivity extends ActionBarActivity implements
     {
         FragmentManager manager = getSupportFragmentManager();
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("courseId", courseId);
-
         Fragment fragment = null;
         FragmentTransaction transaction = manager.beginTransaction();
 
@@ -378,6 +375,10 @@ public class MainActivity extends ActionBarActivity implements
             // Back navigation only if we aren't on the "home" fragment
             transaction.addToBackStack(BACKTAG_COURSELANDING);
         }
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("courseId", courseId);
+        fragment.setArguments(bundle);
 
         transaction.replace(R.id.content_frame, fragment);
         transaction
