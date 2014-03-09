@@ -11,16 +11,15 @@ import android.widget.TextView;
 public class DocumentsFragment extends HttpCommunicatorFragment
 {
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState)
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState )
     {
-        super.onCreateView(inflater, container, savedInstanceState);
+        super.onCreateView( inflater, container, savedInstanceState );
         
         View view = inflater.inflate( R.layout.fragment_documents, null );
-        TextView label = (TextView)view.findViewById(R.id.placeholder);
+        TextView label = (TextView)view.findViewById( R.id.placeholder );
         
         label.append(" " + getCourseId());
-        
         return view;
     }
 
