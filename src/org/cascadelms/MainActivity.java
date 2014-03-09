@@ -1,15 +1,14 @@
 package org.cascadelms;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.cascadelms.fragments.AssignmentsFragment;
 import org.cascadelms.fragments.CourseBlogFragment;
+import org.cascadelms.fragments.CourseLandingFragment;
 import org.cascadelms.fragments.DocumentsFragment;
 import org.cascadelms.fragments.GradesFragment;
 import org.cascadelms.fragments.HttpCommunicatorFragment;
 import org.cascadelms.fragments.SocialStreamFragment;
-import org.cascadelms.fragments.SocialStreamFragment.SubpageNavListener;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +16,15 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,21 +43,42 @@ import android.widget.Toast;
  * Cascade app.
  */
 public class MainActivity extends ActionBarActivity implements
-        FragmentManager.OnBackStackChangedListener, SubpageNavListener
+        FragmentManager.OnBackStackChangedListener, ActionBar.TabListener
 {
     private static final String PREFS_AUTH = "AuthenticationData";
-    private static final String BACKTAG_HOME = "Home";
-    private static final String BACKTAG_COURSEHOME = "CourseHome";
-    private static final String BACKTAG_COURSESUBPAGE = "CourseSubpage";
-    private static final int FRAGMENT_OTHER = -1;
-    private static final int FRAGMENT_HOME = 0;
     private static final int COURSE_NONE = -1;
-    private static final int COURSE_EXISTING = -2;
-    private static final int COURSE_UNSET = -3;
+    private static final String BACKTAG_COURSELANDING = "CourseLanding";
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
+
+    private int[] mTabFragmentIdList =
+    {
+        R.string.fragment_socialstream,
+        R.string.fragment_courseblog,
+        R.string.fragment_documents,
+        R.string.fragment_assignments,
+        R.string.fragment_grades
+    };
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction)
+    {
+        FragmentManager manager = getSupportFragmentManager();
+
+        CourseLandingFragment landingFragment =
+                (CourseLandingFragment) manager.findFragmentById(R.id.content_frame);
+
+        if (landingFragment != null)
+            landingFragment.switchView(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
 
     private class CourseEntry
     {
@@ -147,7 +173,14 @@ public class MainActivity extends ActionBarActivity implements
         public void onItemClick(AdapterView<?> parent, View view, int position,
                 long id)
         {
-            handleCourseNavItem(position);
+            Integer newCourseId = (Integer) mDrawerList.getItemAtPosition(position);
+
+            if (newCourseId != null)
+                setCourseId(newCourseId);
+            else
+                Log.e(getLocalClassName(), "Course item out of range.");
+
+            mDrawerLayout.closeDrawer(mDrawerList);
         }
     }
 
@@ -253,12 +286,23 @@ public class MainActivity extends ActionBarActivity implements
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        ActionBar actionbar = getSupportActionBar();
 
-        // Jump to home fragment.
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeButtonEnabled(true);
+
+        for (int i = 0; i < mTabFragmentIdList.length; ++i)
+        {
+            ActionBar.Tab tab = actionbar.newTab();
+
+            tab.setText(getString(mTabFragmentIdList[i])).setTabListener(this);
+
+            actionbar.addTab(tab);
+        }
+
+        // Jump to home.
         if (savedInstanceState == null)
-            setFragment(FRAGMENT_HOME, COURSE_NONE);
+            setCourseId(COURSE_NONE);
     }
 
     private void logOut()
@@ -300,185 +344,67 @@ public class MainActivity extends ActionBarActivity implements
 
         mCourseList.add(new CourseEntry(id, name));
     }
-
-    private void handleCourseNavItem(int position)
-    {
-        int newCourseId = (Integer) mDrawerList.getItemAtPosition(position);
-
-        setFragment(FRAGMENT_HOME, newCourseId);
-
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-    @Override
-    public void handleSubpageNavItem(int subpageId)
-    {
-        setFragment(subpageId, COURSE_EXISTING);
-    }
-
-    private HttpCommunicatorFragment subpageClassFactory(int fragmentId)
-    {
-        HttpCommunicatorFragment fragment;
-
-        switch (fragmentId)
-        {
-        case R.string.fragment_courseblog:
-            fragment = new CourseBlogFragment();
-            break;
-        case R.string.fragment_documents:
-            fragment = new DocumentsFragment();
-            break;
-        case R.string.fragment_assignments:
-            fragment = new AssignmentsFragment();
-            break;
-        case R.string.fragment_grades:
-            fragment = new GradesFragment();
-            break;
-        default:
-            fragment = new SocialStreamFragment();
-        }
-
-        return fragment;
-    }
-    
-    private FragmentCourseInfo getCurrentFragmentCourse()
-    {
-        FragmentManager manager = getSupportFragmentManager();
-
-        // Get current top fragment
-        HttpCommunicatorFragment topFragment = (HttpCommunicatorFragment) manager
-                .findFragmentById(R.id.content_frame);
-
-        int fragmentId = FRAGMENT_OTHER;
-        int courseId = COURSE_UNSET;
-        String fragmentTitle = null;
-
-        if (topFragment != null)
-        {
-            fragmentId = topFragment.getFragmentId();
-            courseId = topFragment.getCourseId();
-            fragmentTitle = topFragment.getFragmentTitle();
-        }
-        
-        return new FragmentCourseInfo(fragmentId, courseId, fragmentTitle);
-    }
     
     private void goUp()
     {
         FragmentManager manager = getSupportFragmentManager();
-        FragmentCourseInfo old = getCurrentFragmentCourse();
-        
-        if (old.fragment == FRAGMENT_OTHER)
-            manager.popBackStack();
-        else if (old.fragment == FRAGMENT_HOME)
-            manager.popBackStack(BACKTAG_COURSEHOME,
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        else
-            manager.popBackStack(BACKTAG_COURSESUBPAGE,
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        manager.popBackStack();
     }
 
-    private void setFragment(int fragmentId, int courseId)
+    private void setCourseId(int courseId)
     {
         FragmentManager manager = getSupportFragmentManager();
-        FragmentCourseInfo old = getCurrentFragmentCourse();
-        
-        int oldCourseId = old.course;
-        int oldFragmentId = old.fragment;
 
-        // Only switch if we aren't already on the subpage.
-        if (oldCourseId != courseId || oldFragmentId != fragmentId)
+        Bundle bundle = new Bundle();
+        bundle.putInt("courseId", courseId);
+
+        Fragment fragment = null;
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        // "No course" - show main Social Stream.
+        if (courseId == COURSE_NONE)
         {
-            String backstackTag;
+            fragment = new SocialStreamFragment();
 
-            // Tag fragments for up functionality.
-            if (courseId != COURSE_NONE)
-            {
-                if (fragmentId == FRAGMENT_HOME)
-                    backstackTag = BACKTAG_COURSEHOME;
-                else
-                    backstackTag = BACKTAG_COURSESUBPAGE;
-            }
-            else
-            {
-                backstackTag = BACKTAG_HOME;
-                
-                // If we're at home, clear stack.
-                manager.popBackStack(BACKTAG_COURSEHOME,
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
-
-            // Instantiate the appropriate fragment.
-            HttpCommunicatorFragment fragment = subpageClassFactory(fragmentId);
-
-            Bundle bundle = new Bundle();
-
-            // Reuse existing courseId
-            if (courseId == COURSE_EXISTING)
-                bundle.putInt("courseId", oldCourseId);
-            else
-                bundle.putInt("courseId", courseId);
-            // For saved configs.
-            bundle.putInt("fragmentId", fragmentId);
-
-            fragment.setArguments(bundle);
-
-            FragmentTransaction transaction = manager.beginTransaction();
-
-            transaction.replace(R.id.content_frame, fragment);
-            transaction
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
-            // Add to back stack but only if this is not the home fragment.
-            if (courseId != COURSE_NONE)
-                transaction.addToBackStack(backstackTag);
-
-            transaction.commit();
+            // Clear backstack.
+            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+        // We have a course, show the course landing fragment.
+        else
+        {
+            fragment = new CourseLandingFragment();
+
+            // Back navigation only if we aren't on the "home" fragment
+            transaction.addToBackStack(BACKTAG_COURSELANDING);
+        }
+
+        transaction.replace(R.id.content_frame, fragment);
+        transaction
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+        transaction.commit();
+
+        ActionBar actionbar = getSupportActionBar();
     }
 
     private void updateActionBar()
     {
-        FragmentCourseInfo old = getCurrentFragmentCourse();
-        
-        int courseId = old.course;
-        int fragmentId = old.fragment;
-        String fragmentTitle = old.title;
+        FragmentManager manager = getSupportFragmentManager();
 
-        if (courseId != COURSE_NONE)
+        Fragment fragment = manager.findFragmentById(R.id.content_frame);
+
+        mDrawerToggle.setDrawerIndicatorEnabled(fragment instanceof SocialStreamFragment
+                || fragment instanceof CourseLandingFragment);
+
+        ActionBar actionbar = getSupportActionBar();
+
+        // Toggle the use of tabs.
+        if (fragment instanceof CourseLandingFragment)
         {
-            boolean foundCourse = false;
-
-            // Find course with this ID and grab its name for the Action Bar
-            // subtitle.
-            for (Iterator<CourseEntry> iter = mCourseList.iterator(); iter
-                    .hasNext();)
-            {
-                CourseEntry entry = iter.next();
-
-                if (entry.id == courseId)
-                {
-                    getSupportActionBar().setTitle(entry.name);
-                    foundCourse = true;
-                    break;
-                }
-            }
-
-            if (foundCourse)
-                getSupportActionBar().setSubtitle(fragmentTitle);
-            else
-                getSupportActionBar().setSubtitle(null);
+            actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         }
-        else
-        {
-            if (fragmentTitle != null)
-                getSupportActionBar().setTitle(fragmentTitle);
-            else
-                getSupportActionBar().setTitle(getTitle());
-            getSupportActionBar().setSubtitle(null);
-        }
-        
-        // Up navigation when inside a course subpage.
-        mDrawerToggle.setDrawerIndicatorEnabled(fragmentId == FRAGMENT_HOME);
+        else if (actionbar.getNavigationMode() != ActionBar.NAVIGATION_MODE_STANDARD)
+            actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
 }

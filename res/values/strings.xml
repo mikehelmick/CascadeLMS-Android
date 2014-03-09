@@ -19,8 +19,9 @@
     <string name="toast_logout">Successfully logged out!</string>
     <string name="text_username">Username</string>
     <string name="text_password">Password</string>
-    
-    <!-- Subpage fragments -->
+
+    <!-- Main Fragments -->
+    <string name="fragment_socialstream">Social Stream</string>
     <string name="fragment_courseblog">Course Blog</string>
     <string name="fragment_documents">Documents</string>
     <string name="fragment_assignments">Assignments</string>

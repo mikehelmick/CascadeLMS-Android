@@ -5,16 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <GridView
-        android:id="@+id/subpage_category_grid"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="auto_fit"
-        android:columnWidth="150dp"
-        android:gravity="center">
-
-    </GridView>
-
     <ListView
         android:id="@+id/socialstream_list"
         android:layout_width="match_parent"
