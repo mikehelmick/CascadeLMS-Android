@@ -78,6 +78,7 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 		case LoaderCodes.LOADER_CODE_DOCUMENTS:
 		{
 			LOGGER.info( "DocumentsFragment began loading Documents." );
+			this.setEmptyText( this.getString( R.string.fragment_documents_list_loading_message ) );
 			return new DocumentsLoader( this.getActivity(), this.dataSource, this.courseId );
 		}
 		default:
