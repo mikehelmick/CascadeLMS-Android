@@ -80,5 +80,13 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 		this.adapter.clear();
 	}
 	
+	/**
+	 * An interface for providing Documents data.
+	 */
+	public interface DocumentsDataSource 
+	{
+		public List<Document> getDocumentsForCourse( int courseId );
+	}
+	
 	private static Logger LOGGER = Logger.getLogger( DocumentsFragment.class.getName() );
 }
