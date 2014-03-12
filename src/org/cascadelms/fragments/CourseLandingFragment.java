@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.cascadelms.R;
+import org.cascadelms.course_documents.DocumentsFragment;
 
 public class CourseLandingFragment extends Fragment
 {
