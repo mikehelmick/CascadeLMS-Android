@@ -56,14 +56,10 @@ public class CourseLandingFragment extends Fragment
                 case 0: fragment = new SocialStreamFragment(); break;
                 case 1: fragment = new CourseBlogFragment(); break;
                 case 2: return DocumentsFragment.newInstance( CourseLandingFragment.this.getCourse() );
-                case 3: fragment = new AssignmentsFragment(); break;
+                case 3: return AssignmentsFragment.newInstance( CourseLandingFragment.this.getCourse() );
                 case 4: fragment = new GradesFragment(); break;
             }
 
-            /* TODO Using a static method inside the Fragment class to create and set the argument bundle 
-             * allows you to enforce the presence and type of required arguments. The accepted answer 
-             * here has a great example of how to use this:
-             * http://stackoverflow.com/questions/9245408/best-practice-for-instantiating-a-new-android-fragment */
             Bundle bundle = new Bundle();
             bundle.putInt( "courseId", CourseLandingFragment.this.getCourse().getId() );
             fragment.setArguments(bundle);
