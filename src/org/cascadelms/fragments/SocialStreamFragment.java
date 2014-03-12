@@ -7,9 +7,6 @@ import org.cascadelms.socialstream.SocialStreamAdapter;
 import org.cascadelms.socialstream.SocialStreamPost;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,73 +15,78 @@ import android.widget.ListView;
 
 public class SocialStreamFragment extends HttpCommunicatorFragment
 {
-    private class SocialStreamItemClickListener implements AdapterView.OnItemClickListener
-    {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-        {
-            // TODO: Supply post object
-            goToPostDetail(null);
-        }
-    }
+	private class SocialStreamItemClickListener implements
+			AdapterView.OnItemClickListener
+	{
+		@Override
+		public void onItemClick( AdapterView<?> parent, View view,
+				int position, long id )
+		{
+			// TODO: Supply post object
+			// goToPostDetail( null );
+		}
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState)
-    {
-        super.onCreateView(inflater, container, savedInstanceState);
+	@Override
+	public View onCreateView( LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState )
+	{
+		super.onCreateView( inflater, container, savedInstanceState );
 
-        View view = inflater.inflate(R.layout.fragment_socialstream, null);
-        
-        ListView socialstreamList = (ListView) view.findViewById(R.id.socialstream_list);
-        
-        if (socialstreamList != null)
-        {
-            ArrayList<SocialStreamPost> postList = new ArrayList<SocialStreamPost>();
-            
-            for (int i = 0; i < 10; ++i)
-                postList.add(new SocialStreamPost());
-            
-            socialstreamList.setAdapter(new SocialStreamAdapter(view.getContext(), postList));
-            socialstreamList.setOnItemClickListener(new SocialStreamItemClickListener());
-        }
+		View view = inflater.inflate( R.layout.fragment_socialstream, null );
 
-        return view;
-    }
-    
-    private void goToPostDetail(SocialStreamPost parentPost)
-    {
-        ActionBarActivity activity = (ActionBarActivity) getActivity();
-        FragmentManager manager = activity.getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        
-        SocialStreamDetailFragment fragment = new SocialStreamDetailFragment();
+		ListView socialstreamList = (ListView) view
+				.findViewById( R.id.socialstream_list );
 
-        transaction.replace(R.id.content_frame, fragment);
-        transaction
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		if( socialstreamList != null )
+		{
+			ArrayList<SocialStreamPost> postList = new ArrayList<SocialStreamPost>();
 
-        // Add to back stack but only if this is not the home fragment.
-        transaction.addToBackStack(null);
+			for ( int i = 0; i < 10; ++i )
+				postList.add( new SocialStreamPost() );
 
-        transaction.commit();
-    }
+			socialstreamList.setAdapter( new SocialStreamAdapter( view
+					.getContext(), postList ) );
+			socialstreamList
+					.setOnItemClickListener( new SocialStreamItemClickListener() );
+		}
 
-    @Override
-    protected String getSubpageLocation()
-    {
-        int courseId = getCourseId();
+		return view;
+	}
 
-        if (courseId == -1)
-            return "home";
-        else
-            return "course/" + courseId;
-    }
+	// private void goToPostDetail(SocialStreamPost parentPost)
+	// {
+	// ActionBarActivity activity = (ActionBarActivity) getActivity();
+	// FragmentManager manager = activity.getSupportFragmentManager();
+	// FragmentTransaction transaction = manager.beginTransaction();
+	//
+	// SocialStreamDetailFragment fragment = new SocialStreamDetailFragment();
+	//
+	// transaction.replace(R.id.content_frame, fragment);
+	// transaction
+	// .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+	//
+	// // Add to back stack but only if this is not the home fragment.
+	// transaction.addToBackStack(null);
+	//
+	// transaction.commit();
+	// }
 
-    @Override
-    public String getFragmentTitle()
-    {
-        return null;
-    }
+	@Override
+	protected String getSubpageLocation()
+	{
+		int courseId = getCourseId();
+
+		if( courseId == -1 )
+			return "home";
+		else
+			return "course/" + courseId;
+	}
+
+	@Override
+	public String getFragmentTitle()
+	{
+		return null;
+	}
 
 }
