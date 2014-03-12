@@ -67,6 +67,12 @@ public class Course implements Parcelable
 		return this.id == HOME.id;
 	}
 	
+	@Override
+	public String toString() 
+	{
+		return this.title;
+	}
+	
 	/**
 	 * A builder class used to construct new {@link Course} instances.  The <code>
 	 * Builder</code> is constructed with the required attributes.  Optional attributes 
