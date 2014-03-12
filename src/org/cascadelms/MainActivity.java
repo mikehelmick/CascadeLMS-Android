@@ -41,7 +41,7 @@ import android.widget.Toast;
  * Cascade app.
  */
 public class MainActivity extends ActionBarActivity implements
-        FragmentManager.OnBackStackChangedListener, ActionBar.TabListener, LoaderCallbacks<List<Course>>
+        FragmentManager.OnBackStackChangedListener, LoaderCallbacks<List<Course>>
 {
     private static final String PREFS_AUTH = "AuthenticationData";
     private static final String BACKTAG_COURSELANDING = "CourseLanding";
@@ -53,31 +53,12 @@ public class MainActivity extends ActionBarActivity implements
     
     private CourseDataSource courseDataSource;
 
-    private int[] mTabFragmentIdList =
-    {
-        R.string.fragment_socialstream,
-        R.string.fragment_courseblog,
-        R.string.fragment_documents,
-        R.string.fragment_assignments,
-        R.string.fragment_grades
-    };
-
-    @Override
-    public void onTabSelected( ActionBar.Tab tab, FragmentTransaction fragmentTransaction )
-    {
-    	
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
-
-    // Used to map and list courses and subpages.
+	/**
+	 * Used to map and list courses and subpages.
+	 */
     private class CourseNavAdapter extends ArrayAdapter<Course>
     {
-        public CourseNavAdapter(Context context )
+        public CourseNavAdapter( Context context )
         {
         	super( context, android.R.layout.simple_list_item_1 );
         	this.add( Course.HOME );
@@ -235,15 +216,6 @@ public class MainActivity extends ActionBarActivity implements
 
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeButtonEnabled(true);
-
-        for (int i = 0; i < mTabFragmentIdList.length; ++i)
-        {
-            ActionBar.Tab tab = actionbar.newTab();
-
-            tab.setText(getString(mTabFragmentIdList[i])).setTabListener(this);
-
-            actionbar.addTab(tab);
-        }
 
         // Jump to home.
         if (savedInstanceState == null)
