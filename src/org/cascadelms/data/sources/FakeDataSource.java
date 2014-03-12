@@ -171,8 +171,10 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource
 	
 	/* DocumentsDataSource */
 	@Override
-	public List<Document> getDocumentsForCourse(int courseId) {
-		switch (courseId) {
+	public List<Document> getDocumentsForCourse( int courseId ) 
+	{
+		switch ( courseId ) 
+		{
 		case COURSE_ID_DESIGN: {
 			return documentsListDesign;
 		}
