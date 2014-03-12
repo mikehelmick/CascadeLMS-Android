@@ -59,9 +59,9 @@ public class StreamActivity extends ActionBarActivity implements
 		mCourseNavAdapter = new CourseNavAdapter( this );
 		mDrawerList = (ListView) findViewById( R.id.activity_stream_drawer );
 		mDrawerList.setAdapter( mCourseNavAdapter );
+		mDrawerList.setOnItemClickListener( this );
 
 		/* Sets up the drawer toggle */
-		mDrawerList.setOnItemClickListener( this );
 		DrawerLayout drawer = (DrawerLayout) this
 				.findViewById( R.id.activity_stream_drawer_layout );
 		mDrawerToggle = new ActionBarDrawerToggle( this, drawer,
@@ -151,7 +151,8 @@ public class StreamActivity extends ActionBarActivity implements
 	public void onItemClick( AdapterView<?> parent, View view, int position,
 			long id )
 	{
-		LOGGER.info( "Press on course " + id + " in the nav drawer." );
+		LOGGER.info( "Press on course " + id
+				+ " in the StreamActivity nav drawer." );
 		this.startCourseActivity( mCourseNavAdapter.getItem( position ) );
 	}
 
