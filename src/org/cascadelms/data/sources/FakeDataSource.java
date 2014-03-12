@@ -7,17 +7,22 @@ import java.util.List;
 
 import org.cascadelms.MainActivity.CourseDataSource;
 import org.cascadelms.course_documents.DocumentsFragment.DocumentsDataSource;
+import org.cascadelms.data.models.Assignment;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
+import org.cascadelms.fragments.AssignmentsFragment.AssignmentsDataSource;
 
-public class FakeDataSource implements CourseDataSource, DocumentsDataSource
+public class FakeDataSource implements CourseDataSource, DocumentsDataSource, AssignmentsDataSource
 {
 	private static ArrayList<Course> courseList;
+	
 	private static ArrayList<Document> documentsListDesign;
 	private static ArrayList<Document> documentsListMachine;
 	private static ArrayList<Document> documentsListAI;
 	private static ArrayList<Document> documentsListInfo;
 	private static ArrayList<Document> documentsListUI;
+	
+	private static ArrayList<Assignment> emptyAssignmentsList;
 
 	/* Constants */
 	private static final int COURSE_ID_DESIGN = 0;
@@ -144,6 +149,10 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource
 		
 		/* Leaves the UI course as an empty list with no Documents. */
 		documentsListUI = new ArrayList<Document>();
+		
+		/* Builds Assignment lists for each course. */
+		emptyAssignmentsList = new ArrayList<Assignment>();
+		/* TODO Create a list of fake data to return for each course. */
 	}
 	
 	private static FakeDataSource instance;
@@ -195,11 +204,6 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource
 		}
 		}
 
-		// @Override
-		// public List<Course> getRegisteredCourses()
-		// {
-		// return courseList;
-		// }
 		//
 		// @Override
 		// public Course getCourseById(int id)
@@ -222,22 +226,9 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource
 		// throw new UnsupportedOperationException( "Method not implemented." );
 		// }
 		//
-		// @Override
-		// public List<Assignment> getAllAssignmentsForCourse(int courseId)
-		// {
-		// // TODO Auto-generated method stub
-		// throw new UnsupportedOperationException( "Method not implemented." );
-		// }
 		//
 		// @Override
 		// public Assignment getAssignmentById(int id)
-		// {
-		// // TODO Auto-generated method stub
-		// throw new UnsupportedOperationException( "Method not implemented." );
-		// }
-		//
-		// @Override
-		// public List<Document> getAllDocumentsForCourse(int courseId)
 		// {
 		// // TODO Auto-generated method stub
 		// throw new UnsupportedOperationException( "Method not implemented." );
@@ -256,5 +247,38 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource
 		// // TODO Auto-generated method stub
 		// throw new UnsupportedOperationException( "Method not implemented." );
 		// }
+	}
+
+	@Override
+	public List<Assignment> getAssignmentsForCourse( int courseId ) 
+	{
+		/* TODO Return lists of fake data on a course by course basis. */
+		switch( courseId )
+		{
+		case COURSE_ID_DESIGN:
+		{
+			
+		}
+		case COURSE_ID_MACHINE_LEARNING:
+		{
+			
+		}
+		case COURSE_ID_AI:
+		{
+			
+		}
+		case COURSE_ID_INFO_RETRIEVAL:
+		{
+			
+		}
+		case COURSE_ID_UI:
+		{
+			
+		}
+		default:
+		{
+			return emptyAssignmentsList;
+		}
+		}
 	}
 }
