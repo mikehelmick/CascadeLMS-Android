@@ -53,8 +53,9 @@ public class AssignmentsFragment extends ListFragment implements LoaderCallbacks
     }
     
     /**
-     * 
-     * @return
+     * Retrieves the {@link Course} provided as an argument to this Fragment.  The value cannot be stored, 
+     * because the Fragment may be recreated by the FragmentManager at any time.  
+     * @return the <code>Course</code>
      */
     private Course getCourse()
     {
@@ -68,7 +69,7 @@ public class AssignmentsFragment extends ListFragment implements LoaderCallbacks
 		{
 		case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
 		{
-			return new AssignmentsLoader( this.getActivity(), assigmentsDataSource, id );
+			return new AssignmentsLoader( this.getActivity(), assigmentsDataSource, this.getCourse().getId() );
 		}
 		default:
 		{
