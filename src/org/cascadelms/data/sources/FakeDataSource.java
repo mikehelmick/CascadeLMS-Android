@@ -1,13 +1,17 @@
-package org.cascadelms.data_models;
+package org.cascadelms.data.sources;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cascadelms.MainActivity.CourseDataSource;
 import org.cascadelms.course_documents.DocumentsFragment.DocumentsDataSource;
+import org.cascadelms.data.models.Course;
+import org.cascadelms.data.models.Document;
 
-public class FakeDataSource implements DocumentsDataSource {
+public class FakeDataSource implements CourseDataSource, DocumentsDataSource
+{
 	private static ArrayList<Course> courseList;
 	private static ArrayList<Document> documentsListDesign;
 	private static ArrayList<Document> documentsListMachine;
@@ -39,7 +43,8 @@ public class FakeDataSource implements DocumentsDataSource {
 
 		/* Builds the documents list for each course. */
 		documentsListDesign = new ArrayList<Document>();
-		try {
+		try 
+		{
 			documentsListDesign.add(new Document(0, "Syllabus-2013", ".pdf",
 					20000, new URL("http://example.com/Syllabus2013.pdf")));
 			documentsListDesign.add(new Document(1, "Project Teams", ".txt",
@@ -140,7 +145,30 @@ public class FakeDataSource implements DocumentsDataSource {
 		/* Leaves the UI course as an empty list with no Documents. */
 		documentsListUI = new ArrayList<Document>();
 	}
+	
+	private static FakeDataSource instance;
+	
+	private FakeDataSource()
+	{
+		/* Private constructor */
+	}
+	
+	public static FakeDataSource getInstance()
+	{
+		if( instance == null )
+		{
+			instance = new FakeDataSource();
+		}
+		return instance;
+	}
 
+	/* CourseDataSource */
+	@Override
+	public List<Course> getAvailableCourses() 
+	{
+		return courseList;
+	}
+	
 	/* DocumentsDataSource */
 	@Override
 	public List<Document> getDocumentsForCourse(int courseId) {

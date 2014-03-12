@@ -1,7 +1,12 @@
 package org.cascadelms;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
+import org.cascadelms.data.loaders.CourseLoader;
+import org.cascadelms.data.loaders.LoaderCodes;
+import org.cascadelms.data.models.Course;
+import org.cascadelms.data.sources.FakeDataSource;
 import org.cascadelms.fragments.CourseLandingFragment;
 import org.cascadelms.fragments.SocialStreamFragment;
 
@@ -14,18 +19,19 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +41,7 @@ import android.widget.Toast;
  * Cascade app.
  */
 public class MainActivity extends ActionBarActivity implements
-        FragmentManager.OnBackStackChangedListener, ActionBar.TabListener
+        FragmentManager.OnBackStackChangedListener, ActionBar.TabListener, LoaderCallbacks<List<Course>>
 {
     private static final String PREFS_AUTH = "AuthenticationData";
     private static final int COURSE_NONE = -1;
@@ -44,6 +50,9 @@ public class MainActivity extends ActionBarActivity implements
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
+    private CourseNavAdapter mCourseNavAdapter;
+    
+    private CourseDataSource courseDataSource;
 
     private int[] mTabFragmentIdList =
     {
@@ -57,13 +66,12 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction)
     {
-        FragmentManager manager = getSupportFragmentManager();
-
-        CourseLandingFragment landingFragment =
-                (CourseLandingFragment) manager.findFragmentById(R.id.content_frame);
-
-        if (landingFragment != null)
-            landingFragment.switchView(tab.getPosition());
+//        FragmentManager manager = getSupportFragmentManager();
+//
+//        CourseLandingFragment landingFragment = CourseLandingFragment.newInstance();
+//
+//        if (landingFragment != null)
+//            landingFragment.switchView(tab.getPosition());
     }
 
     @Override
@@ -72,89 +80,45 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
 
-    private class CourseEntry
-    {
-        public final int id;
-        public final String name;
-
-        public CourseEntry(int courseId, String courseName)
-        {
-            id = courseId;
-            name = courseName;
-        }
-    }
-    
-    private class FragmentCourseInfo
-    {
-        public final int fragment;
-        public final int course;
-        public final String title;
-
-        public FragmentCourseInfo(int fragmentId, int courseId, String fragmentTitle)
-        {
-            fragment = fragmentId;
-            course = courseId;
-            title = fragmentTitle;
-        }
-    }
-
-    private ArrayList<CourseEntry> mCourseList;
-
     // Used to map and list courses and subpages.
-    private class CourseNavAdapter extends BaseAdapter
+    private class CourseNavAdapter extends ArrayAdapter<Course>
     {
-        private final int SECTION_HOME = 0;
-        private final int SECTION_COURSE_START = 1;
-
-        private Context mContext;
-        private ArrayList<CourseEntry> mCourseListRef;
-
-        public CourseNavAdapter(Context context,
-                ArrayList<CourseEntry> courseList)
+        public CourseNavAdapter(Context context )
         {
-            mContext = context;
-            mCourseListRef = courseList;
+        	super( context, android.R.layout.simple_list_item_1 );
+        	this.add( Course.HOME );
         }
 
         @Override
-        public int getCount()
+        public View getView( int position, View convertView, ViewGroup parent )
         {
-            return mCourseListRef.size() + SECTION_COURSE_START;
-        }
+        	/* Inflates a new view if the adapter doesn't provide one to reuse. */
+            if( convertView == null )
+            {
+            	convertView = LayoutInflater.from( this.getContext() )
+            			.inflate( android.R.layout.simple_list_item_1, parent, false );
+            }
 
-        @Override
-        public Object getItem(int position)
-        {
-            if (position == SECTION_HOME)
-                return COURSE_NONE;
+            TextView label = (TextView) convertView.findViewById( android.R.id.text1 );
+
+            if (position == Course.HOME.getId() )
+            {
+                label.setText( this.getContext().getString( R.string.course_navigation_home ));
+            }
             else
-                return mCourseListRef.get(position - SECTION_COURSE_START).id;
+            {
+                label.setText(this.getItem( position ).getTitle() );
+            }
+
+            return convertView;
         }
-
+        
         @Override
-        public long getItemId(int position)
+        public void clear() 
         {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            View newView = null;
-
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            newView = inflater.inflate(android.R.layout.simple_list_item_1,
-                    parent, false);
-            TextView label = (TextView) newView
-                    .findViewById(android.R.id.text1);
-
-            if (position == SECTION_HOME)
-                label.setText("Home");
-            else
-                label.setText(mCourseListRef.get(position
-                        - SECTION_COURSE_START).name);
-
-            return newView;
+        	super.clear();
+        	/* Ensures that HOME always appears in the list. */
+        	this.add( Course.HOME );
         }
     }
 
@@ -165,12 +129,9 @@ public class MainActivity extends ActionBarActivity implements
         public void onItemClick(AdapterView<?> parent, View view, int position,
                 long id)
         {
-            Integer newCourseId = (Integer) mDrawerList.getItemAtPosition(position);
+            Course newCourse = (Course) mDrawerList.getItemAtPosition(position);
 
-            if (newCourseId != null)
-                setCourseId(newCourseId);
-            else
-                Log.e(getLocalClassName(), "Course item out of range.");
+            setCourseId( newCourse );
 
             mDrawerLayout.closeDrawer(mDrawerList);
         }
@@ -180,6 +141,10 @@ public class MainActivity extends ActionBarActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        
+        /* Setup CourseDataSource and begin course loading. */
+        this.courseDataSource = FakeDataSource.getInstance();
+        this.getSupportLoaderManager().initLoader( 0, null, this ).forceLoad();
 
         // TODO: Make this better.
         SharedPreferences preferences = getSharedPreferences(PREFS_AUTH, 0);
@@ -260,15 +225,11 @@ public class MainActivity extends ActionBarActivity implements
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
                 GravityCompat.START);
 
-        // Add some dummy courses
-        clearCourses();
-        registerCourse(2, "CS App");
-        registerCourse(5, "CS5001 - Senior Design");
-        registerCourse(8, "Artificial Intelligence");
+        
 
-        CourseNavAdapter adapter = new CourseNavAdapter(this, mCourseList);
+        mCourseNavAdapter = new CourseNavAdapter( this );
 
-        mDrawerList.setAdapter(adapter);
+        mDrawerList.setAdapter( mCourseNavAdapter );
         mDrawerList.setOnItemClickListener(new CourseNavItemClickListener());
 
         // Set up drawer toggle
@@ -294,7 +255,7 @@ public class MainActivity extends ActionBarActivity implements
 
         // Jump to home.
         if (savedInstanceState == null)
-            setCourseId(COURSE_NONE);
+            setCourseId( Course.HOME );
     }
 
     private void logOut()
@@ -320,22 +281,6 @@ public class MainActivity extends ActionBarActivity implements
         startActivity(intent);
         finish();
     }
-
-    private void clearCourses()
-    {
-        if (mCourseList == null)
-            mCourseList = new ArrayList<CourseEntry>();
-
-        mCourseList.clear();
-    }
-
-    private void registerCourse(int id, String name)
-    {
-        if (mCourseList == null)
-            mCourseList = new ArrayList<CourseEntry>();
-
-        mCourseList.add(new CourseEntry(id, name));
-    }
     
     private void goUp()
     {
@@ -344,7 +289,7 @@ public class MainActivity extends ActionBarActivity implements
         manager.popBackStack();
     }
 
-    private void setCourseId(int courseId)
+    private void setCourseId( Course course )
     {
         FragmentManager manager = getSupportFragmentManager();
 
@@ -352,7 +297,7 @@ public class MainActivity extends ActionBarActivity implements
         FragmentTransaction transaction = manager.beginTransaction();
 
         // "No course" - show main Social Stream.
-        if (courseId == COURSE_NONE)
+        if ( course.isHome() )
         {
             fragment = new SocialStreamFragment();
 
@@ -362,23 +307,22 @@ public class MainActivity extends ActionBarActivity implements
         // We have a course, show the course landing fragment.
         else
         {
-            fragment = new CourseLandingFragment();
+            fragment = CourseLandingFragment.newInstance( course );
 
             // Back navigation only if we aren't on the "home" fragment
             transaction.addToBackStack(BACKTAG_COURSELANDING);
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("courseId", courseId);
-        fragment.setArguments(bundle);
+        //TODO change fragment argument passing.
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("courseId", courseId);
+//        fragment.setArguments(bundle);
 
         transaction.replace(R.id.content_frame, fragment);
         transaction
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
         transaction.commit();
-
-        ActionBar actionbar = getSupportActionBar();
     }
 
     private void updateActionBar()
@@ -400,4 +344,41 @@ public class MainActivity extends ActionBarActivity implements
         else if (actionbar.getNavigationMode() != ActionBar.NAVIGATION_MODE_STANDARD)
             actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
+    
+    public interface CourseDataSource
+    {
+    	public List<Course> getAvailableCourses();
+    }
+
+	@Override
+	public Loader<List<Course>> onCreateLoader( int id, Bundle args ) 
+	{
+		switch( id )
+		{
+		case LoaderCodes.LOADER_CODE_COURSES:
+		{
+			return new CourseLoader( this, this.courseDataSource );
+		}
+		default:
+		{
+			return null;
+		}
+		}
+	}
+
+	@Override
+	public void onLoadFinished( Loader<List<Course>> loader, List<Course> data ) 
+	{	
+		LOGGER.info( "MainActivity finished loading courses." );
+		this.mCourseNavAdapter.clear();
+		this.mCourseNavAdapter.addAll( data );
+	}
+
+	@Override
+	public void onLoaderReset( Loader<List<Course>> loader ) 
+	{
+		/* TODO Clear anything that relies on the loaders data. */
+	}
+	
+	private static Logger LOGGER = Logger.getLogger( MainActivity.class.getName() );
 }

@@ -1,4 +1,4 @@
-package org.cascadelms.data_models;
+package org.cascadelms.data.models;
 
 import java.util.Date;
 

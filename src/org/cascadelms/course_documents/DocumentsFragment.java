@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.cascadelms.R;
-import org.cascadelms.data_models.Document;
-import org.cascadelms.data_models.FakeDataSource;
+import org.cascadelms.data.loaders.DocumentsLoader;
+import org.cascadelms.data.loaders.LoaderCodes;
+import org.cascadelms.data.models.Course;
+import org.cascadelms.data.models.Document;
+import org.cascadelms.data.sources.FakeDataSource;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -26,16 +29,18 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 	
 	/* Constants */
 	private static final String ARGS_COURSE_ID = "org.cascadelms.args_course_id";
+	private static final String ARGS_COURSE_TITLE = "org.cascadelms.args_course_title";
 	
 	/**
 	 * Creates a new instance of <code>DocumentsFragment</code> using the specified course id.
 	 * @param courseId the database id of the course to pull data from.
 	 * @return a <code>DocumentsFragment</code> instance
 	 */
-	public static DocumentsFragment newInstance( int courseId )
+	public static DocumentsFragment newInstance( Course course )
 	{
 		Bundle args = new Bundle();
-		args.putInt( ARGS_COURSE_ID, courseId );
+		args.putInt( ARGS_COURSE_ID, course.getId() );
+		args.putString( ARGS_COURSE_TITLE, course.getTitle() );
 		DocumentsFragment instance =  new DocumentsFragment();
 		instance.setArguments( args );
 		return instance;
@@ -50,7 +55,7 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 		this.adapter = new DocumentAdapter( this.getActivity(), android.R.layout.simple_list_item_1 );
 		
 		/* Creates a data source and begins loading */
-		this.dataSource = new FakeDataSource();
+		this.dataSource = FakeDataSource.getInstance();
 		this.getActivity().getSupportLoaderManager().initLoader( 0, null, this ).forceLoad();
 		super.onCreate( savedInstanceState );
 	}
@@ -68,8 +73,18 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 	@Override
 	public Loader<List<Document>> onCreateLoader( int id, Bundle args ) 
 	{
-		LOGGER.info( "DocumentsFragment began loading Documents." );
-		return new DocumentsLoader( this.getActivity(), this.dataSource, this.courseId );
+		switch( id )
+		{
+		case LoaderCodes.LOADER_CODE_DOCUMENTS:
+		{
+			LOGGER.info( "DocumentsFragment began loading Documents." );
+			return new DocumentsLoader( this.getActivity(), this.dataSource, this.courseId );
+		}
+		default:
+		{
+			return null;
+		}
+		}
 	}
 
 	@Override

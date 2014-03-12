@@ -1,6 +1,12 @@
-package org.cascadelms.data_models;
+package org.cascadelms.data.sources;
 
 import java.util.List;
+
+import org.cascadelms.data.models.Assignment;
+import org.cascadelms.data.models.BlogPost;
+import org.cascadelms.data.models.Course;
+import org.cascadelms.data.models.Document;
+import org.cascadelms.data.models.StreamItem;
 
 /**
  * This class will eventually become the implementation of each fragment's data source interface.  

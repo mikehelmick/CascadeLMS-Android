@@ -1,4 +1,7 @@
-package org.cascadelms.data_models;
+package org.cascadelms.data.models;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /** 
  * An immutable data model class representing a single course from the CascadeLMS database.
@@ -6,7 +9,7 @@ package org.cascadelms.data_models;
  * New instances should be constructed using the {@link Course.Builder} class.
  * 
  */
-public class Course 
+public class Course implements Parcelable
 {	
 	/* Required Attributes */
 	private final int id;
@@ -14,6 +17,8 @@ public class Course
 	
 	/* Optional Attributes */
 	private final String shortDescription;
+	
+	public static Course HOME = new Course.Builder( 0, "Home" ).build();
 	
 	private Course( Course.Builder builder )
 	{
@@ -57,6 +62,11 @@ public class Course
 		return shortDescription;
 	}
 	
+	public boolean isHome()
+	{
+		return this.id == HOME.id;
+	}
+	
 	/**
 	 * A builder class used to construct new {@link Course} instances.  The <code>
 	 * Builder</code> is constructed with the required attributes.  Optional attributes 
@@ -80,9 +90,39 @@ public class Course
 			return new Course( this );
 		}
 		
-		public void setShortDescription( String shortDescription )
+		public Builder setShortDescription( String shortDescription )
 		{
 			this.shortDescription = shortDescription;
+			return this;
 		}
 	}
+
+	@Override
+	public int describeContents() 
+	{
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel( Parcel dest, int flags ) 
+	{
+		dest.writeInt( this.id );
+		dest.writeString( this.title );
+		dest.writeString( this.shortDescription );
+	}
+	
+	public static Parcelable.Creator<Course> CREATOR = new Parcelable.Creator<Course>() 
+	{
+		@Override
+		public Course createFromParcel( Parcel source ) 
+		{
+			return new Course.Builder( source.readInt(), source.readString() ).setShortDescription( source.readString() ).build();
+		}
+
+		@Override
+		public Course[] newArray( int size ) 
+		{
+			return new Course[size];
+		}
+	};
 }
