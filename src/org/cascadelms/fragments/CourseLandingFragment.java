@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +20,18 @@ import org.cascadelms.R;
 import org.cascadelms.course_documents.DocumentsFragment;
 import org.cascadelms.data.models.Course;
 
-public class CourseLandingFragment extends Fragment
+public class CourseLandingFragment extends Fragment implements TabListener
 {
-    ViewPager mViewPager = null;
+    private ViewPager mViewPager = null;
+    
+    private int[] mTabFragmentIdList =
+    {
+        R.string.fragment_socialstream,
+        R.string.fragment_courseblog,
+        R.string.fragment_documents,
+        R.string.fragment_assignments,
+        R.string.fragment_grades
+    };
     
     /* Constants */
     private static final String ARGS_COURSE = "org.cascadelms.args_course";
@@ -33,11 +44,22 @@ public class CourseLandingFragment extends Fragment
     	fragment.setArguments( args );
     	return fragment;
     }
-
-    public void switchView(int position)
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) 
     {
-        if (mViewPager != null)
-            mViewPager.setCurrentItem(position);
+    	ActionBar actionBar = ((ActionBarActivity) this.getActivity()).getSupportActionBar();
+    	
+    	for (int i = 0; i < mTabFragmentIdList.length; ++i)
+        {
+            ActionBar.Tab tab = actionBar.newTab();
+
+            tab.setText(getString(mTabFragmentIdList[i])).setTabListener(this);
+
+            actionBar.addTab(tab);
+        }
+    	
+    	super.onCreate(savedInstanceState);
     }
 
     private class CourseFragmentAdapter extends FragmentPagerAdapter
@@ -123,6 +145,18 @@ public class CourseLandingFragment extends Fragment
 
         return view;
     }
+    
+    @Override
+    public void onTabSelected( ActionBar.Tab tab, FragmentTransaction fragmentTransaction )
+    {
+    	mViewPager.setCurrentItem( tab.getPosition() );
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
     
     /**
      * Retrieves the {@link Course} provided as an argument to this Fragment.  The value cannot be stored, 
