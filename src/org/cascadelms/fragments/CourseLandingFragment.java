@@ -42,6 +42,8 @@ public class CourseLandingFragment extends Fragment
 
     private class CourseFragmentAdapter extends FragmentPagerAdapter
     {
+    	/* TODO Use an ArrayList<Fragment> to manage the Fragments. */
+    	
         public CourseFragmentAdapter(FragmentManager manager) {
             super(manager);
         }
