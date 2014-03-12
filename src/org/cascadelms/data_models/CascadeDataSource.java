@@ -3,11 +3,20 @@ package org.cascadelms.data_models;
 import java.util.List;
 
 /**
+ * This class will eventually become the implementation of each fragment's data source interface.  
+ * @author Alex
+ * 
+ */
+public class CascadeDataSource
+{
+
+/**
  * An interface for objects that provide access to Cascade LMS data.  This interface defines the signatures of methods
  * used to retrieve model data from the Cascade server.  How that data is obtained is left up to the 
  * implementer.
+ * @deprecated
  */
-public interface CascadeDataSource 
+public interface ICascadeDataSource 
 {		
 	/**
 	 * Retrieves a listing of courses which user is currently registered for.
@@ -78,4 +87,5 @@ public interface CascadeDataSource
 	 * @return the {@link BlogPost}
 	 */
 	public abstract BlogPost getBlogPostById( int id );
+}
 }
