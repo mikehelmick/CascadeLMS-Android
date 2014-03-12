@@ -41,7 +41,7 @@ public class CourseLandingFragment extends Fragment
             {
                 case 0: fragment = new SocialStreamFragment(); break;
                 case 1: fragment = new CourseBlogFragment(); break;
-                case 2: fragment = new DocumentsFragment(); break;
+                case 2: fragment = DocumentsFragment.newInstance( mCourseId ); break;
                 case 3: fragment = new AssignmentsFragment(); break;
                 case 4: fragment = new GradesFragment(); break;
             }
