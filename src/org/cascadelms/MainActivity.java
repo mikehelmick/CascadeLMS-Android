@@ -44,7 +44,6 @@ public class MainActivity extends ActionBarActivity implements
         FragmentManager.OnBackStackChangedListener, ActionBar.TabListener, LoaderCallbacks<List<Course>>
 {
     private static final String PREFS_AUTH = "AuthenticationData";
-    private static final int COURSE_NONE = -1;
     private static final String BACKTAG_COURSELANDING = "CourseLanding";
 
     private DrawerLayout mDrawerLayout;
@@ -64,14 +63,9 @@ public class MainActivity extends ActionBarActivity implements
     };
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction)
+    public void onTabSelected( ActionBar.Tab tab, FragmentTransaction fragmentTransaction )
     {
-//        FragmentManager manager = getSupportFragmentManager();
-//
-//        CourseLandingFragment landingFragment = CourseLandingFragment.newInstance();
-//
-//        if (landingFragment != null)
-//            landingFragment.switchView(tab.getPosition());
+    	
     }
 
     @Override
@@ -144,7 +138,7 @@ public class MainActivity extends ActionBarActivity implements
         
         /* Setup CourseDataSource and begin course loading. */
         this.courseDataSource = FakeDataSource.getInstance();
-        this.getSupportLoaderManager().initLoader( 0, null, this ).forceLoad();
+        this.getSupportLoaderManager().initLoader( LoaderCodes.LOADER_CODE_COURSES, null, this ).forceLoad();
 
         // TODO: Make this better.
         SharedPreferences preferences = getSharedPreferences(PREFS_AUTH, 0);
@@ -224,8 +218,6 @@ public class MainActivity extends ActionBarActivity implements
 
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
                 GravityCompat.START);
-
-        
 
         mCourseNavAdapter = new CourseNavAdapter( this );
 
@@ -369,15 +361,30 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onLoadFinished( Loader<List<Course>> loader, List<Course> data ) 
 	{	
-		LOGGER.info( "MainActivity finished loading courses." );
-		this.mCourseNavAdapter.clear();
-		this.mCourseNavAdapter.addAll( data );
+		switch( loader.getId() )
+		{
+		case LoaderCodes.LOADER_CODE_COURSES:
+		{
+			LOGGER.info( "MainActivity finished loading courses." );
+			this.mCourseNavAdapter.clear();
+			this.mCourseNavAdapter.addAll( data );
+			return;
+		}
+		}
 	}
 
 	@Override
 	public void onLoaderReset( Loader<List<Course>> loader ) 
 	{
-		/* TODO Clear anything that relies on the loaders data. */
+		switch( loader.getId() )
+		{
+		case LoaderCodes.LOADER_CODE_COURSES:
+		{
+			this.mCourseNavAdapter.clear();
+			return;
+		}
+		}
+		
 	}
 	
 	private static Logger LOGGER = Logger.getLogger( MainActivity.class.getName() );

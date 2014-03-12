@@ -17,6 +17,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A <code>Fragment</code> for displaying the files associated with a course.  
@@ -26,6 +27,7 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 	private DocumentAdapter adapter;
 	private DocumentsDataSource dataSource;
 	private int courseId;
+	private TextView emptyTextView;
 	
 	/* Constants */
 	private static final String ARGS_COURSE_ID = "org.cascadelms.args_course_id";
@@ -56,7 +58,6 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 		
 		/* Creates a data source and begins loading */
 		this.dataSource = FakeDataSource.getInstance();
-		this.getActivity().getSupportLoaderManager().initLoader( 0, null, this ).forceLoad();
 		super.onCreate( savedInstanceState );
 	}
 	
@@ -66,8 +67,24 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
     {
         super.onCreateView( inflater, container, savedInstanceState );
         View view = inflater.inflate( R.layout.fragment_documents, null );
-        this.setListAdapter( adapter );
+        this.setListAdapter( adapter );	
+        this.emptyTextView = (TextView) view.findViewById( android.R.id.empty );
         return view;
+    }
+    
+    @Override
+    public void onViewCreated( View view, Bundle savedInstanceState )
+    {
+    	this.getActivity().getSupportLoaderManager().initLoader( 
+    			LoaderCodes.LOADER_CODE_DOCUMENTS, null, this ).forceLoad();
+    	super.onViewCreated(view, savedInstanceState);
+    }
+    
+    @Override
+    public void setEmptyText( CharSequence text ) 
+    {
+    	/* Subclasses which use custom views must override this method. */
+    	this.emptyTextView.setText( text );
     }
 
 	@Override
@@ -91,19 +108,34 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 	@Override
 	public void onLoadFinished( Loader<List<Document>> loader, List<Document> data ) 
 	{	
-		LOGGER.info( "DocumentsFragment finished loading Documents." );
-		this.adapter.clear();
-		this.adapter.addAll( data );
-		if( data.isEmpty() )
+		switch( loader.getId() )
 		{
-			this.setEmptyText( this.getString( R.string.fragment_document_list_empty_message ) );
+		case LoaderCodes.LOADER_CODE_DOCUMENTS:
+		{
+			LOGGER.info( "DocumentsFragment finished loading Documents." );
+			this.adapter.clear();
+			this.adapter.addAll( data );
+			if( data.isEmpty() )
+			{
+				this.setEmptyText( this.getString( R.string.fragment_document_list_empty_message ) );
+			}
+			return;
+		}
 		}
 	}
 
 	@Override
 	public void onLoaderReset( Loader<List<Document>> loader )
 	{
-		this.adapter.clear();
+		switch( loader.getId() )
+		{
+		case LoaderCodes.LOADER_CODE_DOCUMENTS:
+		{
+			this.adapter.clear();
+			return;
+		}
+		}
+		
 	}
 	
 	/**
