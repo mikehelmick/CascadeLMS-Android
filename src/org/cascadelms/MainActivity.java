@@ -2,12 +2,7 @@ package org.cascadelms;
 
 import java.util.ArrayList;
 
-import org.cascadelms.fragments.AssignmentsFragment;
-import org.cascadelms.fragments.CourseBlogFragment;
 import org.cascadelms.fragments.CourseLandingFragment;
-import org.cascadelms.fragments.DocumentsFragment;
-import org.cascadelms.fragments.GradesFragment;
-import org.cascadelms.fragments.HttpCommunicatorFragment;
 import org.cascadelms.fragments.SocialStreamFragment;
 
 import android.content.Context;
@@ -20,7 +15,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -32,8 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;

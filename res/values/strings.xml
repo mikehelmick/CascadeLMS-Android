@@ -29,6 +29,9 @@
     
     <!-- Other fragments -->
     <string name="fragment_viewpost">View Post</string>
+    
+    <!-- Documents Fragment -->
+    <string name="fragment_documents_list_loading_message">Loading Documents...</string>
 
 </resources>
 
