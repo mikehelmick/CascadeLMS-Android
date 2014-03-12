@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.cascadelms.R;
 import org.cascadelms.data_models.Document;
+import org.cascadelms.data_models.FakeDataSource;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -45,9 +46,12 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 	{
 		/* Gets the course id from the arguments */
 		this.courseId = this.getArguments().getInt( ARGS_COURSE_ID );
+		LOGGER.info( "DocumentsFragment created for course #" + this.courseId );
+		this.adapter = new DocumentAdapter( this.getActivity(), android.R.layout.simple_list_item_1 );
 		
-		/* Creates a data source */
-		// TODO
+		/* Creates a data source and begins loading */
+		this.dataSource = new FakeDataSource();
+		this.getActivity().getSupportLoaderManager().initLoader( 0, null, this ).forceLoad();
 		super.onCreate( savedInstanceState );
 	}
 	
@@ -57,12 +61,14 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
     {
         super.onCreateView( inflater, container, savedInstanceState );
         View view = inflater.inflate( R.layout.fragment_documents, null );
+        this.setListAdapter( adapter );
         return view;
     }
 
 	@Override
 	public Loader<List<Document>> onCreateLoader( int id, Bundle args ) 
 	{
+		LOGGER.info( "DocumentsFragment began loading Documents." );
 		return new DocumentsLoader( this.getActivity(), this.dataSource, this.courseId );
 	}
 
@@ -72,6 +78,10 @@ public class DocumentsFragment extends ListFragment implements LoaderCallbacks<L
 		LOGGER.info( "DocumentsFragment finished loading Documents." );
 		this.adapter.clear();
 		this.adapter.addAll( data );
+		if( data.isEmpty() )
+		{
+			this.setEmptyText( this.getString( R.string.fragment_document_list_empty_message ) );
+		}
 	}
 
 	@Override
