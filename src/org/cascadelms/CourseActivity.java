@@ -20,11 +20,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 /**
  * An Activity for showing the sub-page Fragments related to a Course.
  */
-public class CourseActivity extends ActionBarActivity implements TabListener
+public class CourseActivity extends ActionBarActivity implements TabListener,
+		ListView.OnItemClickListener
 {
 	private List<Course> courses;
 	private Course selectedCourse;
@@ -32,6 +36,8 @@ public class CourseActivity extends ActionBarActivity implements TabListener
 	private int[] mTabTitleIdArray = { R.string.fragment_socialstream,
 			R.string.fragment_courseblog, R.string.fragment_documents,
 			R.string.fragment_assignments, R.string.fragment_grades };
+	private CourseNavAdapter mCourseNavAdapter;
+	private ListView mDrawerList;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -49,7 +55,7 @@ public class CourseActivity extends ActionBarActivity implements TabListener
 				+ selectedCourse.getId() );
 
 		/* Creates the ViewPager */
-		mViewPager = (ViewPager) this.findViewById( R.id.pager );
+		mViewPager = (ViewPager) this.findViewById( R.id.activity_course_pager );
 		mViewPager.setAdapter( new CourseFragmentAdapter( this
 				.getSupportFragmentManager() ) );
 		mViewPager
@@ -74,6 +80,13 @@ public class CourseActivity extends ActionBarActivity implements TabListener
 
 		/* Sets the home button to navigate back to the StreamActivity. */
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled( true );
+
+		/* Creates the navigation drawer. */
+		mCourseNavAdapter = new CourseNavAdapter( this );
+		mCourseNavAdapter.addAll( courses );
+		mDrawerList = (ListView) findViewById( R.id.activity_course_drawer );
+		mDrawerList.setAdapter( mCourseNavAdapter );
+		mDrawerList.setOnItemClickListener( this );
 	}
 
 	@Override
@@ -93,6 +106,15 @@ public class CourseActivity extends ActionBarActivity implements TabListener
 	public void onTabReselected( ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction )
 	{
+	}
+
+	@Override
+	public void onItemClick( AdapterView<?> parent, View view, int position,
+			long id )
+	{
+		LOGGER.info( "Press on course " + id
+				+ " in the CourseActivity nav drawer." );
+		// this.startCourseActivity( mCourseNavAdapter.getItem( position ) );
 	}
 
 	private class CourseFragmentAdapter extends FragmentPagerAdapter
