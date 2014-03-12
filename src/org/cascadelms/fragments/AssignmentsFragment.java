@@ -1,44 +1,112 @@
 package org.cascadelms.fragments;
 
+import java.util.List;
+
 import org.cascadelms.R;
+import org.cascadelms.data.loaders.AssignmentsLoader;
+import org.cascadelms.data.loaders.LoaderCodes;
+import org.cascadelms.data.models.Assignment;
+import org.cascadelms.data.models.Course;
+import org.cascadelms.data.sources.FakeDataSource;
 
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-public class AssignmentsFragment extends HttpCommunicatorFragment
+public class AssignmentsFragment extends ListFragment implements LoaderCallbacks<List<Assignment>>
 {
+	private AssignmentsDataSource assigmentsDataSource;
+	
+	/* Constants */
+	private static final String ARGS_COURSE = "org.cascade.args_course";
+	
+	public static AssignmentsFragment newInstance( Course course )
+	{
+		Bundle args = new Bundle();
+		args.putParcelable( ARGS_COURSE, course );
+		AssignmentsFragment fragment = new AssignmentsFragment();
+		fragment.setArguments( args );
+		return fragment;
+	}
+	
+	@Override
+	public void onCreate( Bundle savedInstanceState )
+	{
+		/* Creates the data source and begins loading. */
+		this.assigmentsDataSource = FakeDataSource.getInstance();
+		this.getActivity().getSupportLoaderManager().initLoader( LoaderCodes.LOADER_CODE_ASSIGNMENTS, null, this ).forceLoad();
+		
+		super.onCreate(savedInstanceState);
+	}
+	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {
-        super.onCreateView(inflater, container, savedInstanceState);
-        
-        View view = inflater.inflate( R.layout.fragment_assignments, null );
-        TextView label = (TextView)view.findViewById(R.id.placeholder);
-        
-        label.append(" " + getCourseId());
-        
+        super.onCreateView( inflater, container, savedInstanceState );     
+        View view = inflater.inflate( R.layout.fragment_assignments, container, false );       
         return view;
     }
-
-    @Override
-    protected String getSubpageLocation()
+    
+    /**
+     * 
+     * @return
+     */
+    private Course getCourse()
     {
-        int courseId = getCourseId();
-        
-        if (courseId == -1)
-            return null;
-        else
-            return "course/" + courseId + "/assignments";
+    	return this.getArguments().getParcelable( ARGS_COURSE );
     }
 
-    @Override
-    public String getFragmentTitle()
-    {
-        return getString(R.string.fragment_assignments);
-    }
+	@Override
+	public Loader<List<Assignment>> onCreateLoader( int id, Bundle args ) 
+	{
+		switch( id )
+		{
+		case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
+		{
+			return new AssignmentsLoader( this.getActivity(), assigmentsDataSource, id );
+		}
+		default:
+		{
+			return null;
+		}
+		}
+	}
 
+	@Override
+	public void onLoadFinished( Loader<List<Assignment>> loader,
+			List<Assignment> data ) 
+	{
+		switch( loader.getId() )
+		{
+		case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
+		{
+			/* TODO Use this data in the Fragment. */
+			break;
+		}
+		}
+		
+	}
+
+	@Override
+	public void onLoaderReset( Loader<List<Assignment>> loader ) 
+	{
+		switch( loader.getId() )
+		{
+		case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
+		{
+			/* TODO Anything that uses data from the Loader needs to clear its data here. */
+			break;
+		}
+		}
+	}
+	
+	public interface AssignmentsDataSource 
+	{
+		public List<Assignment> getAssignmentsForCourse( int courseId );
+	}
 }
