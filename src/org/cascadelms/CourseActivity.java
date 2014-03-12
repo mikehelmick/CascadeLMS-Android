@@ -21,7 +21,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.TabListener;
-import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -29,7 +30,7 @@ import android.widget.ListView;
 /**
  * An Activity for showing the sub-page Fragments related to a Course.
  */
-public class CourseActivity extends ActionBarActivity implements TabListener,
+public class CourseActivity extends CascadeActivity implements TabListener,
 		ListView.OnItemClickListener
 {
 	private List<Course> courses;
@@ -114,6 +115,27 @@ public class CourseActivity extends ActionBarActivity implements TabListener,
 	public void onTabReselected( ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction )
 	{
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu( Menu menu )
+	{
+		super.onCreateOptionsMenu( menu );
+		this.getMenuInflater().inflate( R.menu.activity_course, menu );
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item )
+	{
+		switch( item.getItemId() )
+		{
+		/* No cases to respond to yet. */
+			default:
+			{
+				return super.onOptionsItemSelected( item );
+			}
+		}
 	}
 
 	@Override
