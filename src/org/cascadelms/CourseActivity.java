@@ -11,12 +11,14 @@ import org.cascadelms.fragments.CourseBlogFragment;
 import org.cascadelms.fragments.GradesFragment;
 import org.cascadelms.fragments.SocialStreamFragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
@@ -38,6 +40,7 @@ public class CourseActivity extends ActionBarActivity implements TabListener,
 			R.string.fragment_assignments, R.string.fragment_grades };
 	private CourseNavAdapter mCourseNavAdapter;
 	private ListView mDrawerList;
+	private DrawerLayout mDrawer;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -87,6 +90,11 @@ public class CourseActivity extends ActionBarActivity implements TabListener,
 		mDrawerList = (ListView) findViewById( R.id.activity_course_drawer );
 		mDrawerList.setAdapter( mCourseNavAdapter );
 		mDrawerList.setOnItemClickListener( this );
+		mDrawer = (DrawerLayout) this
+				.findViewById( R.id.activity_course_drawer_layout );
+
+		/* Sets the title of the ActionBar to the selected Course's title. */
+		actionBar.setTitle( this.selectedCourse.getTitle() );
 	}
 
 	@Override
@@ -114,7 +122,25 @@ public class CourseActivity extends ActionBarActivity implements TabListener,
 	{
 		LOGGER.info( "Press on course " + id
 				+ " in the CourseActivity nav drawer." );
-		// this.startCourseActivity( mCourseNavAdapter.getItem( position ) );
+		this.startCourseActivity( mCourseNavAdapter.getItem( position ) );
+		mDrawer.closeDrawers();
+	}
+
+	/**
+	 * Packages the chosen Course in an intent and starts CourseActivity with
+	 * it.
+	 * 
+	 * @param course
+	 *            the selected Course
+	 */
+	private void startCourseActivity( Course course )
+	{
+		Intent intent = new Intent( this, CourseActivity.class );
+		intent.putExtra( StreamActivity.ACTIVITY_STREAM_EXTRAS_SELECTED_COURSE,
+				course );
+		intent.putExtra( StreamActivity.ACTIVITY_STREAM_EXTRAS_COURSE_LIST,
+				this.mCourseNavAdapter.getAllCourses() );
+		this.startActivity( intent );
 	}
 
 	private class CourseFragmentAdapter extends FragmentPagerAdapter
