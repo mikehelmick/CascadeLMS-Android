@@ -1,5 +1,7 @@
 package org.cascadelms.fragments;
 
+import java.util.logging.Logger;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,11 +16,23 @@ import android.view.ViewGroup;
 
 import org.cascadelms.R;
 import org.cascadelms.course_documents.DocumentsFragment;
+import org.cascadelms.data.models.Course;
 
 public class CourseLandingFragment extends Fragment
 {
     ViewPager mViewPager = null;
-    int mCourseId = -1;
+    
+    /* Constants */
+    private static final String ARGS_COURSE = "org.cascadelms.args_course";
+    
+    public static CourseLandingFragment newInstance( Course course )
+    {
+    	Bundle args = new Bundle();
+    	args.putParcelable( ARGS_COURSE, course );
+    	CourseLandingFragment fragment = new CourseLandingFragment();
+    	fragment.setArguments( args );
+    	return fragment;
+    }
 
     public void switchView(int position)
     {
@@ -41,13 +55,17 @@ public class CourseLandingFragment extends Fragment
             {
                 case 0: fragment = new SocialStreamFragment(); break;
                 case 1: fragment = new CourseBlogFragment(); break;
-                case 2: fragment = DocumentsFragment.newInstance( mCourseId ); break;
+                case 2: return DocumentsFragment.newInstance( CourseLandingFragment.this.getCourse() );
                 case 3: fragment = new AssignmentsFragment(); break;
                 case 4: fragment = new GradesFragment(); break;
             }
 
+            /* TODO Using a static method inside the Fragment class to create and set the argument bundle 
+             * allows you to enforce the presence and type of required arguments. The accepted answer 
+             * here has a great example of how to use this:
+             * http://stackoverflow.com/questions/9245408/best-practice-for-instantiating-a-new-android-fragment */
             Bundle bundle = new Bundle();
-            bundle.putInt("courseId", mCourseId);
+            bundle.putInt( "courseId", CourseLandingFragment.this.getCourse().getId() );
             fragment.setArguments(bundle);
 
             return fragment;
@@ -65,11 +83,6 @@ public class CourseLandingFragment extends Fragment
                              Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-
-        Bundle arguments = getArguments();
-
-        if (arguments != null)
-            mCourseId = arguments.getInt("courseId", -1);
 
         View view = inflater.inflate(R.layout.fragment_courselanding,
                 null);
@@ -112,4 +125,16 @@ public class CourseLandingFragment extends Fragment
 
         return view;
     }
+    
+    /**
+     * Retrieves the {@link Course} provided as an argument to this Fragment.  The value cannot be stored, 
+     * because the Fragment may be recreated by the Fragment manager at any time.  
+     * @return the <code>Course</code>
+     */
+    private Course getCourse()
+    {
+    	return this.getArguments().getParcelable( ARGS_COURSE );
+    }
+    
+    private static Logger LOGGER = Logger.getLogger( CourseLandingFragment.class.getName() );
 }

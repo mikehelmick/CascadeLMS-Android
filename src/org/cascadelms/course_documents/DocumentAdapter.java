@@ -1,6 +1,6 @@
 package org.cascadelms.course_documents;
 
-import org.cascadelms.data_models.Document;
+import org.cascadelms.data.models.Document;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;

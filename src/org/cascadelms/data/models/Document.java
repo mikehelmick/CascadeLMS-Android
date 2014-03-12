@@ -1,13 +1,17 @@
-package org.cascadelms.data_models;
+package org.cascadelms.data.models;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * An immutable data model representing a document from the Cascade LMS database.  
  * <p>
  * Note that this class does not use a builder, because all of its attributes are required.
  */
-public class Document extends Item
+public class Document extends Item implements Parcelable
 {
 	private final String extension;
 	private final long fileSize;
@@ -62,4 +66,41 @@ public class Document extends Item
 	{
 		return documentURL;
 	}
+
+	@Override
+	public int describeContents() 
+	{
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel( Parcel dest, int flags ) 
+	{
+		super.writeToParcel( dest, flags );
+		dest.writeString( extension );
+		dest.writeLong( fileSize );
+		dest.writeString( documentURL.toString() );
+	}
+	
+	public static Parcelable.Creator<Document> CREATOR = new Parcelable.Creator<Document>() 
+	{
+		@Override
+		public Document createFromParcel(Parcel source) 
+		{
+			try 
+			{
+				return new Document( source.readInt(), source.readString(), source.readString(), 
+						source.readLong(), new URL( source.readString() ) );
+			} catch (MalformedURLException e) 
+			{
+				throw new RuntimeException( "Unable to create Document from Parcel.  The documentURL was malformed." );
+			}
+		}
+
+		@Override
+		public Document[] newArray( int size ) 
+		{
+			return new Document[size];
+		}
+	};
 }
