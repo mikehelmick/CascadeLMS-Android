@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/CascadeTheme" >
         <activity
-            android:name="org.cascadelms.MainActivity"
+            android:name="org.cascadelms.StreamActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +26,11 @@
             android:name="org.cascadelms.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="org.cascadelms.CourseActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="org.cascadelms.StreamActivity" >
         </activity>
     </application>
 
