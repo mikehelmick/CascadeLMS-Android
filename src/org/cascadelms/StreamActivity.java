@@ -37,6 +37,7 @@ public class StreamActivity extends ActionBarActivity implements
 	private CourseNavAdapter mCourseNavAdapter;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
+	private DrawerLayout mDrawer;
 
 	/* Constants */
 	private static final String PREFS_AUTH = "AuthenticationData";
@@ -62,9 +63,9 @@ public class StreamActivity extends ActionBarActivity implements
 		mDrawerList.setOnItemClickListener( this );
 
 		/* Sets up the drawer toggle */
-		DrawerLayout drawer = (DrawerLayout) this
+		mDrawer = (DrawerLayout) this
 				.findViewById( R.id.activity_stream_drawer_layout );
-		mDrawerToggle = new ActionBarDrawerToggle( this, drawer,
+		mDrawerToggle = new ActionBarDrawerToggle( this, mDrawer,
 				R.drawable.ic_drawer, R.string.drawer_open,
 				R.string.drawer_close )
 		{
@@ -84,14 +85,14 @@ public class StreamActivity extends ActionBarActivity implements
 										.getString( R.string.activity_stream_drawer_title ) );
 			}
 		};
-		drawer.setDrawerListener( mDrawerToggle );
+		mDrawer.setDrawerListener( mDrawerToggle );
 
 		/* Enables the home button as a drawer toggle. */
 		mDrawerToggle.setDrawerIndicatorEnabled( true );
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled( true );
 		this.getSupportActionBar().setHomeButtonEnabled( true );
 
-		drawer.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
+		mDrawer.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
 
 		// TODO: Store the login status in a different way.
 		SharedPreferences preferences = getSharedPreferences( PREFS_AUTH, 0 );
@@ -154,6 +155,7 @@ public class StreamActivity extends ActionBarActivity implements
 		LOGGER.info( "Press on course " + id
 				+ " in the StreamActivity nav drawer." );
 		this.startCourseActivity( mCourseNavAdapter.getItem( position ) );
+		mDrawer.closeDrawers();
 	}
 
 	/**
