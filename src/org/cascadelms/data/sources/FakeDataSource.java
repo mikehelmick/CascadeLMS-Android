@@ -11,11 +11,13 @@ import org.cascadelms.data.models.Assignment;
 import org.cascadelms.data.models.BlogPost;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
+import org.cascadelms.data.models.StreamItem;
 import org.cascadelms.fragments.AssignmentsFragment.AssignmentsDataSource;
 import org.cascadelms.fragments.CourseBlogFragment.BlogDataSource;
+import org.cascadelms.fragments.SocialStreamFragment.StreamDataSource;
 
 public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
-		AssignmentsDataSource, BlogDataSource
+		AssignmentsDataSource, BlogDataSource, StreamDataSource
 {
 	private static ArrayList<Course> courseList;
 
@@ -28,6 +30,7 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 	/* TODO Lists with no fake data in them yet. */
 	private static ArrayList<Assignment> emptyAssignmentsList;
 	private static ArrayList<BlogPost> emptyBlogPostList;
+	private static ArrayList<StreamItem> emptyStreamItemList;
 
 	/* Constants */
 	private static final int COURSE_ID_DESIGN = 0;
@@ -162,6 +165,9 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 
 		emptyBlogPostList = new ArrayList<BlogPost>();
 		/* TODO Create fake blog posts to return for each course. */
+
+		emptyStreamItemList = new ArrayList<StreamItem>();
+		/* TODO Create fake Stream items to return for each course. */
 	}
 
 	private static FakeDataSource instance;
@@ -218,42 +224,6 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 				return null;
 			}
 		}
-
-		// TODO Future interface methods to implement or remove.
-		// @Override
-		// public Course getCourseById(int id)
-		// {
-		// return courseList.get( id );
-		// }
-		//
-		// @Override
-		// public List<StreamItem> getAllSocialStreamItems()
-		// {
-		// // TODO Auto-generated method stub
-		// throw new UnsupportedOperationException( "Method not implemented." );
-		// }
-		//
-		// @Override
-		// public List<StreamItem> getAllSocialStreamItemsForCourse(int
-		// courseId)
-		// {
-		// // TODO Auto-generated method stub
-		// throw new UnsupportedOperationException( "Method not implemented." );
-		// }
-		//
-		// @Override
-		// public Assignment getAssignmentById(int id)
-		// {
-		// // TODO Auto-generated method stub
-		// throw new UnsupportedOperationException( "Method not implemented." );
-		// }
-		//
-		// @Override
-		// public BlogPost getBlogPostById(int id)
-		// {
-		// // TODO Auto-generated method stub
-		// throw new UnsupportedOperationException( "Method not implemented." );
-		// }
 	}
 
 	@Override
@@ -292,6 +262,72 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 	@Override
 	public List<BlogPost> getBlogPostsForCourse( int courseId )
 	{
-		return emptyBlogPostList;
+		/* TODO Return lists of fake data on a course by course basis. */
+		switch( courseId )
+		{
+			case COURSE_ID_DESIGN:
+			{
+
+			}
+			case COURSE_ID_MACHINE_LEARNING:
+			{
+
+			}
+			case COURSE_ID_AI:
+			{
+
+			}
+			case COURSE_ID_INFO_RETRIEVAL:
+			{
+
+			}
+			case COURSE_ID_UI:
+			{
+
+			}
+			default:
+			{
+				return emptyBlogPostList;
+			}
+		}
+	}
+
+	@Override
+	public List<StreamItem> getAllStreamItems()
+	{
+		return emptyStreamItemList;
+	}
+
+	@Override
+	public List<StreamItem> getStreamItemsForCourse( int courseId )
+	{
+		/* TODO Return lists of fake data on a course by course basis. */
+		switch( courseId )
+		{
+			case COURSE_ID_DESIGN:
+			{
+
+			}
+			case COURSE_ID_MACHINE_LEARNING:
+			{
+
+			}
+			case COURSE_ID_AI:
+			{
+
+			}
+			case COURSE_ID_INFO_RETRIEVAL:
+			{
+
+			}
+			case COURSE_ID_UI:
+			{
+
+			}
+			default:
+			{
+				return emptyStreamItemList;
+			}
+		}
 	}
 }
