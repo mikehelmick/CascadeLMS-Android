@@ -70,8 +70,7 @@ public class SocialStreamFragment extends Fragment
 	private void goToPostDetail( SocialStreamPost parentPost )
 	{
 		/*
-		 * TODO Should send an intent to open DetailActivity Modifying the
-		 * parent Activity's layout is no longer an option.
+		 * TODO Modifying the parent Activity's layout is no longer an option.
 		 */
 		// ActionBarActivity activity = (ActionBarActivity) getActivity();
 		// FragmentManager manager = activity.getSupportFragmentManager();
