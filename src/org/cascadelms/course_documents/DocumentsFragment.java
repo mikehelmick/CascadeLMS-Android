@@ -104,7 +104,7 @@ public class DocumentsFragment extends ListFragment implements
 				this.setEmptyText( this
 						.getString( R.string.fragment_documents_list_loading_message ) );
 				return new DocumentsLoader( this.getActivity(),
-						this.dataSource, this.courseId );
+						this.dataSource, this.courseId, null );
 			}
 			default:
 			{
