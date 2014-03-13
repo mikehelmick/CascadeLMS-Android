@@ -56,18 +56,6 @@ public class AssignmentsFragment extends ListFragment implements
 		return view;
 	}
 
-	/**
-	 * Retrieves the {@link Course} provided as an argument to this Fragment.
-	 * The value cannot be stored, because the Fragment may be recreated by the
-	 * FragmentManager at any time.
-	 * 
-	 * @return the <code>Course</code>
-	 */
-	private Course getCourse()
-	{
-		return this.getArguments().getParcelable( ARGS_COURSE );
-	}
-
 	@Override
 	public Loader<List<Assignment>> onCreateLoader( int id, Bundle args )
 	{
@@ -119,5 +107,17 @@ public class AssignmentsFragment extends ListFragment implements
 	public interface AssignmentsDataSource
 	{
 		public List<Assignment> getAssignmentsForCourse( int courseId );
+	}
+
+	/**
+	 * Retrieves the {@link Course} provided as an argument to this Fragment.
+	 * The value cannot be stored, because the Fragment may be recreated by the
+	 * FragmentManager at any time.
+	 * 
+	 * @return the <code>Course</code>
+	 */
+	private Course getCourse()
+	{
+		return this.getArguments().getParcelable( ARGS_COURSE );
 	}
 }

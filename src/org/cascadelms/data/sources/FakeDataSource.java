@@ -8,12 +8,14 @@ import java.util.List;
 import org.cascadelms.StreamActivity.CourseDataSource;
 import org.cascadelms.course_documents.DocumentsFragment.DocumentsDataSource;
 import org.cascadelms.data.models.Assignment;
+import org.cascadelms.data.models.BlogPost;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
 import org.cascadelms.fragments.AssignmentsFragment.AssignmentsDataSource;
+import org.cascadelms.fragments.CourseBlogFragment.BlogDataSource;
 
 public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
-		AssignmentsDataSource
+		AssignmentsDataSource, BlogDataSource
 {
 	private static ArrayList<Course> courseList;
 
@@ -23,7 +25,9 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 	private static ArrayList<Document> documentsListInfo;
 	private static ArrayList<Document> documentsListUI;
 
+	/* TODO Lists with no fake data in them yet. */
 	private static ArrayList<Assignment> emptyAssignmentsList;
+	private static ArrayList<BlogPost> emptyBlogPostList;
 
 	/* Constants */
 	private static final int COURSE_ID_DESIGN = 0;
@@ -155,6 +159,9 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 		/* Builds Assignment lists for each course. */
 		emptyAssignmentsList = new ArrayList<Assignment>();
 		/* TODO Create a list of fake data to return for each course. */
+
+		emptyBlogPostList = new ArrayList<BlogPost>();
+		/* TODO Create fake blog posts to return for each course. */
 	}
 
 	private static FakeDataSource instance;
@@ -212,7 +219,7 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 			}
 		}
 
-		//
+		// TODO Future interface methods to implement or remove.
 		// @Override
 		// public Course getCourseById(int id)
 		// {
@@ -234,16 +241,8 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 		// throw new UnsupportedOperationException( "Method not implemented." );
 		// }
 		//
-		//
 		// @Override
 		// public Assignment getAssignmentById(int id)
-		// {
-		// // TODO Auto-generated method stub
-		// throw new UnsupportedOperationException( "Method not implemented." );
-		// }
-		//
-		// @Override
-		// public List<BlogPost> getAllBlogPostsForCourse(int courseId)
 		// {
 		// // TODO Auto-generated method stub
 		// throw new UnsupportedOperationException( "Method not implemented." );
@@ -288,5 +287,11 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 				return emptyAssignmentsList;
 			}
 		}
+	}
+
+	@Override
+	public List<BlogPost> getBlogPostsForCourse( int courseId )
+	{
+		return emptyBlogPostList;
 	}
 }
