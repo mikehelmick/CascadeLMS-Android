@@ -34,17 +34,6 @@ public class CourseNavAdapter extends ArrayAdapter<Course>
 		TextView label = (TextView) convertView
 				.findViewById( android.R.id.text1 );
 		label.setText( this.getItem( position ).getTitle() );
-		// TODO this code could be useful in the CourseAcitivty where we need a
-		// HOME option.
-		// if( position == Course.HOME.getId() )
-		// {
-		// label.setText( this.getContext().getString(
-		// R.string.course_navigation_home ) );
-		// } else
-		// {
-		// label.setText( this.getItem( position ).getTitle() );
-		// }
-
 		return convertView;
 	}
 
@@ -62,11 +51,4 @@ public class CourseNavAdapter extends ArrayAdapter<Course>
 		}
 		return courses;
 	}
-	// @Override
-	// public void clear()
-	// {
-	// super.clear();
-	// /* Ensures that HOME always appears in the list. */
-	// this.add( Course.HOME );
-	// }
 }

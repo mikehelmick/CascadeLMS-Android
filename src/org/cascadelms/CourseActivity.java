@@ -173,15 +173,16 @@ public class CourseActivity extends CascadeActivity implements TabListener,
 		{
 			super( manager );
 			this.fragments = new ArrayList<Fragment>();
-			// TODO change these to create the Fragments using their static
-			// methods.
-			fragments.add( new SocialStreamFragment() );
-			fragments.add( new CourseBlogFragment() );
+			fragments.add( SocialStreamFragment
+					.newInstance( CourseActivity.this.selectedCourse ) );
+			fragments.add( CourseBlogFragment
+					.newInstance( CourseActivity.this.selectedCourse ) );
 			fragments.add( DocumentsFragment
 					.newInstance( CourseActivity.this.selectedCourse ) );
 			fragments.add( AssignmentsFragment
 					.newInstance( CourseActivity.this.selectedCourse ) );
-			fragments.add( new GradesFragment() );
+			fragments.add( GradesFragment
+					.newInstance( CourseActivity.this.selectedCourse ) );
 		}
 
 		@Override
