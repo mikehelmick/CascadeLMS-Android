@@ -6,4 +6,5 @@
     android:padding="3dp"
     android:text="Placeholder Title"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    android:gravity="center_vertical" />
+    android:gravity="center_vertical"
+    android:drawablePadding="12dp" />
