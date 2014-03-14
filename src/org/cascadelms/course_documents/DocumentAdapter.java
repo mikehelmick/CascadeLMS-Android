@@ -1,7 +1,5 @@
 package org.cascadelms.course_documents;
 
-import java.util.logging.Logger;
-
 import org.cascadelms.R;
 import org.cascadelms.data.models.Document;
 
@@ -33,7 +31,13 @@ public class DocumentAdapter extends ArrayAdapter<Document>
 			textView = (TextView) convertView;
 		}
 		Document document = this.getItem( position );
-		textView.setText( document.getTitle() );
+		if( document.isFolder() )
+		{
+			textView.setText( document.getTitle() );
+		} else
+		{
+			textView.setText( document.getTitle() + document.getFileExtension() );
+		}
 		textView.setCompoundDrawablesWithIntrinsicBounds(
 				this.getIconIdForExtension( document.getFileExtension() ), 0,
 				0, 0 );
@@ -42,13 +46,42 @@ public class DocumentAdapter extends ArrayAdapter<Document>
 
 	private int getIconIdForExtension( String extension )
 	{
-		/* TODO Attempt to match the string to a list of extensions. */
+		/* If the extension is null, the document is a directory. */
+		if( extension == null )
+		{
+			return R.drawable.fileicon_folder;
+		}
+		if( this.stringInList( extension, WORD_EXTENSIONS ) )
+		{
+			return R.drawable.fileicon_word;
+		}
+		if( this.stringInList( extension, TEXT_EXTENSIONS ) )
+		{
+			return R.drawable.fileicon_text;
+		}
+		if( this.stringInList( extension, POWERPOINT_EXTENSIONS ) )
+		{
+			return R.drawable.fileicon_powerpoint;
+		}
 
-		// Drawable draw = resources.getDrawable( R.drawable.fileicon_bg );
-		// LOGGER.warning( "Drawable was " + draw.isVisible() );
-
-		return R.drawable.fileicon_bg;
+		return R.drawable.fileicon_generic;
 	}
 
-	Logger LOGGER = Logger.getLogger( DocumentAdapter.class.getName() );
+	private boolean stringInList( String string, String[] stringsList )
+	{
+		for ( String listString : stringsList )
+		{
+			if( string.equalsIgnoreCase( listString ) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/* Lists of extensions that share an icon. */
+	private static String[] WORD_EXTENSIONS = { ".doc", ".docx", ".docm",
+			".wps" };
+	private static String[] TEXT_EXTENSIONS = { ".asc", ".csv", ".rtf", ".txt" };
+	private static String[] POWERPOINT_EXTENSIONS = { ".pps", ".ppt" };
 }
