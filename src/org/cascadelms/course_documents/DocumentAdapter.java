@@ -31,13 +31,11 @@ public class DocumentAdapter extends ArrayAdapter<Document>
 			textView = (TextView) convertView;
 		}
 		Document document = this.getItem( position );
-		if( document.isFolder() )
-		{
-			textView.setText( document.getTitle() );
-		} else
-		{
-			textView.setText( document.getTitle() + document.getFileExtension() );
-		}
+
+		/* Sets the list item text according to the Document's title. */
+		textView.setText( document.getTitle() );
+
+		/* Sets the icon according to the Document's filetype. */
 		textView.setCompoundDrawablesWithIntrinsicBounds(
 				this.getIconIdForExtension( document.getFileExtension() ), 0,
 				0, 0 );
@@ -48,21 +46,29 @@ public class DocumentAdapter extends ArrayAdapter<Document>
 	{
 		/* If the extension is null, the document is a directory. */
 		if( extension == null )
-		{
 			return R.drawable.fileicon_folder;
-		}
 		if( this.stringInList( extension, WORD_EXTENSIONS ) )
-		{
 			return R.drawable.fileicon_word;
-		}
 		if( this.stringInList( extension, TEXT_EXTENSIONS ) )
-		{
 			return R.drawable.fileicon_text;
-		}
 		if( this.stringInList( extension, POWERPOINT_EXTENSIONS ) )
-		{
 			return R.drawable.fileicon_powerpoint;
-		}
+		if( this.stringInList( extension, COMPRESSED_EXTENSIONS ) )
+			return R.drawable.fileicon_compressed;
+		if( this.stringInList( extension, CODE_EXTENSIONS ) )
+			return R.drawable.fileicon_code;
+		if( this.stringInList( extension, EXCEL_EXTENSIONS ) )
+			return R.drawable.fileicon_excel;
+		if( this.stringInList( extension, HTML_EXTENSIONS ) )
+			return R.drawable.fileicon_html;
+		if( this.stringInList( extension, IMAGE_EXTENSIONS ) )
+			return R.drawable.fileicon_image;
+		if( this.stringInList( extension, MOVIE_EXTENSIONS ) )
+			return R.drawable.fileicon_movie;
+		if( this.stringInList( extension, MUSIC_EXTENSIONS ) )
+			return R.drawable.fileicon_music;
+		if( this.stringInList( extension, PDF_EXTENSIONS ) )
+			return R.drawable.fileicon_pdf;
 
 		return R.drawable.fileicon_generic;
 	}
@@ -84,4 +90,18 @@ public class DocumentAdapter extends ArrayAdapter<Document>
 			".wps" };
 	private static String[] TEXT_EXTENSIONS = { ".asc", ".csv", ".rtf", ".txt" };
 	private static String[] POWERPOINT_EXTENSIONS = { ".pps", ".ppt" };
+	private static String[] COMPRESSED_EXTENSIONS = { ".7z", ".apk", ".bz2",
+			".gz", ".jar", ".rar", ".tar", ".tar.gz", ".zip" };
+	private static String[] CODE_EXTENSIONS = { ".c", ".h", ".cpp", ".cc",
+			".cxx", ".cbp", ".cs", ".e", ".hpp", ".hxx", ".hs", ".java",
+			".lisp", ".m", ".pl", ".pm", ".py", ".rb" };
+	private static String[] EXCEL_EXTENSIONS = { ".xls", ".xlsx" };
+	private static String[] HTML_EXTENSIONS = { ".html", ".xhtml", ".mhtml" };
+	private static String[] IMAGE_EXTENSIONS = { ".bmp", ".exif", ".gif",
+			".ico", ".jpg", ".jpeg", ".png", ".tif", ".tiff" };
+	private static String[] MOVIE_EXTENSIONS = { ".avi", ".mkv", ".mov",
+			".mpeg", ".mpg", ".mpe", "wmv" };
+	private static String[] MUSIC_EXTENSIONS = { ".aiff", ".wav", ".flac",
+			".m4a", ".wma", ".mp3", ".aac" };
+	private static String[] PDF_EXTENSIONS = { ".pdf" };
 }
