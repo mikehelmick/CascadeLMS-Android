@@ -1,7 +1,10 @@
 package org.cascadelms.course_documents;
 
+import java.util.Collection;
+
 import org.cascadelms.R;
 import org.cascadelms.data.models.Document;
+import org.cascadelms.data.models.Document.DocumentComparator;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -83,6 +86,17 @@ public class DocumentAdapter extends ArrayAdapter<Document>
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void addAll( Collection<? extends Document> collection )
+	{
+		/* Sort after adding a collection of data. */
+		for ( Document doc : collection )
+		{
+			this.add( doc );
+		}
+		this.sort( new DocumentComparator() );
 	}
 
 	/* Lists of extensions that share an icon. */

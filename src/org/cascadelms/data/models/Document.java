@@ -2,6 +2,7 @@ package org.cascadelms.data.models;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Comparator;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -227,4 +228,33 @@ public class Document extends Item implements Parcelable
 			return new Document[size];
 		}
 	};
+
+	public static class DocumentComparator implements Comparator<Document>
+	{
+		@Override
+		public int compare( Document first, Document second )
+		{
+			/* Places folders ahead of files. Retains ordering otherwise. */
+			if( first.isFolder )
+			{
+				if( second.isFolder )
+				{
+					return 0;
+				} else
+				{
+					return -1;
+				}
+			} else
+			{
+				if( second.isFolder )
+				{
+					return 1;
+				} else
+				{
+					return 0;
+				}
+			}
+		}
+	}
+
 }
