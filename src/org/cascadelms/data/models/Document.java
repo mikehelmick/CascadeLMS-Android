@@ -234,7 +234,10 @@ public class Document extends Item implements Parcelable
 		@Override
 		public int compare( Document first, Document second )
 		{
-			/* Places folders ahead of files. Retains ordering otherwise. */
+			/*
+			 * Places folders ahead of files. Retains previous ordering
+			 * otherwise.
+			 */
 			if( first.isFolder )
 			{
 				if( second.isFolder )
