@@ -31,8 +31,8 @@
     <string name="fragment_viewpost">View Post</string>
     
     <!-- Documents Fragment -->
-    <string name="fragment_documents_list_loading_message">Loading Documents...</string>
-    <string name="fragment_document_list_empty_message">No documents in this folder.</string>
+    <string name="fragment_documents_list_loading_message">Loading Documents&#8230;</string>
+    <string name="fragment_document_list_empty_message">No documents for this course.</string>
     
     <string name="course_navigation_home">Home</string>
     
