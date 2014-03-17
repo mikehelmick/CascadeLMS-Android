@@ -185,6 +185,12 @@ public class Assignment extends Item
 		return description;
 	}
 
+	@Override
+	public String toString()
+	{
+		return this.title;
+	}
+
 	/**
 	 * A builder class used to construct new {@link Assignment} instances. The
 	 * <code>
@@ -222,9 +228,9 @@ public class Assignment extends Item
 		 * @param gradesReleased
 		 * @param pointsPossible
 		 */
-		public Builder( int id, String title, Category category,
-				Date openDate, Date dueDate, Date closeDate,
-				boolean gradesReleased, double pointsPossible )
+		public Builder( int id, String title, Category category, Date openDate,
+				Date dueDate, Date closeDate, boolean gradesReleased,
+				double pointsPossible )
 		{
 			this.id = id;
 			this.title = title;
