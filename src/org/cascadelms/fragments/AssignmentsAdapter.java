@@ -1,5 +1,7 @@
 package org.cascadelms.fragments;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.logging.Logger;
 
 import org.cascadelms.R;
@@ -40,19 +42,21 @@ public class AssignmentsAdapter extends ArrayAdapter<Assignment>
 
 		/* Sets the points earned/possible text. */
 		String pointsString;
+		NumberFormat format = DecimalFormat.getNumberInstance();
+		format.setMaximumFractionDigits( 2 );
 		if( Double.compare( assignment.getPointsEarned(), Double.NaN ) == 0 )
 		{
 			pointsString = this.getContext().getString(
 					R.string.list_item_assignment_no_points,
-					assignment.getPointsPossible() );
+					format.format( assignment.getPointsPossible() ) );
 		} else
 		{
 			Logger.getLogger( AssignmentsAdapter.class.getName() ).info(
 					"Earned: " + assignment.getPointsEarned() );
 			pointsString = this.getContext().getString(
 					R.string.list_item_assignment_points,
-					assignment.getPointsEarned(),
-					assignment.getPointsPossible() );
+					format.format( assignment.getPointsEarned() ),
+					format.format( assignment.getPointsPossible() ) );
 		}
 		( (TextView) view.findViewById( R.id.list_item_assignment_points ) )
 				.setText( pointsString );
