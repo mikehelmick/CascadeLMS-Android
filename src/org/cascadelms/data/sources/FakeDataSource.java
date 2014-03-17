@@ -285,19 +285,19 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 		assignmentsListDesign.add( new Assignment.Builder( id++,
 				"150-Word Project Abstract", Assignment.Category.ASSIGNMENT,
 				availableDate, new Date( dueTime += week ), lastSubmissionDate,
-				true, 100 ).build() );
+				true, 100 ).setPointsEarned( 95 ).build() );
 		assignmentsListDesign.add( new Assignment.Builder( id++,
 				"Presentation Slides", Assignment.Category.ASSIGNMENT,
 				availableDate, new Date( dueTime += week ), lastSubmissionDate,
-				true, 100 ).build() );
+				true, 100 ).setPointsEarned( 92.5 ).build() );
 		assignmentsListDesign.add( new Assignment.Builder( id++, "Test Plans",
 				Assignment.Category.ASSIGNMENT, availableDate, new Date(
 						dueTime += week ), lastSubmissionDate, true, 100 )
-				.build() );
+				.setPointsEarned( 50 ).build() );
 		assignmentsListDesign.add( new Assignment.Builder( id++,
 				"Current Events Essay", Assignment.Category.ASSIGNMENT,
 				availableDate, new Date( dueTime += week ), lastSubmissionDate,
-				true, 100 ).build() );
+				true, 100 ).setPointsEarned( 0 ).build() );
 		assignmentsListDesign.add( new Assignment.Builder( id++,
 				"Online User Manual", Assignment.Category.ASSIGNMENT,
 				availableDate, new Date( dueTime += week ), lastSubmissionDate,
@@ -308,7 +308,8 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 				"Take-Home Exam", Assignment.Category.ASSIGNMENT, new Date(
 						System.currentTimeMillis() ), new Date( System
 						.currentTimeMillis() + 5000L ), new Date( System
-						.currentTimeMillis() + 10000L ), false, 5 ).build() );
+						.currentTimeMillis() + 10000L ), true, 5 )
+				.setPointsEarned( 5 ).build() );
 
 		long today = new Date().getTime();
 		assignmentsListAI = new ArrayList<Assignment>();
