@@ -37,7 +37,7 @@ public class Assignment extends Item
 		this.pointsEarned = builder.pointsEarned;
 		this.pointsPossible = builder.pointsPossible;
 
-		/* Validate Data */
+		/* Validates the Data */
 		if( this.title == null )
 		{
 			throw new IllegalStateException( "Assignment title cannot be null." );
@@ -61,6 +61,16 @@ public class Assignment extends Item
 		{
 			throw new IllegalStateException(
 					"Assignment points possible must be greater than zero." );
+		}
+		if( this.dueDate.before( this.openDate ) )
+		{
+			throw new IllegalStateException(
+					"Assignment cannot be due before it is available." );
+		}
+		if( this.closeDate.before( this.dueDate ) )
+		{
+			throw new IllegalStateException(
+					"Assignment cannot close before it is due." );
 		}
 	}
 
@@ -103,7 +113,7 @@ public class Assignment extends Item
 	 * @return <code>true</code> if the current date & time are before this
 	 *         assignment's open date, <code>false</code> otherwise.
 	 */
-	public boolean isUpcomming()
+	public boolean isUpcoming()
 	{
 		return this.openDate.after( new Date() );
 	}
@@ -127,7 +137,7 @@ public class Assignment extends Item
 	 * @return <code>true</code> if the current date & time are before this
 	 *         assignment's close date and after is due date.
 	 */
-	public boolean isPast()
+	public boolean isPastDue()
 	{
 		Date now = new Date();
 		return this.dueDate.before( now ) && this.closeDate.after( now );
@@ -141,7 +151,7 @@ public class Assignment extends Item
 	 */
 	public boolean isClosed()
 	{
-		return this.closeDate.after( new Date() );
+		return this.closeDate.before( new Date() );
 	}
 
 	/**

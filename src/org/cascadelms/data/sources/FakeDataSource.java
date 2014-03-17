@@ -303,6 +303,7 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 				availableDate, new Date( dueTime += week ), lastSubmissionDate,
 				false, 100 ).build() );
 		assignmentsListMachine = new ArrayList<Assignment>();
+		/* TODO add more assignment data. */
 		assignmentsListAI = new ArrayList<Assignment>();
 		assignmentsListInfo = new ArrayList<Assignment>();
 		assignmentsListUI = new ArrayList<Assignment>();
