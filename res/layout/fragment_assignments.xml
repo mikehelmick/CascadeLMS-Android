@@ -14,7 +14,7 @@
     </ListView>
 
     <TextView
-        android:id="@android:id/empty"
+        android:id="@+id/fragment_assignments_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

@@ -17,6 +17,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -27,6 +28,7 @@ public class DocumentsFragment extends ListFragment implements
 {
 	private DocumentAdapter adapter;
 	private DocumentsDataSource dataSource;
+	private TextView emptyView;
 	private int courseId;
 
 	/* Constants */
@@ -71,6 +73,10 @@ public class DocumentsFragment extends ListFragment implements
 	{
 		super.onCreateView( inflater, container, savedInstanceState );
 		View view = inflater.inflate( R.layout.fragment_documents, null );
+		emptyView = (TextView) view
+				.findViewById( R.id.fragment_documents_empty );
+		( (ListView) view.findViewById( android.R.id.list ) )
+				.setEmptyView( emptyView );
 		this.setListAdapter( adapter );
 		return view;
 	}
@@ -87,9 +93,11 @@ public class DocumentsFragment extends ListFragment implements
 	@Override
 	public void setEmptyText( CharSequence text )
 	{
-		/* Subclasses which use custom views must override this method. */
-		( (TextView) this.getActivity().findViewById( android.R.id.empty ) )
-				.setText( text );
+		/*
+		 * Subclasses using custom layouts must override this method to operate
+		 * on the correct TextView.
+		 */
+		emptyView.setText( text );
 	}
 
 	@Override

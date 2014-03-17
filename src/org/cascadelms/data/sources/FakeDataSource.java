@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.cascadelms.StreamActivity.CourseDataSource;
 import org.cascadelms.course_documents.DocumentsFragment.DocumentsDataSource;
@@ -305,33 +304,34 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 				false, 100 ).build() );
 
 		assignmentsListMachine = new ArrayList<Assignment>();
-		/* TODO add more assignment data. */
+		assignmentsListMachine.add( new Assignment.Builder( id++,
+				"Take-Home Exam", Assignment.Category.ASSIGNMENT, new Date(
+						System.currentTimeMillis() ), new Date( System
+						.currentTimeMillis() + 5000L ), new Date( System
+						.currentTimeMillis() + 10000L ), false, 5 ).build() );
 
 		long today = new Date().getTime();
 		assignmentsListAI = new ArrayList<Assignment>();
 		assignmentsListAI.add( new Assignment.Builder( id++,
 				"Upcoming Assignment", Assignment.Category.ASSIGNMENT,
 				new Date( today + week ), new Date( today + ( 2L * week ) ),
-				new Date( today + ( 3L * week ) ), false, 100 ).build() );
+				new Date( today + ( 3L * week ) ), false, 20 ).build() );
 		assignmentsListAI.add( new Assignment.Builder( id++,
 				"Current Assignment", Assignment.Category.ASSIGNMENT, new Date(
 						today - week ), new Date( today + week ), new Date(
-						today + ( 2L * week ) ), false, 100 ).build() );
+						today + ( 2L * week ) ), false, 20 ).build() );
 		assignmentsListAI.add( new Assignment.Builder( id++,
 				"Past Due Assignment", Assignment.Category.ASSIGNMENT,
 				new Date( today - ( 2L * week ) ), new Date( today - week ),
-				new Date( today + week ), false, 100 ).build() );
+				new Date( today + week ), false, 20 ).build() );
 		assignmentsListAI.add( new Assignment.Builder( id++,
 				"Closed Assignment", Assignment.Category.ASSIGNMENT, new Date(
 						today - ( 3L * week ) ),
 				new Date( today - ( 2L * week ) ), new Date( today - week ),
-				false, 100 ).build() );
+				false, 20 ).build() );
 
 		long now = ( new Date() ).getTime();
 		int labNumber = 0;
-		Logger.getLogger( FakeDataSource.class.getName() ).info(
-				"Now:" + new Date( now ) + ", " + new Date( now + week ) );
-
 		assignmentsListInfo = new ArrayList<Assignment>();
 		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
 				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
@@ -377,6 +377,7 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
 				+ week ), new Date( now + ( 2 * week ) ), new Date( now
 				+ ( 3 * week ) ), false, 100 ).build() );
+
 		assignmentsListUI = new ArrayList<Assignment>();
 		/* This list is left empty on purpose. */
 	}
