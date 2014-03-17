@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.cascadelms.StreamActivity.CourseDataSource;
 import org.cascadelms.course_documents.DocumentsFragment.DocumentsDataSource;
@@ -275,11 +276,11 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 	private static void initAssignmentsData()
 	{
 		/* Dates to use in Assignment building. */
-		Date availableDate = new Date( 1387381568 );
-		Date lastSubmissionDate = new Date( 1398440768 );
+		Date availableDate = new Date( 1387381568000L );
+		Date lastSubmissionDate = new Date( 1398440768000L );
 		int id = 0;
-		long dueTime = 1392181200;
-		long week = 604800;
+		long dueTime = 1392181200000L;
+		final long week = 604800000L;
 
 		assignmentsListDesign = new ArrayList<Assignment>();
 		assignmentsListDesign.add( new Assignment.Builder( id++,
@@ -302,11 +303,82 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 				"Online User Manual", Assignment.Category.ASSIGNMENT,
 				availableDate, new Date( dueTime += week ), lastSubmissionDate,
 				false, 100 ).build() );
+
 		assignmentsListMachine = new ArrayList<Assignment>();
 		/* TODO add more assignment data. */
+
+		long today = new Date().getTime();
 		assignmentsListAI = new ArrayList<Assignment>();
+		assignmentsListAI.add( new Assignment.Builder( id++,
+				"Upcoming Assignment", Assignment.Category.ASSIGNMENT,
+				new Date( today + week ), new Date( today + ( 2L * week ) ),
+				new Date( today + ( 3L * week ) ), false, 100 ).build() );
+		assignmentsListAI.add( new Assignment.Builder( id++,
+				"Current Assignment", Assignment.Category.ASSIGNMENT, new Date(
+						today - week ), new Date( today + week ), new Date(
+						today + ( 2L * week ) ), false, 100 ).build() );
+		assignmentsListAI.add( new Assignment.Builder( id++,
+				"Past Due Assignment", Assignment.Category.ASSIGNMENT,
+				new Date( today - ( 2L * week ) ), new Date( today - week ),
+				new Date( today + week ), false, 100 ).build() );
+		assignmentsListAI.add( new Assignment.Builder( id++,
+				"Closed Assignment", Assignment.Category.ASSIGNMENT, new Date(
+						today - ( 3L * week ) ),
+				new Date( today - ( 2L * week ) ), new Date( today - week ),
+				false, 100 ).build() );
+
+		long now = ( new Date() ).getTime();
+		int labNumber = 0;
+		Logger.getLogger( FakeDataSource.class.getName() ).info(
+				"Now:" + new Date( now ) + ", " + new Date( now + week ) );
+
 		assignmentsListInfo = new ArrayList<Assignment>();
+		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
+				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
+				+ week ), new Date( now + ( 2 * week ) ), new Date( now
+				+ ( 3 * week ) ), false, 100 ).build() );
+		now += week;
+		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
+				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
+				+ week ), new Date( now + ( 2 * week ) ), new Date( now
+				+ ( 3 * week ) ), false, 100 ).build() );
+		now += week;
+		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
+				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
+				+ week ), new Date( now + ( 2 * week ) ), new Date( now
+				+ ( 3 * week ) ), false, 100 ).build() );
+		now += week;
+		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
+				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
+				+ week ), new Date( now + ( 2 * week ) ), new Date( now
+				+ ( 3 * week ) ), false, 100 ).build() );
+		now += week;
+		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
+				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
+				+ week ), new Date( now + ( 2 * week ) ), new Date( now
+				+ ( 3 * week ) ), false, 100 ).build() );
+		now += week;
+		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
+				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
+				+ week ), new Date( now + ( 2 * week ) ), new Date( now
+				+ ( 3 * week ) ), false, 100 ).build() );
+		now += week;
+		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
+				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
+				+ week ), new Date( now + ( 2 * week ) ), new Date( now
+				+ ( 3 * week ) ), false, 100 ).build() );
+		now += week;
+		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
+				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
+				+ week ), new Date( now + ( 2 * week ) ), new Date( now
+				+ ( 3 * week ) ), false, 100 ).build() );
+		now += week;
+		assignmentsListInfo.add( new Assignment.Builder( id++, "Lab "
+				+ ++labNumber, Assignment.Category.ASSIGNMENT, new Date( now
+				+ week ), new Date( now + ( 2 * week ) ), new Date( now
+				+ ( 3 * week ) ), false, 100 ).build() );
 		assignmentsListUI = new ArrayList<Assignment>();
+		/* This list is left empty on purpose. */
 	}
 
 	@Override
