@@ -28,7 +28,6 @@ public class DocumentsFragment extends ListFragment implements
 	private DocumentAdapter adapter;
 	private DocumentsDataSource dataSource;
 	private int courseId;
-	private TextView emptyTextView;
 
 	/* Constants */
 	private static final String ARGS_COURSE_ID = "org.cascadelms.args_course_id";
@@ -73,7 +72,6 @@ public class DocumentsFragment extends ListFragment implements
 		super.onCreateView( inflater, container, savedInstanceState );
 		View view = inflater.inflate( R.layout.fragment_documents, null );
 		this.setListAdapter( adapter );
-		this.emptyTextView = (TextView) view.findViewById( android.R.id.empty );
 		return view;
 	}
 
@@ -90,7 +88,8 @@ public class DocumentsFragment extends ListFragment implements
 	public void setEmptyText( CharSequence text )
 	{
 		/* Subclasses which use custom views must override this method. */
-		this.emptyTextView.setText( text );
+		( (TextView) this.getActivity().findViewById( android.R.id.empty ) )
+				.setText( text );
 	}
 
 	@Override
@@ -127,7 +126,7 @@ public class DocumentsFragment extends ListFragment implements
 				if( data.isEmpty() )
 				{
 					this.setEmptyText( this
-							.getString( R.string.fragment_document_list_empty_message ) );
+							.getString( R.string.fragment_documents_list_empty_message ) );
 				}
 				return;
 			}
