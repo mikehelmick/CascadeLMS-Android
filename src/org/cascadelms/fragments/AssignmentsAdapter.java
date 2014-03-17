@@ -2,7 +2,6 @@ package org.cascadelms.fragments;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.logging.Logger;
 
 import org.cascadelms.R;
 import org.cascadelms.data.models.Assignment;
@@ -51,8 +50,6 @@ public class AssignmentsAdapter extends ArrayAdapter<Assignment>
 					format.format( assignment.getPointsPossible() ) );
 		} else
 		{
-			Logger.getLogger( AssignmentsAdapter.class.getName() ).info(
-					"Earned: " + assignment.getPointsEarned() );
 			pointsString = this.getContext().getString(
 					R.string.list_item_assignment_points,
 					format.format( assignment.getPointsEarned() ),
