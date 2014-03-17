@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.cascadelms.StreamActivity.CourseDataSource;
-import org.cascadelms.course_documents.DocumentsFragment.DocumentsDataSource;
 import org.cascadelms.data.models.Assignment;
 import org.cascadelms.data.models.BlogPost;
 import org.cascadelms.data.models.Course;
@@ -15,6 +14,7 @@ import org.cascadelms.data.models.Document;
 import org.cascadelms.data.models.StreamItem;
 import org.cascadelms.fragments.AssignmentsFragment.AssignmentsDataSource;
 import org.cascadelms.fragments.CourseBlogFragment.BlogDataSource;
+import org.cascadelms.fragments.DocumentsFragment.DocumentsDataSource;
 import org.cascadelms.fragments.SocialStreamFragment.StreamDataSource;
 
 public class FakeDataSource implements CourseDataSource, DocumentsDataSource,

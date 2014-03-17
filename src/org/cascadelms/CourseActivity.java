@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.cascadelms.course_documents.DocumentsFragment;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.fragments.AssignmentsFragment;
 import org.cascadelms.fragments.CourseBlogFragment;
+import org.cascadelms.fragments.DocumentsFragment;
 import org.cascadelms.fragments.GradesFragment;
 import org.cascadelms.fragments.SocialStreamFragment;
 

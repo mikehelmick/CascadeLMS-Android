@@ -1,4 +1,4 @@
-package org.cascadelms.fragments;
+package org.cascadelms.data.adapters;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
