@@ -2,8 +2,8 @@ package org.cascadelms.data.loaders;
 
 import java.util.List;
 
-import org.cascadelms.course_documents.DocumentsFragment.DocumentsDataSource;
 import org.cascadelms.data.models.Document;
+import org.cascadelms.fragments.DocumentsFragment.DocumentsDataSource;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;

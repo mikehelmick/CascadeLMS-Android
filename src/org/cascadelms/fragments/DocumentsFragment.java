@@ -1,9 +1,10 @@
-package org.cascadelms.course_documents;
+package org.cascadelms.fragments;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.cascadelms.R;
+import org.cascadelms.data.adapters.DocumentAdapter;
 import org.cascadelms.data.loaders.DocumentsLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;

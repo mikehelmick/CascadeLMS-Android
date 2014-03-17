@@ -1,4 +1,4 @@
-package org.cascadelms.course_documents;
+package org.cascadelms.data.adapters;
 
 import java.util.Collection;
 

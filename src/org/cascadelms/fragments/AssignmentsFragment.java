@@ -3,6 +3,7 @@ package org.cascadelms.fragments;
 import java.util.List;
 
 import org.cascadelms.R;
+import org.cascadelms.data.adapters.AssignmentsAdapter;
 import org.cascadelms.data.loaders.AssignmentsLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Assignment;
