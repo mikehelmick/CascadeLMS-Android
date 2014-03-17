@@ -21,6 +21,7 @@ public class AssignmentsFragment extends ListFragment implements
 		LoaderCallbacks<List<Assignment>>
 {
 	private AssignmentsDataSource assigmentsDataSource;
+	private AssignmentsAdapter adapter;
 
 	/* Constants */
 	private static final String ARGS_COURSE = "org.cascade.args_course";
@@ -42,6 +43,9 @@ public class AssignmentsFragment extends ListFragment implements
 		this.getActivity().getSupportLoaderManager()
 				.initLoader( LoaderCodes.LOADER_CODE_ASSIGNMENTS, null, this )
 				.forceLoad();
+
+		this.adapter = new AssignmentsAdapter( this.getActivity() );
+		this.setListAdapter( adapter );
 
 		super.onCreate( savedInstanceState );
 	}
@@ -81,7 +85,8 @@ public class AssignmentsFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
 			{
-				/* TODO Use this data in the Fragment. */
+				this.adapter.clear();
+				this.adapter.addAll( data );
 				break;
 			}
 		}
@@ -95,10 +100,7 @@ public class AssignmentsFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
 			{
-				/*
-				 * TODO Anything that uses data from the Loader needs to clear
-				 * its data here.
-				 */
+				this.adapter.clear();
 				break;
 			}
 		}

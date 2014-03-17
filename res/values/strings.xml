@@ -34,6 +34,10 @@
     <string name="fragment_documents_list_loading_message">Loading Documents&#8230;</string>
     <string name="fragment_document_list_empty_message">No documents for this course.</string>
     
+    <!-- Assignments Fragment -->
+    <string name="fragment_assignments_list_loading_message">Loading Assignments&#8230;</string>
+    <string name="fragment_assignments_list_empty_message">Loading Assignments&#8230;</string>
+    
     <string name="course_navigation_home">Home</string>
     
     <!-- Stream Activity -->
