@@ -16,6 +16,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class AssignmentsFragment extends ListFragment implements
 		LoaderCallbacks<List<Assignment>>
@@ -61,6 +62,14 @@ public class AssignmentsFragment extends ListFragment implements
 	}
 
 	@Override
+	public void setEmptyText( CharSequence text )
+	{
+		/* Subclasses which use custom views must override this method. */
+		( (TextView) this.getActivity().findViewById( android.R.id.empty ) )
+				.setText( text );
+	}
+
+	@Override
 	public Loader<List<Assignment>> onCreateLoader( int id, Bundle args )
 	{
 		switch( id )
@@ -87,6 +96,8 @@ public class AssignmentsFragment extends ListFragment implements
 			{
 				this.adapter.clear();
 				this.adapter.addAll( data );
+				this.setEmptyText( this
+						.getString( R.string.fragment_assignments_list_empty_message ) );
 				break;
 			}
 		}
@@ -101,6 +112,8 @@ public class AssignmentsFragment extends ListFragment implements
 			case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
 			{
 				this.adapter.clear();
+				this.setEmptyText( this
+						.getString( R.string.fragment_assignments_list_loading_message ) );
 				break;
 			}
 		}
@@ -122,4 +135,5 @@ public class AssignmentsFragment extends ListFragment implements
 	{
 		return this.getArguments().getParcelable( ARGS_COURSE );
 	}
+
 }
