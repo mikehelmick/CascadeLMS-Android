@@ -3,6 +3,7 @@ package org.cascadelms.data.sources;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.cascadelms.StreamActivity.CourseDataSource;
@@ -20,18 +21,15 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 		AssignmentsDataSource, BlogDataSource, StreamDataSource
 {
 	/* TODO Lists with no fake data in them yet. */
-	private static ArrayList<Assignment> emptyAssignmentsList;
 	private static ArrayList<BlogPost> emptyBlogPostList;
 	private static ArrayList<StreamItem> emptyStreamItemList;
 
 	/* Static initializer */
 	{
+		/* Builds the data to return. */
 		FakeDataSource.initCourseData();
 		FakeDataSource.initDocumentsData();
-
-		/* Builds Assignment lists for each course. */
-		emptyAssignmentsList = new ArrayList<Assignment>();
-		/* TODO Create a list of fake data to return for each course. */
+		FakeDataSource.initAssignmentsData();
 
 		emptyBlogPostList = new ArrayList<BlogPost>();
 		/* TODO Create fake blog posts to return for each course. */
@@ -267,36 +265,77 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 		}
 	}
 
-	/* AssignmentsDataSource Methods */
+	/* Assignments Data */
+	private static ArrayList<Assignment> assignmentsListDesign;
+	private static ArrayList<Assignment> assignmentsListMachine;
+	private static ArrayList<Assignment> assignmentsListAI;
+	private static ArrayList<Assignment> assignmentsListInfo;
+	private static ArrayList<Assignment> assignmentsListUI;
+
+	private static void initAssignmentsData()
+	{
+		/* Dates to use in Assignment building. */
+		Date availableDate = new Date( 1387381568 );
+		Date lastSubmissionDate = new Date( 1398440768 );
+		int id = 0;
+		long dueTime = 1392181200;
+		long week = 604800;
+
+		assignmentsListDesign = new ArrayList<Assignment>();
+		assignmentsListDesign.add( new Assignment.Builder( id++,
+				"150-Word Project Abstract", Assignment.Category.ASSIGNMENT,
+				availableDate, new Date( dueTime += week ), lastSubmissionDate,
+				true, 100 ).build() );
+		assignmentsListDesign.add( new Assignment.Builder( id++,
+				"Presentation Slides", Assignment.Category.ASSIGNMENT,
+				availableDate, new Date( dueTime += week ), lastSubmissionDate,
+				true, 100 ).build() );
+		assignmentsListDesign.add( new Assignment.Builder( id++, "Test Plans",
+				Assignment.Category.ASSIGNMENT, availableDate, new Date(
+						dueTime += week ), lastSubmissionDate, true, 100 )
+				.build() );
+		assignmentsListDesign.add( new Assignment.Builder( id++,
+				"Current Events Essay", Assignment.Category.ASSIGNMENT,
+				availableDate, new Date( dueTime += week ), lastSubmissionDate,
+				true, 100 ).build() );
+		assignmentsListDesign.add( new Assignment.Builder( id++,
+				"Online User Manual", Assignment.Category.ASSIGNMENT,
+				availableDate, new Date( dueTime += week ), lastSubmissionDate,
+				false, 100 ).build() );
+		assignmentsListMachine = new ArrayList<Assignment>();
+		assignmentsListAI = new ArrayList<Assignment>();
+		assignmentsListInfo = new ArrayList<Assignment>();
+		assignmentsListUI = new ArrayList<Assignment>();
+	}
+
 	@Override
 	public List<Assignment> getAssignmentsForCourse( int courseId )
 	{
-		/* TODO Return lists of fake data on a course by course basis. */
 		switch( courseId )
 		{
 			case COURSE_ID_DESIGN:
 			{
-
+				return assignmentsListDesign;
 			}
 			case COURSE_ID_MACHINE_LEARNING:
 			{
-
+				return assignmentsListMachine;
 			}
 			case COURSE_ID_AI:
 			{
-
+				return assignmentsListAI;
 			}
 			case COURSE_ID_INFO_RETRIEVAL:
 			{
-
+				return assignmentsListInfo;
 			}
 			case COURSE_ID_UI:
 			{
-
+				return assignmentsListUI;
 			}
 			default:
 			{
-				return emptyAssignmentsList;
+				return null;
 			}
 		}
 	}
