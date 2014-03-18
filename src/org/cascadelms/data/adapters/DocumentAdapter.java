@@ -15,9 +15,9 @@ import android.widget.TextView;
 
 public class DocumentAdapter extends ArrayAdapter<Document>
 {
-	public DocumentAdapter( Context context, int resource )
+	public DocumentAdapter( Context context )
 	{
-		super( context, resource );
+		super( context, R.layout.list_item_document );
 	}
 
 	@Override

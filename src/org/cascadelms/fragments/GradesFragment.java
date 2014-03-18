@@ -3,6 +3,7 @@ package org.cascadelms.fragments;
 import java.util.List;
 
 import org.cascadelms.R;
+import org.cascadelms.data.adapters.GradesAdapter;
 import org.cascadelms.data.loaders.GradesLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
@@ -23,6 +24,7 @@ public class GradesFragment extends ListFragment implements
 		LoaderCallbacks<List<Grade>>
 {
 	private GradesDataSource dataSource;
+	private GradesAdapter adapter;
 	private TextView emptyView;
 
 	/* Constants */
@@ -41,6 +43,7 @@ public class GradesFragment extends ListFragment implements
 	public void onCreate( Bundle savedInstanceState )
 	{
 		this.dataSource = FakeDataSource.getInstance();
+		this.adapter = new GradesAdapter( this.getActivity() );
 		super.onCreate( savedInstanceState );
 	}
 
@@ -64,6 +67,7 @@ public class GradesFragment extends ListFragment implements
 		this.getActivity().getSupportLoaderManager()
 				.initLoader( LoaderCodes.LOADER_CODE_GRADES, null, this )
 				.forceLoad();
+		this.getListView().setAdapter( adapter );
 		super.onViewCreated( view, savedInstanceState );
 	}
 
@@ -93,9 +97,8 @@ public class GradesFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_GRADES:
 			{
-				// TODO
-				// this.adapter.clear();
-				// this.adapter.addAll( data );
+				this.adapter.clear();
+				this.adapter.addAll( data );
 				this.emptyView
 						.setText( R.string.fragment_grades_list_empty_message );
 				return;
@@ -110,8 +113,7 @@ public class GradesFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_GRADES:
 			{
-				// TODO
-				// this.adapter.clear();
+				this.adapter.clear();
 				return;
 			}
 		}
