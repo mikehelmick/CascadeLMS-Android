@@ -60,8 +60,7 @@ public class DocumentsFragment extends ListFragment implements
 		/* Gets the course id from the arguments */
 		this.courseId = this.getArguments().getInt( ARGS_COURSE_ID );
 		LOGGER.info( "DocumentsFragment created for course #" + this.courseId );
-		this.adapter = new DocumentAdapter( this.getActivity(),
-				android.R.layout.simple_list_item_1 );
+		this.adapter = new DocumentAdapter( this.getActivity() );
 
 		/* Creates a data source and begins loading */
 		this.dataSource = FakeDataSource.getInstance();
