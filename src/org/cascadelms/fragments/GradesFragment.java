@@ -16,11 +16,14 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class GradesFragment extends ListFragment implements
 		LoaderCallbacks<List<Grade>>
 {
 	private GradesDataSource dataSource;
+	private TextView emptyView;
 
 	/* Constants */
 	private static final String ARGS_COURSE = "org.cascadelms.args_course";
@@ -48,15 +51,19 @@ public class GradesFragment extends ListFragment implements
 		super.onCreateView( inflater, container, savedInstanceState );
 
 		View view = inflater.inflate( R.layout.fragment_grades, null );
+		this.emptyView = (TextView) view
+				.findViewById( R.id.fragment_grades_empty );
+		( (ListView) view.findViewById( android.R.id.list ) )
+				.setEmptyView( emptyView );
 		return view;
 	}
 
 	@Override
 	public void onViewCreated( View view, Bundle savedInstanceState )
 	{
-		// this.getActivity().getSupportLoaderManager()
-		// .initLoader( LoaderCodes.LOADER_CODE_GRADES, null, this )
-		// .forceLoad();
+		this.getActivity().getSupportLoaderManager()
+				.initLoader( LoaderCodes.LOADER_CODE_GRADES, null, this )
+				.forceLoad();
 		super.onViewCreated( view, savedInstanceState );
 	}
 
@@ -67,6 +74,8 @@ public class GradesFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_GRADES:
 			{
+				emptyView
+						.setText( R.string.fragment_grades_list_loading_message );
 				return new GradesLoader( this.getActivity(), this.dataSource,
 						this.getCourse().getId() );
 			}
@@ -87,12 +96,8 @@ public class GradesFragment extends ListFragment implements
 				// TODO
 				// this.adapter.clear();
 				// this.adapter.addAll( data );
-				// if( data.isEmpty() )
-				// {
-				// this.setEmptyText( this
-				// .getString( R.string.fragment_documents_list_empty_message )
-				// );
-				// }
+				this.emptyView
+						.setText( R.string.fragment_grades_list_empty_message );
 				return;
 			}
 		}
