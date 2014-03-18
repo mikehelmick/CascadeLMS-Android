@@ -1,17 +1,29 @@
 package org.cascadelms.fragments;
 
+import java.util.List;
+
 import org.cascadelms.R;
+import org.cascadelms.data.loaders.GradesLoader;
+import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
+import org.cascadelms.data.models.Grade;
+import org.cascadelms.data.sources.FakeDataSource;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class GradesFragment extends Fragment
+public class GradesFragment extends ListFragment implements
+		LoaderCallbacks<List<Grade>>
 {
+	private GradesDataSource dataSource;
+
+	/* Constants */
 	private static final String ARGS_COURSE = "org.cascadelms.args_course";
 
 	public static GradesFragment newInstance( Course course )
@@ -21,6 +33,13 @@ public class GradesFragment extends Fragment
 		GradesFragment fragment = new GradesFragment();
 		fragment.setArguments( args );
 		return fragment;
+	}
+
+	@Override
+	public void onCreate( Bundle savedInstanceState )
+	{
+		this.dataSource = FakeDataSource.getInstance();
+		super.onCreate( savedInstanceState );
 	}
 
 	@Override
@@ -35,6 +54,72 @@ public class GradesFragment extends Fragment
 		label.append( " " + this.getCourse().getId() );
 
 		return view;
+	}
+
+	@Override
+	public void onViewCreated( View view, Bundle savedInstanceState )
+	{
+		// this.getActivity().getSupportLoaderManager()
+		// .initLoader( LoaderCodes.LOADER_CODE_GRADES, null, this )
+		// .forceLoad();
+		super.onViewCreated( view, savedInstanceState );
+	}
+
+	@Override
+	public Loader<List<Grade>> onCreateLoader( int id, Bundle args )
+	{
+		switch( id )
+		{
+			case LoaderCodes.LOADER_CODE_GRADES:
+			{
+				return new GradesLoader( this.getActivity(), this.dataSource,
+						this.getCourse().getId() );
+			}
+			default:
+			{
+				return null;
+			}
+		}
+	}
+
+	@Override
+	public void onLoadFinished( Loader<List<Grade>> loader, List<Grade> data )
+	{
+		switch( loader.getId() )
+		{
+			case LoaderCodes.LOADER_CODE_GRADES:
+			{
+				// TODO
+				// this.adapter.clear();
+				// this.adapter.addAll( data );
+				// if( data.isEmpty() )
+				// {
+				// this.setEmptyText( this
+				// .getString( R.string.fragment_documents_list_empty_message )
+				// );
+				// }
+				return;
+			}
+		}
+	}
+
+	@Override
+	public void onLoaderReset( Loader<List<Grade>> loader )
+	{
+		switch( loader.getId() )
+		{
+			case LoaderCodes.LOADER_CODE_GRADES:
+			{
+				// TODO
+				// this.adapter.clear();
+				return;
+			}
+		}
+	}
+
+	public interface GradesDataSource
+	{
+		public List<Grade> getGradesForCourse( int courseId );
 	}
 
 	/**

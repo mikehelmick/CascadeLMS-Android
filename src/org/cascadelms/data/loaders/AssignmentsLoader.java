@@ -10,10 +10,11 @@ import android.support.v4.content.AsyncTaskLoader;
 
 public class AssignmentsLoader extends AsyncTaskLoader<List<Assignment>>
 {
-	AssignmentsDataSource source;
-	int courseId;
-	
-	public AssignmentsLoader( Context context, AssignmentsDataSource source, int courseId ) 
+	private AssignmentsDataSource source;
+	private int courseId;
+
+	public AssignmentsLoader( Context context, AssignmentsDataSource source,
+			int courseId )
 	{
 		super( context );
 		this.source = source;
@@ -21,7 +22,7 @@ public class AssignmentsLoader extends AsyncTaskLoader<List<Assignment>>
 	}
 
 	@Override
-	public List<Assignment> loadInBackground() 
+	public List<Assignment> loadInBackground()
 	{
 		return this.source.getAssignmentsForCourse( courseId );
 	}
