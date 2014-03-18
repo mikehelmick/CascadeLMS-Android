@@ -16,7 +16,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 public class GradesFragment extends ListFragment implements
 		LoaderCallbacks<List<Grade>>
@@ -49,10 +48,6 @@ public class GradesFragment extends ListFragment implements
 		super.onCreateView( inflater, container, savedInstanceState );
 
 		View view = inflater.inflate( R.layout.fragment_grades, null );
-		TextView label = (TextView) view.findViewById( R.id.placeholder );
-
-		label.append( " " + this.getCourse().getId() );
-
 		return view;
 	}
 
