@@ -17,6 +17,8 @@ public class GradesLoader extends AsyncTaskLoader<List<Grade>>
 			int courseId )
 	{
 		super( context );
+		this.dataSource = dataSource;
+		this.courseId = courseId;
 	}
 
 	@Override
