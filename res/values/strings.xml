@@ -32,17 +32,21 @@
     
     <!-- Documents Fragment -->
     <string name="fragment_documents_list_loading_message">Loading Documents&#8230;</string>
-    <string name="fragment_documents_list_empty_message">No documents for this course.</string>
+    <string name="fragment_documents_list_empty_message">No documents for this course</string>
     
     <!-- Assignments Fragment -->
     <string name="fragment_assignments_list_loading_message">Loading Assignments&#8230;</string>
-    <string name="fragment_assignments_list_empty_message">No assignments for this course.</string>
+    <string name="fragment_assignments_list_empty_message">No assignments for this course</string>
     <string name="list_item_assignment_points" formatted="false">%s/%s</string>
     <string name="list_item_assignment_no_points" formatted="false">-/%s</string>
     <string name="list_item_assignment_upcoming_date" formatted="false">Available %1$tm/%1$td</string>
     <string name="list_item_assignment_due_date" formatted="false">Due %1$tm/%1$td</string>
     <string name="list_item_assignment_close_date" formatted="false">Closes %1$tm/%1$td</string>
     <string name="list_item_assignment_closed">Closed</string>
+    
+    <!-- Grades Fragment -->
+    <string name="fragment_grades_list_loading_message">Loading Grades&#8230;</string>
+    <string name="fragment_grades_list_empty_message">No grades for this course</string>
     
     <string name="course_navigation_home">Home</string>
     

@@ -132,11 +132,8 @@ public class DocumentsFragment extends ListFragment implements
 				LOGGER.info( "DocumentsFragment finished loading Documents." );
 				this.adapter.clear();
 				this.adapter.addAll( data );
-				if( data.isEmpty() )
-				{
-					this.setEmptyText( this
-							.getString( R.string.fragment_documents_list_empty_message ) );
-				}
+				this.setEmptyText( this
+						.getString( R.string.fragment_documents_list_empty_message ) );
 				return;
 			}
 		}

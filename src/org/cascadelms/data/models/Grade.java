@@ -67,6 +67,13 @@ public class Grade
 		return pointsPossible;
 	}
 
+	@Override
+	public String toString()
+	{
+		return this.pointsEarned + "/" + this.pointsPossible + " : "
+				+ this.assignmentTitle;
+	}
+
 	/**
 	 * Possible values for a Grade's grade_type attribute. So far, only Score
 	 * has been observed.
