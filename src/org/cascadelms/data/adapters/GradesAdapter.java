@@ -1,6 +1,5 @@
 package org.cascadelms.data.adapters;
 
-import org.cascadelms.R;
 import org.cascadelms.data.models.Grade;
 
 import android.content.Context;
@@ -12,7 +11,8 @@ public class GradesAdapter extends ArrayAdapter<Grade>
 {
 	public GradesAdapter( Context context )
 	{
-		super( context, R.layout.list_item_grade );
+		super( context, android.R.layout.simple_list_item_1 );// R.layout.list_item_grade
+																// );
 	}
 
 	@Override
