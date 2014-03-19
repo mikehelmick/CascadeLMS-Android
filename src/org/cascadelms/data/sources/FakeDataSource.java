@@ -23,22 +23,13 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 		AssignmentsDataSource, BlogDataSource, StreamDataSource,
 		GradesDataSource
 {
-	/* TODO Lists with no fake data in them yet. */
-	private static ArrayList<BlogPost> emptyBlogPostList;
-	private static ArrayList<StreamItem> emptyStreamItemList;
-
 	/* Static initializer */
 	{
 		/* Builds the data to return. */
 		FakeDataSource.initCourseData();
 		FakeDataSource.initDocumentsData();
 		FakeDataSource.initAssignmentsData();
-
-		emptyBlogPostList = new ArrayList<BlogPost>();
-		/* TODO Create fake blog posts to return for each course. */
-
-		emptyStreamItemList = new ArrayList<StreamItem>();
-		/* TODO Create fake Stream items to return for each course. */
+		FakeDataSource.initGradesData();
 	}
 
 	private static FakeDataSource instance;
@@ -418,6 +409,90 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 		}
 	}
 
+	/* Grades Data */
+	private static ArrayList<Grade> gradesListDesign;
+	private static ArrayList<Grade> gradesListMachine;
+	private static ArrayList<Grade> gradesListAI;
+	private static ArrayList<Grade> gradesListInfo;
+	private static ArrayList<Grade> gradesListUI;
+
+	private static void initGradesData()
+	{
+		/* Transform Assignments into Grades. */
+		gradesListDesign = new ArrayList<Grade>();
+		for ( Assignment assignment : assignmentsListDesign )
+		{
+			gradesListDesign.add( new Grade( assignment.getId(), assignment
+					.getTitle(), assignment.getCategory(), assignment
+					.getDueDate(), Grade.Type.SCORE, assignment
+					.getPointsEarned(), assignment.getPointsPossible() ) );
+		}
+		gradesListMachine = new ArrayList<Grade>();
+		for ( Assignment assignment : assignmentsListMachine )
+		{
+			gradesListMachine.add( new Grade( assignment.getId(), assignment
+					.getTitle(), assignment.getCategory(), assignment
+					.getDueDate(), Grade.Type.SCORE, assignment
+					.getPointsEarned(), assignment.getPointsPossible() ) );
+		}
+		gradesListAI = new ArrayList<Grade>();
+		for ( Assignment assignment : assignmentsListAI )
+		{
+			gradesListAI.add( new Grade( assignment.getId(), assignment
+					.getTitle(), assignment.getCategory(), assignment
+					.getDueDate(), Grade.Type.SCORE, assignment
+					.getPointsEarned(), assignment.getPointsPossible() ) );
+		}
+		gradesListInfo = new ArrayList<Grade>();
+		for ( Assignment assignment : assignmentsListInfo )
+		{
+			gradesListInfo.add( new Grade( assignment.getId(), assignment
+					.getTitle(), assignment.getCategory(), assignment
+					.getDueDate(), Grade.Type.SCORE, assignment
+					.getPointsEarned(), assignment.getPointsPossible() ) );
+		}
+		gradesListUI = new ArrayList<Grade>();
+		for ( Assignment assignment : assignmentsListUI )
+		{
+			gradesListUI.add( new Grade( assignment.getId(), assignment
+					.getTitle(), assignment.getCategory(), assignment
+					.getDueDate(), Grade.Type.SCORE, assignment
+					.getPointsEarned(), assignment.getPointsPossible() ) );
+		}
+	}
+
+	@Override
+	public List<Grade> getGradesForCourse( int courseId )
+	{
+		switch( courseId )
+		{
+			case COURSE_ID_DESIGN:
+			{
+				return gradesListDesign;
+			}
+			case COURSE_ID_MACHINE_LEARNING:
+			{
+				return gradesListMachine;
+			}
+			case COURSE_ID_AI:
+			{
+				return gradesListAI;
+			}
+			case COURSE_ID_INFO_RETRIEVAL:
+			{
+				return gradesListInfo;
+			}
+			case COURSE_ID_UI:
+			{
+				return gradesListUI;
+			}
+			default:
+			{
+				return new ArrayList<Grade>();
+			}
+		}
+	}
+
 	@Override
 	public List<BlogPost> getBlogPostsForCourse( int courseId )
 	{
@@ -446,7 +521,7 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 			}
 			default:
 			{
-				return emptyBlogPostList;
+				return new ArrayList<BlogPost>();
 			}
 		}
 	}
@@ -454,7 +529,7 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 	@Override
 	public List<StreamItem> getAllStreamItems()
 	{
-		return emptyStreamItemList;
+		return new ArrayList<StreamItem>();
 	}
 
 	@Override
@@ -485,15 +560,8 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 			}
 			default:
 			{
-				return emptyStreamItemList;
+				return new ArrayList<StreamItem>();
 			}
 		}
-	}
-
-	@Override
-	public List<Grade> getGradesForCourse( int courseId )
-	{
-		// TODO Provide test data
-		return new ArrayList<Grade>();
 	}
 }
