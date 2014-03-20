@@ -3,6 +3,7 @@ package org.cascadelms;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,8 +66,7 @@ public class CascadeActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent( this, SelectSchoolActivity.class );
 
-		// Makes Back leave the app.
-		intent.addFlags( Intent.FLAG_ACTIVITY_NO_HISTORY );
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
 		this.startActivity( intent );
         finish();
 	}
