@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.IntentCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -199,6 +200,8 @@ public class LoginActivity extends FragmentActivity
 				Intent intent = new Intent( LoginActivity.this,
 						StreamActivity.class );
 
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity( intent );
 				finish();
 			} else
