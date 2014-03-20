@@ -172,14 +172,26 @@ public class DocumentAdapter extends BaseAdapter
 
 	public void setData( List<? extends Document> collection )
 	{
-		int size = collection.size();
 		/* Sort the data and insert dividers. */
 		items.clear();
 		Collections.sort( collection, new DocumentComparator() );
 		items.addAll( collection );
-		items.add( 0, new Divider( "Folders" ) ); // TODO use string resource
+		if( items.isEmpty() )
+		{
+			/* Nothing to do on an empty list. */
+			return;
+		}
+
+		int startingIndex = 0;
+		/* Only insert the header if there are folders. */
+		if( ( (Document) items.get( 0 ) ).isFolder() )
+		{
+			items.add( 0, new Divider( "Folders" ) ); // TODO use string
+														// resource
+			startingIndex = 1;
+		}
 		/* Finds the correct position to insert the Files divider. */
-		for ( int i = 1; i < items.size(); i++ )
+		for ( int i = startingIndex; i < items.size(); i++ )
 		{
 			if( ( (Document) items.get( i ) ).isFolder() )
 			{
@@ -190,7 +202,6 @@ public class DocumentAdapter extends BaseAdapter
 				break;
 			}
 		}
-		assert ( size + 2 ) == items.size();
 		this.notifyDataSetChanged();
 	}
 
