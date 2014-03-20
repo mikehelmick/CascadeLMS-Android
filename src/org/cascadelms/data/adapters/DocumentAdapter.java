@@ -100,7 +100,6 @@ public class DocumentAdapter extends BaseAdapter
 	@Override
 	public View getView( int position, View convertView, ViewGroup parent )
 	{
-		LOGGER.info( "DocumentAdapter.getView() at " + position );
 		switch( this.getItemViewType( position ) )
 		{
 			case ITEM_TYPE_DOCUMENT:

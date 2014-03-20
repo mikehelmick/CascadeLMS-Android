@@ -78,6 +78,18 @@ public class Document extends Item implements Parcelable
 	}
 
 	/**
+	 * Returns the filename (with extension) of this document's file.
+	 * 
+	 * @return
+	 */
+	public String getFileName()
+	{
+		// TODO Add error handling.
+		String urlString = this.documentURL.getFile();
+		return urlString.substring( urlString.lastIndexOf( "/" ) + 1 );
+	}
+
+	/**
 	 * Returns a URL to this document's associated file.
 	 * 
 	 * @return a {@link URL}
