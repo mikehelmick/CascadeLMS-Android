@@ -129,10 +129,10 @@ public class DocumentsFragment extends ListFragment implements
 			case LoaderCodes.LOADER_CODE_DOCUMENTS:
 			{
 				LOGGER.info( "DocumentsFragment finished loading Documents." );
-				this.adapter.clear();
-				this.adapter.addAll( data );
+				this.adapter.setData( data );
 				this.setEmptyText( this
 						.getString( R.string.fragment_documents_list_empty_message ) );
+				LOGGER.info( "Count: " + adapter.getCount() );
 				return;
 			}
 		}
