@@ -199,8 +199,6 @@ public class LoginActivity extends Activity
 				Intent intent = new Intent( LoginActivity.this,
 						StreamActivity.class );
 
-				// Make Back leave the app.
-				intent.addFlags( Intent.FLAG_ACTIVITY_NO_HISTORY );
 				startActivity( intent );
 				finish();
 			} else
