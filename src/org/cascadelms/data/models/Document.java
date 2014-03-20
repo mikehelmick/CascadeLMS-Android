@@ -23,6 +23,9 @@ public class Document extends Item implements Parcelable
 	private final long fileSize;
 	private final URL documentURL;
 
+	/* Constants */
+	private static final int ROOT_ID = -1;
+
 	private Document( Builder builder )
 	{
 		/* Sets attributes as specified in the Builder. */
@@ -93,6 +96,11 @@ public class Document extends Item implements Parcelable
 	public boolean isFolder()
 	{
 		return this.isFolder;
+	}
+
+	public static Document rootDocument()
+	{
+		return new Document( Builder.getFolderBuilder( ROOT_ID, "Root" ) );
 	}
 
 	/**
