@@ -56,6 +56,25 @@ public class DocumentAdapter extends BaseAdapter
 	}
 
 	@Override
+	public boolean isEnabled( int position )
+	{
+		{
+			Object item = items.get( position );
+			if( item instanceof Document )
+			{
+				return true;
+			} else if( item instanceof Divider )
+			{
+				return false;
+			} else
+			{
+				throw new IllegalStateException(
+						"An item in the list was neither a Document nor Divider." );
+			}
+		}
+	}
+
+	@Override
 	public int getItemViewType( int position )
 	{
 		Object item = items.get( position );
@@ -115,8 +134,6 @@ public class DocumentAdapter extends BaseAdapter
 						parent, false );
 				dividerView
 						.setText( ( (Divider) this.getItem( position ) ).title );
-				dividerView.setBackgroundColor( 0x00777777 ); // TODO Use color
-																// resource
 				return dividerView;
 			}
 			default:

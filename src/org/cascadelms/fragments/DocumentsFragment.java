@@ -9,6 +9,7 @@ import org.cascadelms.data.loaders.DocumentsLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
+import org.cascadelms.data.models.Folder;
 import org.cascadelms.data.sources.FakeDataSource;
 
 import android.os.Bundle;
@@ -18,19 +19,21 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 /**
  * A <code>Fragment</code> for displaying the files associated with a course.
  */
 public class DocumentsFragment extends ListFragment implements
-		LoaderCallbacks<List<Document>>
+		LoaderCallbacks<List<Document>>, OnItemClickListener
 {
 	private DocumentAdapter adapter;
 	private DocumentsDataSource dataSource;
 	private TextView emptyView;
 	private int courseId;
+	private Folder rootFolder;
 
 	/* Constants */
 	private static final String ARGS_COURSE_ID = "org.cascadelms.args_course_id";
@@ -75,8 +78,6 @@ public class DocumentsFragment extends ListFragment implements
 		View view = inflater.inflate( R.layout.fragment_documents, null );
 		emptyView = (TextView) view
 				.findViewById( R.id.fragment_documents_empty );
-		( (ListView) view.findViewById( android.R.id.list ) )
-				.setEmptyView( emptyView );
 		this.setListAdapter( adapter );
 		return view;
 	}
@@ -87,7 +88,24 @@ public class DocumentsFragment extends ListFragment implements
 		this.getActivity().getSupportLoaderManager()
 				.initLoader( LoaderCodes.LOADER_CODE_DOCUMENTS, null, this )
 				.forceLoad();
+		this.getListView().setOnItemClickListener( this );
+		this.getListView().setEmptyView( emptyView );
 		super.onViewCreated( view, savedInstanceState );
+	}
+
+	@Override
+	public void onItemClick( AdapterView<?> parent, View view, int position,
+			long id )
+	{
+
+		if( ( (Document) adapter.getItem( position ) ).isFolder() )
+		{
+			LOGGER.info( "Got a click on a folder." );
+		} else
+		{
+			LOGGER.info( "Got a click on a file." );
+		}
+
 	}
 
 	@Override
@@ -128,11 +146,11 @@ public class DocumentsFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_DOCUMENTS:
 			{
-				LOGGER.info( "DocumentsFragment finished loading Documents." );
-				this.adapter.setData( data );
+				LOGGER.info( "DocumentsFragment finished loading root directory." );
+				this.rootFolder = Folder.createRootFolder( data );
+				this.adapter.setData( rootFolder.getContents() );
 				this.setEmptyText( this
 						.getString( R.string.fragment_documents_list_empty_message ) );
-				LOGGER.info( "Count: " + adapter.getCount() );
 				return;
 			}
 		}
