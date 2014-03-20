@@ -155,10 +155,10 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 
 			/* List for Artificial Intelligence */
 			documentsListAI = new ArrayList<Document>();
-			documentsListAI.add( Document.Builder.getFileBuilder( 100,
-					"AI_Syllabus_2013-14", ".docx", 20000,
-					new URL( "http://example.com/AI_Syllabus_2013-14.docx" ) )
-					.build() );
+			// documentsListAI.add( Document.Builder.getFileBuilder( 100,
+			// "AI_Syllabus_2013-14", ".docx", 20000,
+			// new URL( "http://example.com/AI_Syllabus_2013-14.docx" ) )
+			// .build() );
 			documentsListAI.add( Document.Builder.getFolderBuilder(
 					DOCUMENT_FOLDER_LECTURE_NOTES, "Lectures" ).build() );
 
