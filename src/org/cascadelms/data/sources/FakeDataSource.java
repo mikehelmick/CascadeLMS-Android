@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.cascadelms.SelectSchoolActivity.SchoolsDataSource;
 import org.cascadelms.StreamActivity.CourseDataSource;
 import org.cascadelms.data.models.Assignment;
 import org.cascadelms.data.models.BlogPost;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
 import org.cascadelms.data.models.Grade;
+import org.cascadelms.data.models.School;
 import org.cascadelms.data.models.StreamItem;
 import org.cascadelms.fragments.AssignmentsFragment.AssignmentsDataSource;
 import org.cascadelms.fragments.CourseBlogFragment.BlogDataSource;
@@ -19,7 +21,7 @@ import org.cascadelms.fragments.DocumentsFragment.DocumentsDataSource;
 import org.cascadelms.fragments.GradesFragment.GradesDataSource;
 import org.cascadelms.fragments.SocialStreamFragment.StreamDataSource;
 
-public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
+public class FakeDataSource implements SchoolsDataSource, CourseDataSource, DocumentsDataSource,
 		AssignmentsDataSource, BlogDataSource, StreamDataSource,
 		GradesDataSource
 {
@@ -30,6 +32,7 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 		FakeDataSource.initDocumentsData();
 		FakeDataSource.initAssignmentsData();
 		FakeDataSource.initGradesData();
+        FakeDataSource.initSchoolData();
 	}
 
 	private static FakeDataSource instance;
@@ -564,4 +567,25 @@ public class FakeDataSource implements CourseDataSource, DocumentsDataSource,
 			}
 		}
 	}
+
+    private static ArrayList<School> schoolsList;
+
+    private static void initSchoolData()
+    {
+        schoolsList = new ArrayList<School>();
+
+        schoolsList.add(new School("University of Cincinnati", "https://cascade.ceas.uc.edu/",
+                "https://cascade.ceas.uc.edu/index/shibboleth"));
+        for (int i = 2; i <= 6; ++i)
+        {
+            schoolsList.add(new School("School " + i, "http://www.cascadelms.org/",
+                    "http://www.cascadelms.org/"));
+        }
+    }
+
+    @Override
+    public List<School> getSchools()
+    {
+        return schoolsList;
+    }
 }

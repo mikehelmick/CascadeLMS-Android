@@ -3,12 +3,13 @@ package org.cascadelms;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.IntentCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -20,7 +21,7 @@ import android.widget.Toast;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class LoginActivity extends Activity
+public class LoginActivity extends FragmentActivity
 {
 	private static final String PREFS_AUTH = "AuthenticationData";
 
@@ -199,8 +200,8 @@ public class LoginActivity extends Activity
 				Intent intent = new Intent( LoginActivity.this,
 						StreamActivity.class );
 
-				// Make Back leave the app.
-				intent.addFlags( Intent.FLAG_ACTIVITY_NO_HISTORY );
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity( intent );
 				finish();
 			} else
