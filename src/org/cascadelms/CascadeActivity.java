@@ -63,11 +63,12 @@ public class CascadeActivity extends ActionBarActivity
 	 */
 	protected void startLoginActivity()
 	{
-		Intent intent = new Intent( this, LoginActivity.class );
+		Intent intent = new Intent( this, SelectSchoolActivity.class );
 
 		// Makes Back leave the app.
 		intent.addFlags( Intent.FLAG_ACTIVITY_NO_HISTORY );
 		this.startActivity( intent );
+        finish();
 	}
 
 	/**
@@ -85,5 +86,6 @@ public class CascadeActivity extends ActionBarActivity
 				Toast.LENGTH_SHORT ).show();
 
 		this.startLoginActivity();
+        finish();
 	}
 }
