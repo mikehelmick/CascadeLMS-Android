@@ -31,9 +31,13 @@ public class CourseNavAdapter extends ArrayAdapter<Course>
 					android.R.layout.simple_list_item_1, parent, false );
 		}
 
-		TextView label = (TextView) convertView
-				.findViewById( android.R.id.text1 );
-		label.setText( this.getItem( position ).getTitle() );
+        if (convertView != null)
+        {
+            TextView label = (TextView) convertView
+                    .findViewById(android.R.id.text1);
+            label.setText( this.getItem( position ).getTitle() );
+        }
+
 		return convertView;
 	}
 
