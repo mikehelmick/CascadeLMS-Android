@@ -21,9 +21,9 @@ import org.cascadelms.fragments.DocumentsFragment.DocumentsDataSource;
 import org.cascadelms.fragments.GradesFragment.GradesDataSource;
 import org.cascadelms.fragments.SocialStreamFragment.StreamDataSource;
 
-public class FakeDataSource implements SchoolsDataSource, CourseDataSource, DocumentsDataSource,
-		AssignmentsDataSource, BlogDataSource, StreamDataSource,
-		GradesDataSource
+public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
+		DocumentsDataSource, AssignmentsDataSource, BlogDataSource,
+		StreamDataSource, GradesDataSource
 {
 	/* Static initializer */
 	{
@@ -32,7 +32,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource, Docu
 		FakeDataSource.initDocumentsData();
 		FakeDataSource.initAssignmentsData();
 		FakeDataSource.initGradesData();
-        FakeDataSource.initSchoolData();
+		FakeDataSource.initSchoolData();
 	}
 
 	private static FakeDataSource instance;
@@ -100,114 +100,91 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource, Docu
 	{
 		/* Builds Documents lists for each course. */
 		documentsListDesign = new ArrayList<Document>();
+		URL cascadeImageURL = null;
 		try
 		{
-			/* List for Senior Design */
-			documentsListDesign.add( Document.Builder.getFileBuilder( 0,
-					"Syllabus-2013", ".pdf", 20000,
-					new URL( "http://example.com/Syllabus2013.pdf" ) ).build() );
-			documentsListDesign.add( Document.Builder.getFileBuilder( 1,
-					"Project Teams", ".txt", 5000,
-					new URL( "http://example.com/ProjectTeams.txt" ) ).build() );
-			documentsListDesign.add( Document.Builder.getFileBuilder( 2,
-					"Sample Project Poster", ".png", 200000,
-					new URL( "http://example.com/Sample_project_poster.png" ) )
-					.build() );
-			documentsListDesign.add( Document.Builder.getFileBuilder( 3,
-					"Abstract Edits", ".docx", 25000,
-					new URL( "http://example.com/Abstract_edits.docx" ) )
-					.build() );
-			documentsListDesign.add( Document.Builder.getFolderBuilder(
-					DOCUMENT_FOLDER_PAST_PROJECTS, "Previous Projects" )
-					.build() );
-
-			/* A list for the Previous Projects subfolder in Senior Design. */
-			directoryListPreviousProjects = new ArrayList<Document>();
-			directoryListPreviousProjects.add( Document.Builder.getFileBuilder(
-					4, "PreviousProjects1", ".pdf", 25000,
-					new URL( "http://example.com/Previous_Projects1.pdf" ) )
-					.build() );
-			directoryListPreviousProjects.add( Document.Builder.getFileBuilder(
-					5, "PreviousProjects2", ".pdf", 25000,
-					new URL( "http://example.com/Previous_Projects2.pdf" ) )
-					.build() );
-			directoryListPreviousProjects.add( Document.Builder.getFileBuilder(
-					6, "PreviousProjects3", ".pdf", 25000,
-					new URL( "http://example.com/Previous_Projects3.pdf" ) )
-					.build() );
-			directoryListPreviousProjects.add( Document.Builder.getFileBuilder(
-					7, "PreviousProjects4", ".pdf", 25000,
-					new URL( "http://example.com/Previous_Projects4.pdf" ) )
-					.build() );
-
-			/* List for Machine Learning */
-			documentsListMachine = new ArrayList<Document>();
-			documentsListMachine.add( Document.Builder.getFileBuilder( 10,
-					"MachineSyllabus-2013", ".pdf", 20000,
-					new URL( "http://example.com/Syllabus2013.pdf" ) ).build() );
-			documentsListMachine.add( Document.Builder.getFileBuilder( 11,
-					"Supervised Learning", ".ppt", 50000,
-					new URL( "http://example.com/Supervised.ppt" ) ).build() );
-			documentsListMachine.add( Document.Builder.getFileBuilder( 12,
-					"Transduction Training Cases", ".dat", 543210,
-					new URL( "http://example.com/training-cases.dat" ) )
-					.build() );
-			documentsListMachine.add( Document.Builder.getFileBuilder( 13,
-					"Cluster Analysis", ".ppt", 25000,
-					new URL( "http://example.com/Clustering.ppt" ) ).build() );
-
-			/* List for Artificial Intelligence */
-			documentsListAI = new ArrayList<Document>();
-			// documentsListAI.add( Document.Builder.getFileBuilder( 100,
-			// "AI_Syllabus_2013-14", ".docx", 20000,
-			// new URL( "http://example.com/AI_Syllabus_2013-14.docx" ) )
-			// .build() );
-			documentsListAI.add( Document.Builder.getFolderBuilder(
-					DOCUMENT_FOLDER_LECTURE_NOTES, "Lectures" ).build() );
-
-			/* List for the Lectures sub-folder in AI */
-			directoryListLectures = new ArrayList<Document>();
-			directoryListLectures.add( Document.Builder.getFileBuilder( 101,
-					"Lecture_1", ".ppt", 50000,
-					new URL( "http://example.com/Lecture1.ppt" ) ).build() );
-			directoryListLectures.add( Document.Builder.getFileBuilder( 102,
-					"Lecture_2", ".ppt", 50000,
-					new URL( "http://example.com/Lecture2.ppt" ) ).build() );
-			directoryListLectures.add( Document.Builder.getFileBuilder( 103,
-					"Lecture_3", ".ppt", 50000,
-					new URL( "http://example.com/Lecture3.ppt" ) ).build() );
-			directoryListLectures.add( Document.Builder.getFileBuilder( 104,
-					"Lecture_4", ".ppt", 50000,
-					new URL( "http://example.com/Lecture4.ppt" ) ).build() );
-			directoryListLectures.add( Document.Builder.getFileBuilder( 105,
-					"Lecture_5", ".ppt", 50000,
-					new URL( "http://example.com/Lecture5.ppt" ) ).build() );
-			directoryListLectures.add( Document.Builder.getFileBuilder( 106,
-					"Lecture_6", ".ppt", 50000,
-					new URL( "http://example.com/Lecture6.ppt" ) ).build() );
-			directoryListLectures.add( Document.Builder.getFileBuilder( 107,
-					"Lecture_7", ".ppt", 50000,
-					new URL( "http://example.com/Lecture7.ppt" ) ).build() );
-			directoryListLectures.add( Document.Builder.getFileBuilder( 108,
-					"Lecture_8", ".ppt", 50000,
-					new URL( "http://example.com/Lecture8.ppt" ) ).build() );
-
-			/* List for Information Retrieval */
-			documentsListInfo = new ArrayList<Document>();
-			documentsListInfo.add( Document.Builder.getFileBuilder( 10,
-					"Info_retrieval2013", ".pdf", 20000,
-					new URL( "http://example.com/Syllabus2013.pdf" ) ).build() );
-			documentsListMachine.add( Document.Builder.getFileBuilder( 11,
-					"Lecture Notes on a very obscure topic with a long title",
-					".ppt", 50000,
-					new URL( "http://example.com/Supervised.ppt" ) ).build() );
-
-			/* Leaves the UI course as an empty list with no Documents. */
-			documentsListUI = new ArrayList<Document>();
+			cascadeImageURL = new URL(
+					"http://www.cascadelms.org/assets/img/cascade.png" );
 		} catch( MalformedURLException e )
 		{
-
 		}
+		/* List for Senior Design */
+		documentsListDesign.add( Document.Builder.getFileBuilder( 0,
+				"Syllabus-2013", ".pdf", 20000, cascadeImageURL ).build() );
+		documentsListDesign.add( Document.Builder.getFileBuilder( 1,
+				"Project Teams", ".txt", 5000, cascadeImageURL ).build() );
+		documentsListDesign.add( Document.Builder.getFileBuilder( 2,
+				"Sample Project Poster", ".png", 200000, cascadeImageURL )
+				.build() );
+		documentsListDesign.add( Document.Builder.getFileBuilder( 3,
+				"Abstract Edits", ".docx", 25000, cascadeImageURL ).build() );
+		documentsListDesign.add( Document.Builder.getFolderBuilder(
+				DOCUMENT_FOLDER_PAST_PROJECTS, "Previous Projects" ).build() );
+
+		/* A list for the Previous Projects subfolder in Senior Design. */
+		directoryListPreviousProjects = new ArrayList<Document>();
+		directoryListPreviousProjects.add( Document.Builder.getFileBuilder( 4,
+				"PreviousProjects1", ".pdf", 25000, cascadeImageURL ).build() );
+		directoryListPreviousProjects.add( Document.Builder.getFileBuilder( 5,
+				"PreviousProjects2", ".pdf", 25000, cascadeImageURL ).build() );
+		directoryListPreviousProjects.add( Document.Builder.getFileBuilder( 6,
+				"PreviousProjects3", ".pdf", 25000, cascadeImageURL ).build() );
+		directoryListPreviousProjects.add( Document.Builder.getFileBuilder( 7,
+				"PreviousProjects4", ".pdf", 25000, cascadeImageURL ).build() );
+
+		/* List for Machine Learning */
+		documentsListMachine = new ArrayList<Document>();
+		documentsListMachine.add( Document.Builder.getFileBuilder( 10,
+				"MachineSyllabus-2013", ".pdf", 20000, cascadeImageURL )
+				.build() );
+		documentsListMachine
+				.add( Document.Builder.getFileBuilder( 11,
+						"Supervised Learning", ".ppt", 50000, cascadeImageURL )
+						.build() );
+		documentsListMachine.add( Document.Builder.getFileBuilder( 12,
+				"Transduction Training Cases", ".dat", 543210, cascadeImageURL )
+				.build() );
+		documentsListMachine.add( Document.Builder.getFileBuilder( 13,
+				"Cluster Analysis", ".ppt", 25000, cascadeImageURL ).build() );
+
+		/* List for Artificial Intelligence */
+		documentsListAI = new ArrayList<Document>();
+		// documentsListAI.add( Document.Builder.getFileBuilder( 100,
+		// "AI_Syllabus_2013-14", ".docx", 20000,
+		// cascadeImageURL )
+		// .build() );
+		documentsListAI.add( Document.Builder.getFolderBuilder(
+				DOCUMENT_FOLDER_LECTURE_NOTES, "Lectures" ).build() );
+
+		/* List for the Lectures sub-folder in AI */
+		directoryListLectures = new ArrayList<Document>();
+		directoryListLectures.add( Document.Builder.getFileBuilder( 101,
+				"Lecture_1", ".ppt", 50000, cascadeImageURL ).build() );
+		directoryListLectures.add( Document.Builder.getFileBuilder( 102,
+				"Lecture_2", ".ppt", 50000, cascadeImageURL ).build() );
+		directoryListLectures.add( Document.Builder.getFileBuilder( 103,
+				"Lecture_3", ".ppt", 50000, cascadeImageURL ).build() );
+		directoryListLectures.add( Document.Builder.getFileBuilder( 104,
+				"Lecture_4", ".ppt", 50000, cascadeImageURL ).build() );
+		directoryListLectures.add( Document.Builder.getFileBuilder( 105,
+				"Lecture_5", ".ppt", 50000, cascadeImageURL ).build() );
+		directoryListLectures.add( Document.Builder.getFileBuilder( 106,
+				"Lecture_6", ".ppt", 50000, cascadeImageURL ).build() );
+		directoryListLectures.add( Document.Builder.getFileBuilder( 107,
+				"Lecture_7", ".ppt", 50000, cascadeImageURL ).build() );
+		directoryListLectures.add( Document.Builder.getFileBuilder( 108,
+				"Lecture_8", ".ppt", 50000, cascadeImageURL ).build() );
+
+		/* List for Information Retrieval */
+		documentsListInfo = new ArrayList<Document>();
+		documentsListInfo.add( Document.Builder.getFileBuilder( 10,
+				"Info_retrieval2013", ".pdf", 20000, cascadeImageURL ).build() );
+		documentsListMachine.add( Document.Builder.getFileBuilder( 11,
+				"Lecture Notes on a very obscure topic with a long title",
+				".ppt", 50000, cascadeImageURL ).build() );
+
+		/* Leaves the UI course as an empty list with no Documents. */
+		documentsListUI = new ArrayList<Document>();
 	}
 
 	@Override
@@ -568,24 +545,27 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource, Docu
 		}
 	}
 
-    private static ArrayList<School> schoolsList;
+	private static ArrayList<School> schoolsList;
 
-    private static void initSchoolData()
-    {
-        schoolsList = new ArrayList<School>();
+	private static void initSchoolData()
+	{
+		schoolsList = new ArrayList<School>();
 
-        schoolsList.add(new School("University of Cincinnati", "https://cascade.ceas.uc.edu/",
-                "https://cascade.ceas.uc.edu/index/shibboleth"));
-        for (int i = 2; i <= 6; ++i)
-        {
-            schoolsList.add(new School("School " + i, "http://www.cascadelms.org/",
-                    "http://www.cascadelms.org/"));
-        }
-    }
+		schoolsList.add( new School( "University of Cincinnati",
+				"https://cascade.ceas.uc.edu/",
+				"https://cascade.ceas.uc.edu/index/shibboleth" ) );
+		for ( int i = 2; i <= 6; ++i )
+		{
+			schoolsList
+					.add( new School( "School " + i,
+							"http://www.cascadelms.org/",
+							"http://www.cascadelms.org/" ) );
+		}
+	}
 
-    @Override
-    public List<School> getSchools()
-    {
-        return schoolsList;
-    }
+	@Override
+	public List<School> getSchools()
+	{
+		return schoolsList;
+	}
 }
