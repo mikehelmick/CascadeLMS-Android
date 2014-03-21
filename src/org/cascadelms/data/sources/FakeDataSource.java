@@ -3,6 +3,8 @@ package org.cascadelms.data.sources;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -33,9 +35,10 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource, Docu
 		FakeDataSource.initAssignmentsData();
 		FakeDataSource.initGradesData();
         FakeDataSource.initSchoolData();
+        FakeDataSource.initStreamData();
 	}
 
-	private static FakeDataSource instance;
+    private static FakeDataSource instance;
 
 	private FakeDataSource()
 	{
@@ -50,6 +53,16 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource, Docu
 		}
 		return instance;
 	}
+
+    /* Social Stream sort comparator class */
+    private static class SocialStreamComparator implements Comparator<StreamItem>
+    {
+        @Override
+        public int compare(StreamItem itemA, StreamItem itemB)
+        {
+            return itemA.getSummaryDate().compareTo(itemB.getSummaryDate());
+        }
+    }
 
 	/* CourseDataSource */
 	/* Course ID Constants */
@@ -261,6 +274,87 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource, Docu
 			}
 		}
 	}
+
+    private static ArrayList<StreamItem> streamItemsListAll;
+    private static ArrayList<StreamItem> streamItemsListDesign;
+    private static ArrayList<StreamItem> streamItemsListMachine;
+    private static ArrayList<StreamItem> streamItemsListAI;
+    private static ArrayList<StreamItem> streamItemsListInfo;
+    private static ArrayList<StreamItem> streamItemsListUI;
+
+    /* Stream Data */
+    private static void initStreamData()
+    {
+        streamItemsListAll = new ArrayList<StreamItem>();
+        streamItemsListDesign = new ArrayList<StreamItem>();
+        streamItemsListMachine = new ArrayList<StreamItem>();
+        streamItemsListAI = new ArrayList<StreamItem>();
+        streamItemsListInfo = new ArrayList<StreamItem>();
+        streamItemsListUI = new ArrayList<StreamItem>();
+
+        for (Assignment assignment : assignmentsListDesign)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListDesign.add(item);
+        }
+        for (Assignment assignment : assignmentsListMachine)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListMachine.add(item);
+        }
+        for (Assignment assignment : assignmentsListAI)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListAI.add(item);
+        }
+        for (Assignment assignment : assignmentsListMachine)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListMachine.add(item);
+        }
+        for (Assignment assignment : assignmentsListInfo)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListInfo.add(item);
+        }
+        for (Assignment assignment : assignmentsListUI)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListUI.add(item);
+        }
+
+        // Sort by date
+        Collections.sort(streamItemsListAll, new SocialStreamComparator());
+        Collections.sort(streamItemsListDesign, new SocialStreamComparator());
+        Collections.sort(streamItemsListMachine, new SocialStreamComparator());
+        Collections.sort(streamItemsListAI, new SocialStreamComparator());
+        Collections.sort(streamItemsListInfo, new SocialStreamComparator());
+        Collections.sort(streamItemsListUI, new SocialStreamComparator());
+    }
 
 	/* Assignments Data */
 	private static ArrayList<Assignment> assignmentsListDesign;
@@ -532,7 +626,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource, Docu
 	@Override
 	public List<StreamItem> getAllStreamItems()
 	{
-		return new ArrayList<StreamItem>();
+		return streamItemsListAll;
 	}
 
 	@Override
@@ -543,23 +637,23 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource, Docu
 		{
 			case COURSE_ID_DESIGN:
 			{
-
+                return streamItemsListDesign;
 			}
 			case COURSE_ID_MACHINE_LEARNING:
 			{
-
+                return streamItemsListMachine;
 			}
 			case COURSE_ID_AI:
 			{
-
+                return streamItemsListAI;
 			}
 			case COURSE_ID_INFO_RETRIEVAL:
 			{
-
+                return streamItemsListInfo;
 			}
 			case COURSE_ID_UI:
 			{
-
+                return streamItemsListUI;
 			}
 			default:
 			{
