@@ -9,28 +9,41 @@ import org.cascadelms.data.loaders.DocumentsLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
+import org.cascadelms.data.models.Folder;
 import org.cascadelms.data.sources.FakeDataSource;
 
+import android.annotation.SuppressLint;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A <code>Fragment</code> for displaying the files associated with a course.
  */
 public class DocumentsFragment extends ListFragment implements
-		LoaderCallbacks<List<Document>>
+		LoaderCallbacks<List<Document>>, OnItemClickListener
 {
 	private DocumentAdapter adapter;
 	private DocumentsDataSource dataSource;
 	private TextView emptyView;
 	private int courseId;
+	private Folder rootFolder;
 
 	/* Constants */
 	private static final String ARGS_COURSE_ID = "org.cascadelms.args_course_id";
@@ -75,8 +88,6 @@ public class DocumentsFragment extends ListFragment implements
 		View view = inflater.inflate( R.layout.fragment_documents, null );
 		emptyView = (TextView) view
 				.findViewById( R.id.fragment_documents_empty );
-		( (ListView) view.findViewById( android.R.id.list ) )
-				.setEmptyView( emptyView );
 		this.setListAdapter( adapter );
 		return view;
 	}
@@ -87,7 +98,25 @@ public class DocumentsFragment extends ListFragment implements
 		this.getActivity().getSupportLoaderManager()
 				.initLoader( LoaderCodes.LOADER_CODE_DOCUMENTS, null, this )
 				.forceLoad();
+		this.getListView().setOnItemClickListener( this );
+		this.getListView().setEmptyView( emptyView );
 		super.onViewCreated( view, savedInstanceState );
+	}
+
+	@Override
+	public void onItemClick( AdapterView<?> parent, View view, int position,
+			long id )
+	{
+		Document doc = (Document) adapter.getItem( position );
+		if( doc.isFolder() )
+		{
+			LOGGER.info( "Got a click on a folder." );
+		} else
+		{
+			LOGGER.info( "Got a click on a file." );
+			this.downloadFile( doc );
+		}
+
 	}
 
 	@Override
@@ -128,9 +157,9 @@ public class DocumentsFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_DOCUMENTS:
 			{
-				LOGGER.info( "DocumentsFragment finished loading Documents." );
-				this.adapter.clear();
-				this.adapter.addAll( data );
+				LOGGER.info( "DocumentsFragment finished loading root directory." );
+				this.rootFolder = Folder.createRootFolder( data );
+				this.adapter.setData( rootFolder.getContents() );
 				this.setEmptyText( this
 						.getString( R.string.fragment_documents_list_empty_message ) );
 				return;
@@ -150,6 +179,75 @@ public class DocumentsFragment extends ListFragment implements
 			}
 		}
 
+	}
+
+	/**
+	 * Queries whether the DownloadManager is available at the current API
+	 * level.
+	 * <p>
+	 * Thanks to Stack Overflow for this code.<br>
+	 * http://stackoverflow.com/questions
+	 * /3028306/download-a-file-with-android-and
+	 * -showing-the-progress-in-a-progressdialog
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static boolean isDownloadManagerAvailable( Context context )
+	{
+		try
+		{
+			if( Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD )
+			{
+				return false;
+			}
+			Intent intent = new Intent( Intent.ACTION_MAIN );
+			intent.addCategory( Intent.CATEGORY_LAUNCHER );
+			intent.setClassName( "com.android.providers.downloads.ui",
+					"com.android.providers.downloads.ui.DownloadList" );
+			List<ResolveInfo> list = context.getPackageManager()
+					.queryIntentActivities( intent,
+							PackageManager.MATCH_DEFAULT_ONLY );
+			return list.size() > 0;
+		} catch( Exception e )
+		{
+			return false;
+		}
+	}
+
+	@SuppressLint( "NewApi" )
+	// TODO Will need another way to download files on lower API levels.
+	public void downloadFile( Document document )
+	{
+		if( isDownloadManagerAvailable( this.getActivity() ) )
+		{
+			DownloadManager.Request request = new DownloadManager.Request(
+					Uri.parse( document.getDocumentURL().toString() ) );
+			request.setTitle( document.getTitle() );
+
+			// in order for this if to run, you must use the android 3.2 to
+			// compile
+			// your app
+			if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB )
+			{
+				request.allowScanningByMediaScanner();
+				request.setNotificationVisibility( DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED );
+			}
+
+			/* Removes the first '/' from the URL's file string. */
+			request.setDestinationInExternalPublicDir(
+					Environment.DIRECTORY_DOWNLOADS, document.getFileName() );
+
+			// get download service and enqueue file
+			DownloadManager manager = (DownloadManager) this.getActivity()
+					.getSystemService( Context.DOWNLOAD_SERVICE );
+			manager.enqueue( request );
+		} else
+		{
+			Toast.makeText( this.getActivity(),
+					"DownloadManager is not available.", Toast.LENGTH_LONG )
+					.show();
+		}
 	}
 
 	/**
