@@ -23,6 +23,9 @@ public class Document extends Item implements Parcelable
 	private final long fileSize;
 	private final URL documentURL;
 
+	/* Constants */
+	private static final int ROOT_ID = -1;
+
 	private Document( Builder builder )
 	{
 		/* Sets attributes as specified in the Builder. */
@@ -75,6 +78,18 @@ public class Document extends Item implements Parcelable
 	}
 
 	/**
+	 * Returns the filename (with extension) of this document's file.
+	 * 
+	 * @return
+	 */
+	public String getFileName()
+	{
+		// TODO Add error handling.
+		String urlString = this.documentURL.getFile();
+		return urlString.substring( urlString.lastIndexOf( "/" ) + 1 );
+	}
+
+	/**
 	 * Returns a URL to this document's associated file.
 	 * 
 	 * @return a {@link URL}
@@ -93,6 +108,11 @@ public class Document extends Item implements Parcelable
 	public boolean isFolder()
 	{
 		return this.isFolder;
+	}
+
+	public static Document rootDocument()
+	{
+		return new Document( Builder.getFolderBuilder( ROOT_ID, "Root" ) );
 	}
 
 	/**

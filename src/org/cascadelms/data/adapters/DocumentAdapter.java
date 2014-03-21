@@ -1,6 +1,9 @@
 package org.cascadelms.data.adapters;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Logger;
 
 import org.cascadelms.R;
 import org.cascadelms.data.models.Document;
@@ -10,39 +13,134 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class DocumentAdapter extends ArrayAdapter<Document>
+public class DocumentAdapter extends BaseAdapter
 {
+	private ArrayList<Object> items;
+	private Context context;
+
+	/* Constants */
+	private static final int ITEM_TYPE_DOCUMENT = 0;
+	private static final int ITEM_TYPE_DIVIDER = 1;
+
 	public DocumentAdapter( Context context )
 	{
-		super( context, R.layout.list_item_document );
+		this.items = new ArrayList<Object>();
+		this.context = context;
+	}
+
+	@Override
+	public boolean areAllItemsEnabled()
+	{
+		return false;
+	}
+
+	@Override
+	public int getCount()
+	{
+		return items.size();
+	}
+
+	@Override
+	public Object getItem( int position )
+	{
+		return items.get( position );
+	}
+
+	@Override
+	public long getItemId( int position )
+	{
+		return position;
+	}
+
+	@Override
+	public boolean isEnabled( int position )
+	{
+		{
+			Object item = items.get( position );
+			if( item instanceof Document )
+			{
+				return true;
+			} else if( item instanceof Divider )
+			{
+				return false;
+			} else
+			{
+				throw new IllegalStateException(
+						"An item in the list was neither a Document nor Divider." );
+			}
+		}
+	}
+
+	@Override
+	public int getItemViewType( int position )
+	{
+		Object item = items.get( position );
+		if( item instanceof Document )
+		{
+			return ITEM_TYPE_DOCUMENT;
+		} else if( item instanceof Divider )
+		{
+			return ITEM_TYPE_DIVIDER;
+		} else
+		{
+			throw new IllegalStateException(
+					"An item in the list was neither a Document nor Divider." );
+		}
+	}
+
+	@Override
+	public int getViewTypeCount()
+	{
+		return 2;
 	}
 
 	@Override
 	public View getView( int position, View convertView, ViewGroup parent )
 	{
-		/* Re-uses the convertView, if possible. */
-		TextView textView;
-		if( convertView == null )
+		switch( this.getItemViewType( position ) )
 		{
-			textView = (TextView) LayoutInflater.from( this.getContext() )
-					.inflate( R.layout.list_item_document, parent, false );
-		} else
-		{
-			textView = (TextView) convertView;
+			case ITEM_TYPE_DOCUMENT:
+			{
+				/* Re-uses the convertView, if possible. */
+				TextView textView;
+				if( convertView == null )
+				{
+					textView = (TextView) LayoutInflater.from( this.context )
+							.inflate( R.layout.list_item_document, parent,
+									false );
+				} else
+				{
+					textView = (TextView) convertView;
+				}
+				Document document = (Document) this.getItem( position );
+
+				/* Sets the list item text according to the Document's title. */
+				textView.setText( document.getTitle() );
+
+				/* Sets the icon according to the Document's filetype. */
+				textView.setCompoundDrawablesWithIntrinsicBounds( this
+						.getIconIdForExtension( document.getFileExtension() ),
+						0, 0, 0 );
+				return textView;
+			}
+			case ITEM_TYPE_DIVIDER:
+			{
+				TextView dividerView = (TextView) LayoutInflater.from(
+						this.context ).inflate( R.layout.list_item_document,
+						parent, false );
+				dividerView
+						.setText( ( (Divider) this.getItem( position ) ).title );
+				return dividerView;
+			}
+			default:
+			{
+				throw new IllegalStateException(
+						"Unrecognized item type in DocumentAdapter.getView()" );
+			}
 		}
-		Document document = this.getItem( position );
-
-		/* Sets the list item text according to the Document's title. */
-		textView.setText( document.getTitle() );
-
-		/* Sets the icon according to the Document's filetype. */
-		textView.setCompoundDrawablesWithIntrinsicBounds(
-				this.getIconIdForExtension( document.getFileExtension() ), 0,
-				0, 0 );
-		return textView;
 	}
 
 	private int getIconIdForExtension( String extension )
@@ -88,15 +186,58 @@ public class DocumentAdapter extends ArrayAdapter<Document>
 		return false;
 	}
 
-	@Override
-	public void addAll( Collection<? extends Document> collection )
+	public void setData( List<? extends Document> collection )
 	{
-		/* Sort after adding a collection of data. */
-		for ( Document doc : collection )
+		/* Sort the data and insert dividers. */
+		items.clear();
+		Collections.sort( collection, new DocumentComparator() );
+		items.addAll( collection );
+		if( items.isEmpty() )
 		{
-			this.add( doc );
+			/* Nothing to do on an empty list. */
+			return;
 		}
-		this.sort( new DocumentComparator() );
+
+		int startingIndex = 0;
+		/* Only insert the header if there are folders. */
+		if( ( (Document) items.get( 0 ) ).isFolder() )
+		{
+			items.add( 0, new Divider( "Folders" ) ); // TODO use string
+														// resource
+			startingIndex = 1;
+		}
+		/* Finds the correct position to insert the Files divider. */
+		for ( int i = startingIndex; i < items.size(); i++ )
+		{
+			if( ( (Document) items.get( i ) ).isFolder() )
+			{
+				continue;
+			} else
+			{
+				items.add( i, new Divider( "Files" ) );
+				break;
+			}
+		}
+		this.notifyDataSetChanged();
+	}
+
+	public void clear()
+	{
+		items.clear();
+	}
+
+	/**
+	 * A class inserted into the items list as a divider.
+	 * 
+	 */
+	private class Divider
+	{
+		private String title;
+
+		private Divider( String title )
+		{
+			this.title = title;
+		}
 	}
 
 	/* Lists of extensions that share an icon. */
@@ -118,4 +259,7 @@ public class DocumentAdapter extends ArrayAdapter<Document>
 	private static String[] MUSIC_EXTENSIONS = { ".aiff", ".wav", ".flac",
 			".m4a", ".wma", ".mp3", ".aac" };
 	private static String[] PDF_EXTENSIONS = { ".pdf" };
+
+	private static Logger LOGGER = Logger.getLogger( DocumentAdapter.class
+			.getName() );
 }
