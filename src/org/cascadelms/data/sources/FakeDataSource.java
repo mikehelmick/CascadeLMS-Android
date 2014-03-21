@@ -325,12 +325,14 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
         }
 
         // Sort by date
-        Collections.sort(streamItemsListAll, new SocialStreamComparator());
-        Collections.sort(streamItemsListDesign, new SocialStreamComparator());
-        Collections.sort(streamItemsListMachine, new SocialStreamComparator());
-        Collections.sort(streamItemsListAI, new SocialStreamComparator());
-        Collections.sort(streamItemsListInfo, new SocialStreamComparator());
-        Collections.sort(streamItemsListUI, new SocialStreamComparator());
+        SocialStreamComparator comparator = new SocialStreamComparator();
+
+        Collections.sort(streamItemsListAll, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListDesign, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListMachine, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListAI, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListInfo, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListUI, Collections.reverseOrder(comparator));
     }
 
 	/* Assignments Data */
