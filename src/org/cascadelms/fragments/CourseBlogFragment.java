@@ -44,9 +44,6 @@ public class CourseBlogFragment extends ListFragment implements
 	{
 		/* Initializes a data source and begins loading. */
 		this.blogDataSource = FakeDataSource.getInstance();
-		this.getActivity().getSupportLoaderManager()
-				.initLoader( LoaderCodes.LOADER_CODE_BLOG, null, this )
-				.forceLoad();
         this.adapter = new BlogPostAdapter(getActivity());
 
 		super.onCreate( savedInstanceState );
@@ -71,6 +68,11 @@ public class CourseBlogFragment extends ListFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         this.getListView().setAdapter( adapter );
+
+        this.getActivity().getSupportLoaderManager()
+                .initLoader( LoaderCodes.LOADER_CODE_BLOG, null, this )
+                .forceLoad();
+
         super.onViewCreated(view, savedInstanceState);
     }
 
