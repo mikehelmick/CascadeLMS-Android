@@ -36,6 +36,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		FakeDataSource.initGradesData();
 		FakeDataSource.initSchoolData();
         FakeDataSource.initStreamData();
+        FakeDataSource.initBlogData();
 	}
 
     private static FakeDataSource instance;
@@ -569,6 +570,96 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		}
 	}
 
+    /* Blog Data */
+    private static ArrayList<BlogPost> blogListDesign;
+    private static ArrayList<BlogPost> blogListMachine;
+    private static ArrayList<BlogPost> blogListAI;
+    private static ArrayList<BlogPost> blogListInfo;
+    private static ArrayList<BlogPost> blogListUI;
+
+    private static void initBlogData()
+    {
+        long now = (new Date()).getTime();
+        final long week = 604800000L;
+
+        blogListDesign = new ArrayList<BlogPost>();
+
+        blogListDesign.add(new BlogPost(new BlogPost.Builder(1,
+                "Presentation Schedule",
+                false, "Fred Annexstein",
+                new Date(now),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.")));
+        blogListDesign.add(new BlogPost(new BlogPost.Builder(2,
+                "Submission Requirements",
+                false, "Fred Annexstein",
+                new Date(now + week),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.")));
+
+        blogListMachine = new ArrayList<BlogPost>();
+
+        for (int i = 1; i <= 10; ++i)
+            blogListMachine.add(new BlogPost(new BlogPost.Builder(i,
+                "Blog Post " + i,
+                false, "Fred Annexstein",
+                new Date(now + week),
+                "Post " + i + " description.")));
+
+        blogListAI = new ArrayList<BlogPost>();
+
+        blogListAI.add(new BlogPost(new BlogPost.Builder(1,
+                "A Blog Post",
+                false, "Fred Annexstein",
+                new Date(now),
+                "Hello, world!")));
+
+        blogListInfo = new ArrayList<BlogPost>();
+
+        blogListInfo.add(new BlogPost(new BlogPost.Builder(1,
+                "Presentation Schedule",
+                false, "Fred Annexstein",
+                new Date(now),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.")));
+        blogListInfo.add(new BlogPost(new BlogPost.Builder(2,
+                "Submission Requirements",
+                false, "Fred Annexstein",
+                new Date(now + week),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.")));
+
+        blogListUI = new ArrayList<BlogPost>();
+    }
+
 	@Override
 	public List<BlogPost> getBlogPostsForCourse( int courseId )
 	{
@@ -577,23 +668,23 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		{
 			case COURSE_ID_DESIGN:
 			{
-
+                return blogListDesign;
 			}
 			case COURSE_ID_MACHINE_LEARNING:
 			{
-
+                return blogListMachine;
 			}
 			case COURSE_ID_AI:
 			{
-
+                return blogListAI;
 			}
 			case COURSE_ID_INFO_RETRIEVAL:
 			{
-
+                return blogListInfo;
 			}
 			case COURSE_ID_UI:
 			{
-
+                return blogListUI;
 			}
 			default:
 			{
@@ -653,9 +744,9 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		for ( int i = 2; i <= 6; ++i )
 		{
 			schoolsList
-					.add( new School( "School " + i,
-							"http://www.cascadelms.org/",
-							"http://www.cascadelms.org/" ) );
+					.add(new School("School " + i,
+                            "http://www.cascadelms.org/",
+                            "http://www.cascadelms.org/"));
 		}
 	}
 
