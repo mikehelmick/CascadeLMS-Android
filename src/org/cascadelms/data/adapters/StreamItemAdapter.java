@@ -14,7 +14,7 @@ public class StreamItemAdapter extends ArrayAdapter<StreamItem>
 {
     public StreamItemAdapter( Context context )
     {
-        super( context, R.layout.view_socialstream_post );
+        super( context, R.layout.list_item_socialstream_post);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class StreamItemAdapter extends ArrayAdapter<StreamItem>
         if( convertView == null )
         {
             convertView = LayoutInflater.from(this.getContext()).inflate(
-                    R.layout.view_socialstream_post, parent, false );
+                    R.layout.list_item_socialstream_post, parent, false );
         }
 
         if (convertView != null)
@@ -34,7 +34,7 @@ public class StreamItemAdapter extends ArrayAdapter<StreamItem>
             dateLabel.setText( this.getItem( position ).getSummaryDate().toString() );
             TextView summaryLabel = (TextView) convertView
                     .findViewById(R.id.socialstream_description);
-            summaryLabel.setText( this.getItem( position ).getSummary() );
+            summaryLabel.setText( this.getItem(position).getSummary() );
         }
 
         return convertView;
