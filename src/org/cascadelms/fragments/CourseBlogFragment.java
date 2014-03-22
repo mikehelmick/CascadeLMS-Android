@@ -17,6 +17,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class CourseBlogFragment extends ListFragment implements
@@ -24,6 +25,7 @@ public class CourseBlogFragment extends ListFragment implements
 {
 	private BlogDataSource blogDataSource;
     private BlogPostAdapter adapter;
+    private TextView emptyView;
 
 	/* Constants */
 	private static final String ARGS_COURSE = "org.cascadelms.args_course";
@@ -56,7 +58,13 @@ public class CourseBlogFragment extends ListFragment implements
 	{
 		super.onCreateView( inflater, container, savedInstanceState );
 
-		return inflater.inflate( R.layout.fragment_courseblog, null );
+        View view = inflater.inflate( R.layout.fragment_courseblog, null );
+        this.emptyView = (TextView) view
+                .findViewById( R.id.fragment_courseblog_empty );
+        ( (ListView) view.findViewById( android.R.id.list ) )
+                .setEmptyView( emptyView );
+
+		return view;
 	}
 
     @Override
@@ -93,6 +101,8 @@ public class CourseBlogFragment extends ListFragment implements
 			{
                 adapter.clear();
                 adapter.addAll(data);
+                this.emptyView
+                        .setText( R.string.fragment_courseblog_list_empty_message );
 				break;
 			}
 		}

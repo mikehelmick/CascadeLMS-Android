@@ -19,12 +19,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class SocialStreamFragment extends ListFragment implements
 		LoaderCallbacks<List<StreamItem>>
 {
 	private StreamDataSource streamDataSource;
     private StreamItemAdapter adapter;
+    private TextView emptyView;
 
 	private static final String ARGS_COURSE = "org.cascadelms.args_course";
 
@@ -74,7 +77,13 @@ public class SocialStreamFragment extends ListFragment implements
     {
         super.onCreateView( inflater, container, savedInstanceState );
 
-        return inflater.inflate( R.layout.fragment_socialstream, null );
+        View view = inflater.inflate( R.layout.fragment_socialstream, null );
+        this.emptyView = (TextView) view
+                .findViewById( R.id.fragment_socialstream_empty );
+        ( (ListView) view.findViewById( android.R.id.list ) )
+                .setEmptyView( emptyView );
+
+        return view;
     }
 
     private class SocialStreamItemClickListener implements
@@ -144,6 +153,8 @@ public class SocialStreamFragment extends ListFragment implements
 			{
                 adapter.clear();
                 adapter.addAll(data);
+                this.emptyView
+                        .setText( R.string.fragment_socialstream_list_empty_message );
 				break;
 			}
 		}
