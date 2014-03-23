@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="?android:attr/colorBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <ListView
-        android:id="@+id/socialstream_list"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@null"
         android:dividerHeight="0dp" >
     </ListView>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/fragment_socialstream_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/fragment_socialstream_list_loading_message"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>
