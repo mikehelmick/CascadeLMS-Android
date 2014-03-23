@@ -1,5 +1,6 @@
 package org.cascadelms.data.models;
 
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -272,6 +273,104 @@ public class Assignment extends Item
 		{
 			this.pointsEarned = pointsEarned;
 			return this;
+		}
+	}
+
+	public static class AssignmentComparator implements Comparator<Assignment>
+	{
+		final int LHS_FIRST = -1;
+		final int RHS_FIRST = 1;
+		final int EQUAL = 0;
+
+		@Override
+		public int compare( Assignment lhs, Assignment rhs )
+		{
+			/*
+			 * Used to sort Assignments by their status (i.e. upcoming,
+			 * available, past due, closed) and then sort by date within each
+			 * category.
+			 */
+			if( lhs.isUpcoming() )
+			{
+				if( rhs.isUpcoming() )
+				{
+					if( lhs.getOpenDate().before( rhs.getOpenDate() ) )
+					{
+						return LHS_FIRST;
+					} else if( rhs.getOpenDate().before( lhs.getOpenDate() ) )
+					{
+						return RHS_FIRST;
+					} else
+					{
+						return EQUAL;
+					}
+				} else if( rhs.isCurrent() || rhs.isPastDue() || rhs.isClosed() )
+				{
+					return LHS_FIRST;
+				}
+			} else if( lhs.isCurrent() )
+			{
+				if( rhs.isUpcoming() )
+				{
+					return RHS_FIRST;
+				} else if( rhs.isCurrent() )
+				{
+					if( lhs.getDueDate().before( rhs.getDueDate() ) )
+					{
+						return LHS_FIRST;
+					} else if( rhs.getDueDate().before( lhs.getDueDate() ) )
+					{
+						return RHS_FIRST;
+					} else
+					{
+						return EQUAL;
+					}
+				} else if( rhs.isPastDue() || rhs.isClosed() )
+				{
+					return LHS_FIRST;
+				}
+			} else if( lhs.isPastDue() )
+			{
+				if( rhs.isUpcoming() || rhs.isCurrent() )
+				{
+					return RHS_FIRST;
+				} else if( rhs.isPastDue() )
+				{
+					if( lhs.getCloseDate().before( rhs.getCloseDate() ) )
+					{
+						return LHS_FIRST;
+					} else if( rhs.getCloseDate().before( lhs.getCloseDate() ) )
+					{
+						return RHS_FIRST;
+					} else
+					{
+						return EQUAL;
+					}
+				} else if( rhs.isClosed() )
+				{
+					return LHS_FIRST;
+				}
+			} else if( lhs.isClosed() )
+			{
+				if( rhs.isUpcoming() || rhs.isCurrent() || rhs.isPastDue() )
+				{
+					return RHS_FIRST;
+				} else if( rhs.isClosed() )
+				{
+					if( lhs.getCloseDate().before( rhs.getCloseDate() ) )
+					{
+						return LHS_FIRST;
+					} else if( rhs.getCloseDate().before( lhs.getCloseDate() ) )
+					{
+						return RHS_FIRST;
+					} else
+					{
+						return EQUAL;
+					}
+				}
+			}
+			throw new IllegalStateException(
+					"Assignment Comparator did not return an ordering." );
 		}
 	}
 

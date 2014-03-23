@@ -128,6 +128,7 @@ public class DocumentAdapter extends BaseAdapter
 			}
 			case ITEM_TYPE_DIVIDER:
 			{
+				/* TODO create an actual XML file to inflate for dividers. */
 				TextView dividerView = (TextView) LayoutInflater.from(
 						this.context ).inflate( R.layout.list_item_document,
 						parent, false );
