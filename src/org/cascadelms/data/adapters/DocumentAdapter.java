@@ -224,6 +224,7 @@ public class DocumentAdapter extends BaseAdapter
 	public void clear()
 	{
 		items.clear();
+		this.notifyDataSetInvalidated();
 	}
 
 	/**

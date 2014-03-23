@@ -111,8 +111,7 @@ public class AssignmentsFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
 			{
-				this.adapter.clear();
-				this.adapter.addAll( data );
+				this.adapter.setData( data );
 				this.setEmptyText( this
 						.getString( R.string.fragment_assignments_list_empty_message ) );
 				break;

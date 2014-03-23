@@ -2,6 +2,8 @@ package org.cascadelms.data.adapters;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.cascadelms.R;
 import org.cascadelms.data.models.Assignment;
@@ -10,14 +12,36 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class AssignmentsAdapter extends ArrayAdapter<Assignment>
+public class AssignmentsAdapter extends BaseAdapter
 {
+	Context context;
+	ArrayList<Assignment> assignments;
+
 	public AssignmentsAdapter( Context context )
 	{
-		super( context, R.layout.list_item_assignment );
+		this.context = context;
+		this.assignments = new ArrayList<Assignment>();
+	}
+
+	@Override
+	public int getCount()
+	{
+		return assignments.size();
+	}
+
+	@Override
+	public Object getItem( int position )
+	{
+		return assignments.get( position );
+	}
+
+	@Override
+	public long getItemId( int position )
+	{
+		return position;
 	}
 
 	@Override
@@ -27,13 +51,13 @@ public class AssignmentsAdapter extends ArrayAdapter<Assignment>
 		View view;
 		if( convertView == null )
 		{
-			view = LayoutInflater.from( this.getContext() ).inflate(
+			view = LayoutInflater.from( this.context ).inflate(
 					R.layout.list_item_assignment, parent, false );
 		} else
 		{
 			view = convertView;
 		}
-		Assignment assignment = this.getItem( position );
+		Assignment assignment = (Assignment) this.getItem( position );
 
 		/* Sets the list item text according to the Document's title. */
 		( (TextView) view.findViewById( R.id.list_item_assignment_title ) )
@@ -45,12 +69,12 @@ public class AssignmentsAdapter extends ArrayAdapter<Assignment>
 		format.setMaximumFractionDigits( 2 );
 		if( Double.compare( assignment.getPointsEarned(), Double.NaN ) == 0 )
 		{
-			pointsString = this.getContext().getString(
+			pointsString = this.context.getString(
 					R.string.list_item_assignment_no_points,
 					format.format( assignment.getPointsPossible() ) );
 		} else
 		{
-			pointsString = this.getContext().getString(
+			pointsString = this.context.getString(
 					R.string.list_item_assignment_points,
 					format.format( assignment.getPointsEarned() ),
 					format.format( assignment.getPointsPossible() ) );
@@ -62,23 +86,23 @@ public class AssignmentsAdapter extends ArrayAdapter<Assignment>
 		String dateString = "";
 		if( assignment.isUpcoming() )
 		{
-			dateString = this.getContext().getString(
+			dateString = this.context.getString(
 					R.string.list_item_assignment_upcoming_date,
 					assignment.getOpenDate() );
 		} else if( assignment.isCurrent() )
 		{
-			dateString = this.getContext().getString(
+			dateString = this.context.getString(
 					R.string.list_item_assignment_due_date,
 					assignment.getDueDate() );
 		} else if( assignment.isPastDue() )
 		{
-			dateString = this.getContext().getString(
+			dateString = this.context.getString(
 					R.string.list_item_assignment_close_date,
 					assignment.getCloseDate() );
 		} else if( assignment.isClosed() )
 		{
-			dateString = this.getContext().getString(
-					R.string.list_item_assignment_closed );
+			dateString = this.context
+					.getString( R.string.list_item_assignment_closed );
 		} else
 		{
 			throw new IllegalStateException(
@@ -88,5 +112,18 @@ public class AssignmentsAdapter extends ArrayAdapter<Assignment>
 				.setText( dateString );
 
 		return view;
+	}
+
+	public void setData( List<Assignment> data )
+	{
+		this.assignments.clear();
+		this.assignments.addAll( data );
+		this.notifyDataSetChanged();
+	}
+
+	public void clear()
+	{
+		this.assignments.clear();
+		this.notifyDataSetInvalidated();
 	}
 }
