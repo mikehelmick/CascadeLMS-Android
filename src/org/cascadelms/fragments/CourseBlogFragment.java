@@ -3,6 +3,7 @@ package org.cascadelms.fragments;
 import java.util.List;
 
 import org.cascadelms.R;
+import org.cascadelms.data.adapters.BlogPostAdapter;
 import org.cascadelms.data.loaders.BlogPostLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.BlogPost;
@@ -10,18 +11,21 @@ import org.cascadelms.data.models.Course;
 import org.cascadelms.data.sources.FakeDataSource;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class CourseBlogFragment extends Fragment implements
+public class CourseBlogFragment extends ListFragment implements
 		LoaderCallbacks<List<BlogPost>>
 {
 	private BlogDataSource blogDataSource;
+    private BlogPostAdapter adapter;
+    private TextView emptyView;
 
 	/* Constants */
 	private static final String ARGS_COURSE = "org.cascadelms.args_course";
@@ -40,9 +44,7 @@ public class CourseBlogFragment extends Fragment implements
 	{
 		/* Initializes a data source and begins loading. */
 		this.blogDataSource = FakeDataSource.getInstance();
-		this.getActivity().getSupportLoaderManager()
-				.initLoader( LoaderCodes.LOADER_CODE_BLOG, null, this )
-				.forceLoad();
+        this.adapter = new BlogPostAdapter(getActivity());
 
 		super.onCreate( savedInstanceState );
 	}
@@ -53,15 +55,28 @@ public class CourseBlogFragment extends Fragment implements
 	{
 		super.onCreateView( inflater, container, savedInstanceState );
 
-		View view = inflater.inflate( R.layout.fragment_courseblog, null );
-		TextView label = (TextView) view.findViewById( R.id.placeholder );
-
-		label.append( " " + this.getCourse().getId() );
+        View view = inflater.inflate( R.layout.fragment_courseblog, null );
+        this.emptyView = (TextView) view
+                .findViewById( R.id.fragment_courseblog_empty );
+        ( (ListView) view.findViewById( android.R.id.list ) )
+                .setEmptyView( emptyView );
 
 		return view;
 	}
 
-	@Override
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        this.getListView().setAdapter( adapter );
+
+        this.getActivity().getSupportLoaderManager()
+                .initLoader( LoaderCodes.LOADER_CODE_BLOG, null, this )
+                .forceLoad();
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
 	public Loader<List<BlogPost>> onCreateLoader( int id, Bundle args )
 	{
 		switch( id )
@@ -86,7 +101,10 @@ public class CourseBlogFragment extends Fragment implements
 		{
 			case LoaderCodes.LOADER_CODE_BLOG:
 			{
-				/* TODO Use this data in the Fragment. */
+                adapter.clear();
+                adapter.addAll(data);
+                this.emptyView
+                        .setText( R.string.fragment_courseblog_list_empty_message );
 				break;
 			}
 		}
@@ -100,10 +118,7 @@ public class CourseBlogFragment extends Fragment implements
 		{
 			case LoaderCodes.LOADER_CODE_BLOG:
 			{
-				/*
-				 * TODO Anything that uses data from the Loader needs to clear
-				 * its data here.
-				 */
+                adapter.clear();
 				break;
 			}
 		}

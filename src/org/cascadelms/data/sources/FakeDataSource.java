@@ -3,6 +3,8 @@ package org.cascadelms.data.sources;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -33,9 +35,11 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		FakeDataSource.initAssignmentsData();
 		FakeDataSource.initGradesData();
 		FakeDataSource.initSchoolData();
+        FakeDataSource.initStreamData();
+        FakeDataSource.initBlogData();
 	}
 
-	private static FakeDataSource instance;
+    private static FakeDataSource instance;
 
 	private FakeDataSource()
 	{
@@ -50,6 +54,16 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		}
 		return instance;
 	}
+
+    /* Social Stream sort comparator class */
+    private static class SocialStreamComparator implements Comparator<StreamItem>
+    {
+        @Override
+        public int compare(StreamItem itemA, StreamItem itemB)
+        {
+            return itemA.getSummaryDate().compareTo(itemB.getSummaryDate());
+        }
+    }
 
 	/* CourseDataSource */
 	/* Course ID Constants */
@@ -238,6 +252,89 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 			}
 		}
 	}
+
+    private static ArrayList<StreamItem> streamItemsListAll;
+    private static ArrayList<StreamItem> streamItemsListDesign;
+    private static ArrayList<StreamItem> streamItemsListMachine;
+    private static ArrayList<StreamItem> streamItemsListAI;
+    private static ArrayList<StreamItem> streamItemsListInfo;
+    private static ArrayList<StreamItem> streamItemsListUI;
+
+    /* Stream Data */
+    private static void initStreamData()
+    {
+        streamItemsListAll = new ArrayList<StreamItem>();
+        streamItemsListDesign = new ArrayList<StreamItem>();
+        streamItemsListMachine = new ArrayList<StreamItem>();
+        streamItemsListAI = new ArrayList<StreamItem>();
+        streamItemsListInfo = new ArrayList<StreamItem>();
+        streamItemsListUI = new ArrayList<StreamItem>();
+
+        for (Assignment assignment : assignmentsListDesign)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListDesign.add(item);
+        }
+        for (Assignment assignment : assignmentsListMachine)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListMachine.add(item);
+        }
+        for (Assignment assignment : assignmentsListAI)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListAI.add(item);
+        }
+        for (Assignment assignment : assignmentsListMachine)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListMachine.add(item);
+        }
+        for (Assignment assignment : assignmentsListInfo)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListInfo.add(item);
+        }
+        for (Assignment assignment : assignmentsListUI)
+        {
+            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    assignment.getOpenDate(), "New assignment posted: " + assignment.getTitle(),
+                    null);
+
+            streamItemsListAll.add(item);
+            streamItemsListUI.add(item);
+        }
+
+        // Sort by date
+        SocialStreamComparator comparator = new SocialStreamComparator();
+
+        Collections.sort(streamItemsListAll, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListDesign, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListMachine, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListAI, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListInfo, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListUI, Collections.reverseOrder(comparator));
+    }
 
 	/* Assignments Data */
 	private static ArrayList<Assignment> assignmentsListDesign;
@@ -473,6 +570,96 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		}
 	}
 
+    /* Blog Data */
+    private static ArrayList<BlogPost> blogListDesign;
+    private static ArrayList<BlogPost> blogListMachine;
+    private static ArrayList<BlogPost> blogListAI;
+    private static ArrayList<BlogPost> blogListInfo;
+    private static ArrayList<BlogPost> blogListUI;
+
+    private static void initBlogData()
+    {
+        long now = (new Date()).getTime();
+        final long week = 604800000L;
+
+        blogListDesign = new ArrayList<BlogPost>();
+
+        blogListDesign.add(new BlogPost(new BlogPost.Builder(1,
+                "Presentation Schedule",
+                false, "Fred Annexstein",
+                new Date(now),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.")));
+        blogListDesign.add(new BlogPost(new BlogPost.Builder(2,
+                "Submission Requirements",
+                false, "Fred Annexstein",
+                new Date(now + week),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.")));
+
+        blogListMachine = new ArrayList<BlogPost>();
+
+        for (int i = 1; i <= 10; ++i)
+            blogListMachine.add(new BlogPost(new BlogPost.Builder(i,
+                "Blog Post " + i,
+                false, "Fred Annexstein",
+                new Date(now + week),
+                "Post " + i + " description.")));
+
+        blogListAI = new ArrayList<BlogPost>();
+
+        blogListAI.add(new BlogPost(new BlogPost.Builder(1,
+                "A Blog Post",
+                false, "Fred Annexstein",
+                new Date(now),
+                "Hello, world!")));
+
+        blogListInfo = new ArrayList<BlogPost>();
+
+        blogListInfo.add(new BlogPost(new BlogPost.Builder(1,
+                "Presentation Schedule",
+                false, "Fred Annexstein",
+                new Date(now),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.")));
+        blogListInfo.add(new BlogPost(new BlogPost.Builder(2,
+                "Submission Requirements",
+                false, "Fred Annexstein",
+                new Date(now + week),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.")));
+
+        blogListUI = new ArrayList<BlogPost>();
+    }
+
 	@Override
 	public List<BlogPost> getBlogPostsForCourse( int courseId )
 	{
@@ -481,23 +668,23 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		{
 			case COURSE_ID_DESIGN:
 			{
-
+                return blogListDesign;
 			}
 			case COURSE_ID_MACHINE_LEARNING:
 			{
-
+                return blogListMachine;
 			}
 			case COURSE_ID_AI:
 			{
-
+                return blogListAI;
 			}
 			case COURSE_ID_INFO_RETRIEVAL:
 			{
-
+                return blogListInfo;
 			}
 			case COURSE_ID_UI:
 			{
-
+                return blogListUI;
 			}
 			default:
 			{
@@ -509,7 +696,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 	@Override
 	public List<StreamItem> getAllStreamItems()
 	{
-		return new ArrayList<StreamItem>();
+		return streamItemsListAll;
 	}
 
 	@Override
@@ -520,23 +707,23 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		{
 			case COURSE_ID_DESIGN:
 			{
-
+                return streamItemsListDesign;
 			}
 			case COURSE_ID_MACHINE_LEARNING:
 			{
-
+                return streamItemsListMachine;
 			}
 			case COURSE_ID_AI:
 			{
-
+                return streamItemsListAI;
 			}
 			case COURSE_ID_INFO_RETRIEVAL:
 			{
-
+                return streamItemsListInfo;
 			}
 			case COURSE_ID_UI:
 			{
-
+                return streamItemsListUI;
 			}
 			default:
 			{
@@ -557,9 +744,9 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		for ( int i = 2; i <= 6; ++i )
 		{
 			schoolsList
-					.add( new School( "School " + i,
-							"http://www.cascadelms.org/",
-							"http://www.cascadelms.org/" ) );
+					.add(new School("School " + i,
+                            "http://www.cascadelms.org/",
+                            "http://www.cascadelms.org/"));
 		}
 	}
 

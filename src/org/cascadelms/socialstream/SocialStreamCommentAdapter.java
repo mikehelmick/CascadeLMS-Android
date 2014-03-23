@@ -51,10 +51,10 @@ public class SocialStreamCommentAdapter extends BaseAdapter
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         if (position == 0)
-            newView = inflater.inflate(org.cascadelms.R.layout.view_socialstream_post,
+            newView = inflater.inflate(org.cascadelms.R.layout.list_item_socialstream_post,
                     parent, false);
         else
-            newView = inflater.inflate(org.cascadelms.R.layout.view_socialstream_comment,
+            newView = inflater.inflate(org.cascadelms.R.layout.list_item_socialstream_comment,
                     parent, false);
 
         return newView;

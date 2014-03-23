@@ -41,6 +41,14 @@
     
     <!-- Other fragments -->
     <string name="fragment_viewpost">View Post</string>
+
+    <!-- Social Stream Fragment -->
+    <string name="fragment_socialstream_list_loading_message">Loading Social Stream&#8230;</string>
+    <string name="fragment_socialstream_list_empty_message">No posts yet. Be the first!</string>
+
+    <!-- Course Blog Fragment -->
+    <string name="fragment_courseblog_list_loading_message">Loading Course Blog&#8230;</string>
+    <string name="fragment_courseblog_list_empty_message">No blog posts for this course</string>
     
     <!-- Documents Fragment -->
     <string name="fragment_documents_list_loading_message">Loading Documents&#8230;</string>

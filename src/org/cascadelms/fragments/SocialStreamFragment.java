@@ -1,19 +1,18 @@
 package org.cascadelms.fragments;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.cascadelms.R;
+import org.cascadelms.data.adapters.StreamItemAdapter;
 import org.cascadelms.data.loaders.CourseStreamItemLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.StreamItem;
 import org.cascadelms.data.sources.FakeDataSource;
-import org.cascadelms.socialstream.SocialStreamAdapter;
 import org.cascadelms.socialstream.SocialStreamPost;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -21,11 +20,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-public class SocialStreamFragment extends Fragment implements
+public class SocialStreamFragment extends ListFragment implements
 		LoaderCallbacks<List<StreamItem>>
 {
 	private StreamDataSource streamDataSource;
+    private StreamItemAdapter adapter;
+    private TextView emptyView;
 
 	private static final String ARGS_COURSE = "org.cascadelms.args_course";
 
@@ -43,22 +45,48 @@ public class SocialStreamFragment extends Fragment implements
 	{
 		/* Initializes a data source and begins loading. */
 		this.streamDataSource = FakeDataSource.getInstance();
-
-		/* There are two loaders available to this Fragment. */
-		/* This call initializes a Loader to load all StreamItems. */
-		this.getActivity().getSupportLoaderManager()
-				.initLoader( LoaderCodes.LOADER_CODE_TOTAL_STREAM, null, this );
-		/*
-		 * This call initializes a Loader to load only stream items for this
-		 * Fragment's Course
-		 */
-		// this.getActivity().getSupportLoaderManager()
-		// .initLoader( LoaderCodes.LOADER_CODE_COURSE_STREAM, null, this );
+        this.adapter = new StreamItemAdapter(getActivity());
 
 		super.onCreate( savedInstanceState );
 	}
 
-	private class SocialStreamItemClickListener implements
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        /* There are two loaders available to this Fragment. */
+
+        if (this.getCourse() == null)
+            /* This call initializes a Loader to load all StreamItems. */
+            this.getActivity().getSupportLoaderManager()
+                .initLoader( LoaderCodes.LOADER_CODE_TOTAL_STREAM, null, this ).forceLoad();
+        else
+		/*
+		 * This call initializes a Loader to load only stream items for this
+		 * Fragment's Course
+		 */
+            this.getActivity().getSupportLoaderManager()
+                .initLoader(LoaderCodes.LOADER_CODE_COURSE_STREAM, null, this).forceLoad();
+
+        this.getListView().setAdapter( adapter );
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState )
+    {
+        super.onCreateView( inflater, container, savedInstanceState );
+
+        View view = inflater.inflate( R.layout.fragment_socialstream, null );
+        this.emptyView = (TextView) view
+                .findViewById( R.id.fragment_socialstream_empty );
+        ( (ListView) view.findViewById( android.R.id.list ) )
+                .setEmptyView( emptyView );
+
+        return view;
+    }
+
+    private class SocialStreamItemClickListener implements
 			AdapterView.OnItemClickListener
 	{
 		@Override
@@ -68,33 +96,6 @@ public class SocialStreamFragment extends Fragment implements
 			// TODO: Supply post object
 			goToPostDetail( null );
 		}
-	}
-
-	@Override
-	public View onCreateView( LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState )
-	{
-		super.onCreateView( inflater, container, savedInstanceState );
-
-		View view = inflater.inflate( R.layout.fragment_socialstream, null );
-
-		ListView socialstreamList = (ListView) view
-				.findViewById( R.id.socialstream_list );
-
-		if( socialstreamList != null )
-		{
-			ArrayList<SocialStreamPost> postList = new ArrayList<SocialStreamPost>();
-
-			for ( int i = 0; i < 10; ++i )
-				postList.add( new SocialStreamPost() );
-
-			socialstreamList.setAdapter( new SocialStreamAdapter( view
-					.getContext(), postList ) );
-			socialstreamList
-					.setOnItemClickListener( new SocialStreamItemClickListener() );
-		}
-
-		return view;
 	}
 
 	private void goToPostDetail( SocialStreamPost parentPost )
@@ -148,13 +149,12 @@ public class SocialStreamFragment extends Fragment implements
 		switch( loader.getId() )
 		{
 			case LoaderCodes.LOADER_CODE_COURSE_STREAM:
-			{
-				/* TODO Use this data in the Fragment. */
-				break;
-			}
 			case LoaderCodes.LOADER_CODE_TOTAL_STREAM:
 			{
-				/* TODO Use this data in the Fragment. */
+                adapter.clear();
+                adapter.addAll(data);
+                this.emptyView
+                        .setText( R.string.fragment_socialstream_list_empty_message );
 				break;
 			}
 		}
@@ -167,19 +167,9 @@ public class SocialStreamFragment extends Fragment implements
 		switch( loader.getId() )
 		{
 			case LoaderCodes.LOADER_CODE_COURSE_STREAM:
-			{
-				/*
-				 * TODO Anything that uses data from this Loader needs to clear
-				 * its data here.
-				 */
-				break;
-			}
 			case LoaderCodes.LOADER_CODE_TOTAL_STREAM:
 			{
-				/*
-				 * TODO Anything that uses data from this Loader needs to clear
-				 * its data here.
-				 */
+                adapter.clear();
 				break;
 			}
 		}
@@ -199,8 +189,11 @@ public class SocialStreamFragment extends Fragment implements
 	 * 
 	 * @return the <code>Course</code>
 	 */
-	private Course getCourse()
-	{
-		return this.getArguments().getParcelable( ARGS_COURSE );
-	}
+    private Course getCourse()
+    {
+        if (this.getArguments() == null)
+            return null;
+        else
+            return this.getArguments().getParcelable( ARGS_COURSE );
+    }
 }
