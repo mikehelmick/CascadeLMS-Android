@@ -130,7 +130,7 @@ public class DocumentAdapter extends BaseAdapter
 			{
 				/* TODO create an actual XML file to inflate for dividers. */
 				TextView dividerView = (TextView) LayoutInflater.from(
-						this.context ).inflate( R.layout.list_item_document,
+						this.context ).inflate( R.layout.list_item_divider,
 						parent, false );
 				dividerView
 						.setText( ( (Divider) this.getItem( position ) ).title );
