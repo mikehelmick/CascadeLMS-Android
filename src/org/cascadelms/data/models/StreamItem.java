@@ -1,15 +1,17 @@
 package org.cascadelms.data.models;
 
 import java.net.URL;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
  * An immutable data model class representing a single stream item.
  * <p>
- * Note this class does not use the Builder pattern because all of its fields are mandatory.
+ * Note this class does not use the Builder pattern because all of its fields
+ * are mandatory.
  * 
  */
-public class StreamItem 
+public class StreamItem
 {
 	/* Required Attributes */
 	private final long id;
@@ -17,8 +19,9 @@ public class StreamItem
 	private final Date summaryDate;
 	private final String summary;
 	private final URL linkFor;
-	
-	public StreamItem( long id, ItemType type, Date summaryDate, String summary, URL linkFor ) 
+
+	public StreamItem( long id, ItemType type, Date summaryDate,
+			String summary, URL linkFor )
 	{
 		this.id = id;
 		this.type = type;
@@ -27,27 +30,27 @@ public class StreamItem
 		this.linkFor = linkFor;
 	}
 
-	public long getId() 
+	public long getId()
 	{
 		return id;
 	}
 
-	public ItemType getType() 
+	public ItemType getType()
 	{
 		return type;
 	}
 
-	public Date getSummaryDate() 
+	public Date getSummaryDate()
 	{
 		return summaryDate;
 	}
 
-	public String getSummary() 
+	public String getSummary()
 	{
 		return summary;
 	}
 
-	public URL getLinkFor() 
+	public URL getLinkFor()
 	{
 		return linkFor;
 	}
@@ -55,5 +58,16 @@ public class StreamItem
 	public enum ItemType
 	{
 		ASSIGNMENT, BLOG_POST, DOCUMENT
+	}
+
+	/* Social Stream sort comparator class */
+	public static class SocialStreamComparator implements
+			Comparator<StreamItem>
+	{
+		@Override
+		public int compare( StreamItem itemA, StreamItem itemB )
+		{
+			return itemA.getSummaryDate().compareTo( itemB.getSummaryDate() );
+		}
 	}
 }
