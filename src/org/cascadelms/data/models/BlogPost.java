@@ -122,15 +122,17 @@ public class BlogPost extends Item
             this.score = score;
 		}
 
-        public void setCommentCount( int commentCount )
+        public Builder setCommentCount( int commentCount )
         {
             this.commentCount = commentCount;
+            return this;
         }
 
-		public void setComments( Comment[] comments )
+		public Builder setComments( Comment[] comments )
 		{
 			this.comments = comments;
             this.commentCount = comments.length;
+            return this;
 		}
 	}
 }
