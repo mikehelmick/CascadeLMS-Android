@@ -275,50 +275,55 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 
         for (Assignment assignment : assignmentsListDesign)
         {
-            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10), random.nextInt(10));
+                    null, random.nextInt(10)));
 
             streamItemsListAll.add(item);
             streamItemsListDesign.add(item);
         }
         for (Assignment assignment : assignmentsListMachine)
         {
-            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
-                    "Michael Helmick", assignment.getOpenDate(),
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10), random.nextInt(10));
+                    null, random.nextInt(10)));
 
             streamItemsListAll.add(item);
             streamItemsListMachine.add(item);
         }
         for (Assignment assignment : assignmentsListAI)
         {
-            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10), random.nextInt(10));
+                    null, random.nextInt(10)));
 
             streamItemsListAll.add(item);
             streamItemsListAI.add(item);
         }
         for (Assignment assignment : assignmentsListInfo)
         {
-            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10), random.nextInt(10));
+                    null, random.nextInt(10)));
 
             streamItemsListAll.add(item);
             streamItemsListInfo.add(item);
         }
         for (Assignment assignment : assignmentsListUI)
         {
-            StreamItem item = new StreamItem(assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10), random.nextInt(10));
+                    null, random.nextInt(10)));
 
             streamItemsListAll.add(item);
             streamItemsListUI.add(item);
