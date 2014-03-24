@@ -288,9 +288,9 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
         {
             StreamItem item = new StreamItem( new StreamItem.Builder (
                     assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
-                    "Fred Annexstein", assignment.getOpenDate(),
+                    "Michael Helmick", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10)));
+                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
 
             streamItemsListAll.add(item);
             streamItemsListMachine.add(item);
@@ -301,7 +301,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
                     assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10)));
+                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
 
             streamItemsListAll.add(item);
             streamItemsListAI.add(item);
@@ -312,7 +312,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
                     assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10)));
+                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
 
             streamItemsListAll.add(item);
             streamItemsListInfo.add(item);
@@ -323,7 +323,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
                     assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10)));
+                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
 
             streamItemsListAll.add(item);
             streamItemsListUI.add(item);
@@ -601,7 +601,8 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
                         "Curabitur risus enim, sollicitudin ut lorem at," +
                         "dictum ullamcorper tortor. Nulla facilisi." +
                         "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
-                        "Nulla facilisi.", random.nextInt(10))));
+                        "Nulla facilisi.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
         blogListDesign.add(new BlogPost(new BlogPost.Builder(2,
                 "Submission Requirements",
                 false, "Fred Annexstein",
@@ -614,7 +615,8 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
                         "Curabitur risus enim, sollicitudin ut lorem at," +
                         "dictum ullamcorper tortor. Nulla facilisi." +
                         "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
-                        "Nulla facilisi.", random.nextInt(10))));
+                        "Nulla facilisi.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
 
         blogListMachine = new ArrayList<BlogPost>();
 
@@ -623,7 +625,8 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
                 "Blog Post " + i,
                 false, "Michael Helmick",
                 new Date(now + week),
-                "Post " + i + " description.", random.nextInt(10))));
+                "Post " + i + " description.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
 
         blogListAI = new ArrayList<BlogPost>();
 
@@ -631,7 +634,8 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
                 "A Blog Post",
                 false, "Fred Annexstein",
                 new Date(now),
-                "Hello, world!", random.nextInt(10))));
+                "Hello, world!",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
 
         blogListInfo = new ArrayList<BlogPost>();
 
@@ -647,7 +651,8 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
                         "Curabitur risus enim, sollicitudin ut lorem at," +
                         "dictum ullamcorper tortor. Nulla facilisi." +
                         "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
-                        "Nulla facilisi.", random.nextInt(10))));
+                        "Nulla facilisi.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
         blogListInfo.add(new BlogPost(new BlogPost.Builder(2,
                 "Submission Requirements",
                 false, "Fred Annexstein",
@@ -660,7 +665,8 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
                         "Curabitur risus enim, sollicitudin ut lorem at," +
                         "dictum ullamcorper tortor. Nulla facilisi." +
                         "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
-                        "Nulla facilisi.", random.nextInt(10))));
+                        "Nulla facilisi.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
 
         blogListUI = new ArrayList<BlogPost>();
     }
