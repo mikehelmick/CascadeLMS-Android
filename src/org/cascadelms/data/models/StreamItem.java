@@ -20,18 +20,21 @@ public class StreamItem
 	private final URL linkFor;
     private final int score;
     private final int commentCount;
+
+    /* Optional Attributes */
+    private final Comment[] comments;
 	
-	public StreamItem( long id, ItemType type, String author, Date summaryDate, String summary,
-                       URL linkFor, int score, int commentCount )
+	public StreamItem( StreamItem.Builder builder )
 	{
-		this.id = id;
-		this.type = type;
-        this.author = author;
-		this.summaryDate = summaryDate;
-		this.summary = summary;
-		this.linkFor = linkFor;
-        this.score = score;
-        this.commentCount = commentCount;
+		this.id = builder.id;
+		this.type = builder.type;
+        this.author = builder.author;
+		this.summaryDate = builder.summaryDate;
+		this.summary = builder.summary;
+		this.linkFor = builder.linkFor;
+        this.score = builder.score;
+        this.commentCount = builder.commentCount;
+        this.comments = builder.comments;
 	}
 
 	public long getId() 
@@ -74,8 +77,52 @@ public class StreamItem
         return commentCount;
     }
 
+    public Comment[] getComments()
+    {
+        return comments;
+    }
+
     public enum ItemType
 	{
 		ASSIGNMENT, BLOG_POST, DOCUMENT
 	}
+
+    public static class Builder
+    {
+        /* Required Attributes */
+        private long id;
+        private ItemType type;
+        private String author;
+        private Date summaryDate;
+        private String summary;
+        private URL linkFor;
+        private int score;
+        private int commentCount = 0;
+
+        /* Optional Attributes */
+        private Comment[] comments;
+
+        public Builder( int id, ItemType type, String author, Date summaryDate,
+                        String summary, URL linkFor, int score )
+        {
+            this.id = id;
+            this.type = type;
+            this.author = author;
+            this.summaryDate = summaryDate;
+            this.summary = summary;
+            this.linkFor = linkFor;
+            this.score = score;
+        }
+
+        public void setCommentCount( int commentCount )
+        {
+            this.commentCount = commentCount;
+        }
+
+        public void setComments( Comment[] comments )
+        {
+            this.comments = comments;
+            this.commentCount = comments.length;
+        }
+    }
 }
