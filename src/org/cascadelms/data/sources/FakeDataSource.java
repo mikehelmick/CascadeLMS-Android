@@ -261,6 +261,27 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		streamItemsListInfo = new ArrayList<StreamItem>();
 		streamItemsListUI = new ArrayList<StreamItem>();
 
+		/* Some pretty data to be used in the poster screenshot */
+		streamItemsListAll
+				.add( new StreamItem(
+						1000,
+						StreamItem.ItemType.DOCUMENT,
+						new Date(),
+						"A new Document was posted in CS5002: Senior Design: Poster Design Guidelines",
+						null ) );
+		streamItemsListAll
+				.add( new StreamItem(
+						2000,
+						StreamItem.ItemType.BLOG_POST,
+						new Date( System.currentTimeMillis() - 86400 ),
+						"All FINAL abstracts (150 word count), titles and equipment needs are to be submitted no later than Wednesday February 26, 2014.  The links below are to be used for your project abstract submissions and for equipment needs – one each per project.",
+						null ) );
+		streamItemsListAll.add( new StreamItem( 3000,
+				StreamItem.ItemType.ASSIGNMENT, new Date( System
+						.currentTimeMillis() - ( 2 * 86400 ) ),
+				"New assignment posted in CS5002: Senior Design: Expo Poster",
+				null ) );
+
 		for ( Assignment assignment : assignmentsListDesign )
 		{
 			StreamItem item = new StreamItem( assignment.getId(),
