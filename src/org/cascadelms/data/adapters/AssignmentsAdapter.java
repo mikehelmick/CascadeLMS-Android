@@ -211,16 +211,22 @@ public class AssignmentsAdapter extends BaseAdapter
 		int index = 0;
 		if( ( (Assignment) items.get( 0 ) ).isUpcoming() )
 		{
-			items.add( 0, new Divider( "Upcoming" ) ); // TODO Use string
-														// resource.
+			items.add(
+					0,
+					new Divider(
+							this.context
+									.getString( R.string.fragment_assignments_list_divider_upcoming ) ) );
 			index = 1;
 		}
 		for ( int i = index; i < items.size(); i++ )
 		{
 			if( ( (Assignment) items.get( i ) ).isCurrent() )
 			{
-				items.add( i, new Divider( "Current" ) ); // TODO Use string
-															// resource.
+				items.add(
+						i,
+						new Divider(
+								this.context
+										.getString( R.string.fragment_assignments_list_divider_current ) ) );
 				index = i + 1;
 				break;
 			}
@@ -229,8 +235,11 @@ public class AssignmentsAdapter extends BaseAdapter
 		{
 			if( ( (Assignment) items.get( i ) ).isPastDue() )
 			{
-				items.add( i, new Divider( "Past Due" ) ); // TODO Use string
-															// resource.
+				items.add(
+						i,
+						new Divider(
+								this.context
+										.getString( R.string.fragment_assignments_list_divider_past ) ) );
 				index = i + 1;
 				break;
 			}
@@ -239,8 +248,11 @@ public class AssignmentsAdapter extends BaseAdapter
 		{
 			if( ( (Assignment) items.get( i ) ).isClosed() )
 			{
-				items.add( i, new Divider( "Closed" ) ); // TODO Use string
-															// resource.
+				items.add(
+						i,
+						new Divider(
+								this.context
+										.getString( R.string.fragment_assignments_list_divider_closed ) ) );
 				break;
 			}
 		}

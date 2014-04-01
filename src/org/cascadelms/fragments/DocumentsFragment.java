@@ -44,7 +44,6 @@ public class DocumentsFragment extends ListFragment implements
 	private TextView emptyView;
 	private int courseId;
 	private LinkedList<Document> directoryStack;
-	// private Folder currentFolder;
 
 	/* Constants */
 	private static final String ARGS_COURSE_ID = "org.cascadelms.args_course_id";
@@ -215,6 +214,9 @@ public class DocumentsFragment extends ListFragment implements
 
 	private void upDirectory()
 	{
+		directoryStack.removeFirst();
+		LOGGER.info( "Changed directory to "
+				+ directoryStack.getFirst().getTitle() );
 		/* Update the breadcrumb. */
 		// TODO
 	}
@@ -223,6 +225,7 @@ public class DocumentsFragment extends ListFragment implements
 	{
 		/* Add dir to the breadcrumb. */
 		LOGGER.info( "Changed directory to " + dir.getTitle() );
+		directoryStack.addFirst( dir );
 	}
 
 	/**
