@@ -1,5 +1,7 @@
 package org.cascadelms.data.models;
 
+import android.graphics.drawable.Drawable;
+
 import java.net.URL;
 import java.util.Date;
 
@@ -15,6 +17,7 @@ public class StreamItem
 	private final long id;
 	private final ItemType type;
     private final String author;
+    private final Drawable authorAvatar;
 	private final Date summaryDate;
 	private final String summary;
 	private final URL linkFor;
@@ -29,6 +32,7 @@ public class StreamItem
 		this.id = builder.id;
 		this.type = builder.type;
         this.author = builder.author;
+        this.authorAvatar = builder.authorAvatar;
 		this.summaryDate = builder.summaryDate;
 		this.summary = builder.summary;
 		this.linkFor = builder.linkFor;
@@ -50,6 +54,11 @@ public class StreamItem
     public String getAuthor()
     {
         return author;
+    }
+
+    public Drawable getAuthorAvatar()
+    {
+        return authorAvatar;
     }
 
 	public Date getSummaryDate() 
@@ -84,7 +93,7 @@ public class StreamItem
 
     public enum ItemType
 	{
-		ASSIGNMENT, BLOG_POST, DOCUMENT
+		ASSIGNMENT, BLOG_POST, DOCUMENT, STATUS_UPDATE
 	}
 
     public static class Builder
@@ -93,6 +102,7 @@ public class StreamItem
         private long id;
         private ItemType type;
         private String author;
+        private Drawable authorAvatar = null;
         private Date summaryDate;
         private String summary;
         private URL linkFor;
@@ -112,6 +122,12 @@ public class StreamItem
             this.summary = summary;
             this.linkFor = linkFor;
             this.score = score;
+        }
+
+        public Builder setAuthorAvatar( Drawable authorAvatar )
+        {
+            this.authorAvatar = authorAvatar;
+            return this;
         }
 
         public Builder setCommentCount( int commentCount )
