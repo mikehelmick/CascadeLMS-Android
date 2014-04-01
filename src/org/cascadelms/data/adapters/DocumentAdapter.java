@@ -203,8 +203,11 @@ public class DocumentAdapter extends BaseAdapter
 		/* Only insert the header if there are folders. */
 		if( ( (Document) items.get( 0 ) ).isFolder() )
 		{
-			items.add( 0, new Divider( "Folders" ) ); // TODO use string
-														// resource
+			items.add(
+					0,
+					new Divider(
+							this.context
+									.getString( R.string.fragment_documents_list_divider_folders ) ) );
 			startingIndex = 1;
 		}
 		/* Finds the correct position to insert the Files divider. */
@@ -215,7 +218,11 @@ public class DocumentAdapter extends BaseAdapter
 				continue;
 			} else
 			{
-				items.add( i, new Divider( "Files" ) );
+				items.add(
+						i,
+						new Divider(
+								this.context
+										.getString( R.string.fragment_documents_list_divider_files ) ) );
 				break;
 			}
 		}
