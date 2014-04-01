@@ -13,7 +13,7 @@
     <string name="prompt_password">Password</string>
     <string name="process_login">Logging in&#8230;</string>
     <string name="error_general">Could not log in.</string>
-    
+
     <!-- Buttons/Menu items -->
     <string name="action_next">Next</string>
     <string name="action_login">Log in</string>
@@ -21,11 +21,11 @@
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
     <string name="action_settings">Settings</string>
-    
+
     <!-- Content strings -->
     <string name="desc_select_school">Select your school from the list:</string>
     <string name="desc_enter_school_url">Or enter your school\'s Cascade URL:</string>
-    
+
     <!-- Toasts -->
     <string name="toast_login">Successfully logged in!</string>
     <string name="toast_logout">Successfully logged out!</string>
@@ -38,7 +38,7 @@
     <string name="fragment_documents">Documents</string>
     <string name="fragment_assignments">Assignments</string>
     <string name="fragment_grades">Grades</string>
-    
+
     <!-- Other fragments -->
     <string name="fragment_viewpost">View Post</string>
 
@@ -49,31 +49,33 @@
     <!-- Course Blog Fragment -->
     <string name="fragment_courseblog_list_loading_message">Loading Course Blog&#8230;</string>
     <string name="fragment_courseblog_list_empty_message">No blog posts for this course</string>
-    
+
     <!-- Documents Fragment -->
     <string name="fragment_documents_list_loading_message">Loading Documents&#8230;</string>
     <string name="fragment_documents_list_empty_message">No documents for this course</string>
     <string name="fragment_documents_list_divider_folders">FOLDERS</string>
     <string name="fragment_documents_list_divider_files">FILES</string>
-    
+
     <!-- Assignments Fragment -->
     <string name="fragment_assignments_list_loading_message">Loading Assignments&#8230;</string>
     <string name="fragment_assignments_list_empty_message">No assignments for this course</string>
+    <string name="fragment_assignments_list_divider_closed">CLOSED</string>
+    <string name="fragment_assignments_list_divider_past">PAST DUE</string>
+    <string name="fragment_assignments_list_divider_current">CURRENT</string>
+    <string name="fragment_assignments_list_divider_upcoming">UPCOMING</string>
     <string name="list_item_assignment_points" formatted="false">%s/%s</string>
     <string name="list_item_assignment_no_points" formatted="false">-/%s</string>
     <string name="list_item_assignment_upcoming_date" formatted="false">Available %1$tm/%1$td</string>
     <string name="list_item_assignment_due_date" formatted="false">Due %1$tm/%1$td</string>
     <string name="list_item_assignment_close_date" formatted="false">Closes %1$tm/%1$td</string>
     <string name="list_item_assignment_closed">Closed</string>
-    
+
     <!-- Grades Fragment -->
     <string name="fragment_grades_list_loading_message">Loading Grades&#8230;</string>
     <string name="fragment_grades_list_empty_message">No grades for this course</string>
-    
     <string name="course_navigation_home">Home</string>
-    
+
     <!-- Stream Activity -->
     <string name="activity_stream_drawer_title">Courses</string>
 
 </resources>
-
