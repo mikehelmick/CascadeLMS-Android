@@ -1,5 +1,6 @@
 package org.cascadelms.fragments;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -9,7 +10,6 @@ import org.cascadelms.data.loaders.DocumentsLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
-import org.cascadelms.data.models.Folder;
 import org.cascadelms.data.sources.FakeDataSource;
 
 import android.annotation.SuppressLint;
@@ -43,7 +43,8 @@ public class DocumentsFragment extends ListFragment implements
 	private DocumentsDataSource dataSource;
 	private TextView emptyView;
 	private int courseId;
-	private Folder rootFolder;
+	private LinkedList<Document> directoryStack;
+	// private Folder currentFolder;
 
 	/* Constants */
 	private static final String ARGS_COURSE_ID = "org.cascadelms.args_course_id";
@@ -77,6 +78,9 @@ public class DocumentsFragment extends ListFragment implements
 
 		/* Creates a data source and begins loading */
 		this.dataSource = FakeDataSource.getInstance();
+
+		this.directoryStack = new LinkedList<Document>();
+		this.directoryStack.add( Document.rootDocument() );
 		super.onCreate( savedInstanceState );
 	}
 
@@ -111,12 +115,18 @@ public class DocumentsFragment extends ListFragment implements
 		if( doc.isFolder() )
 		{
 			LOGGER.info( "Got a click on a folder." );
+			Bundle args = new Bundle();
+			args.putParcelable( DocumentsLoader.ARGS_DIRECTORY, doc );
+			this.getActivity()
+					.getSupportLoaderManager()
+					.initLoader( LoaderCodes.LOADER_CODE_DOCUMENT_DIRECTORY,
+							args, this ).forceLoad();
+			this.changeDirectory( doc );
 		} else
 		{
 			LOGGER.info( "Got a click on a file." );
 			this.downloadFile( doc );
 		}
-
 	}
 
 	@Override
@@ -142,6 +152,16 @@ public class DocumentsFragment extends ListFragment implements
 				return new DocumentsLoader( this.getActivity(),
 						this.dataSource, this.courseId, null );
 			}
+			case LoaderCodes.LOADER_CODE_DOCUMENT_DIRECTORY:
+			{
+				LOGGER.info( "DocumentsFragment began loading directory." );
+				this.setEmptyText( this
+						.getString( R.string.fragment_documents_list_loading_message ) );
+				return new DocumentsLoader( this.getActivity(),
+						this.dataSource, this.courseId,
+						(Document) args
+								.getParcelable( DocumentsLoader.ARGS_DIRECTORY ) );
+			}
 			default:
 			{
 				return null;
@@ -153,13 +173,21 @@ public class DocumentsFragment extends ListFragment implements
 	public void onLoadFinished( Loader<List<Document>> loader,
 			List<Document> data )
 	{
+		LOGGER.info( "A documents loader finished." );
 		switch( loader.getId() )
 		{
 			case LoaderCodes.LOADER_CODE_DOCUMENTS:
 			{
 				LOGGER.info( "DocumentsFragment finished loading root directory." );
-				this.rootFolder = Folder.createRootFolder( data );
-				this.adapter.setData( rootFolder.getContents() );
+				this.adapter.setData( data );
+				this.setEmptyText( this
+						.getString( R.string.fragment_documents_list_empty_message ) );
+				return;
+			}
+			case LoaderCodes.LOADER_CODE_DOCUMENT_DIRECTORY:
+			{
+				LOGGER.info( "DocumentsFragment finished loading directory." );
+				this.adapter.setData( data );
 				this.setEmptyText( this
 						.getString( R.string.fragment_documents_list_empty_message ) );
 				return;
@@ -177,8 +205,24 @@ public class DocumentsFragment extends ListFragment implements
 				this.adapter.clear();
 				return;
 			}
+			case LoaderCodes.LOADER_CODE_DOCUMENT_DIRECTORY:
+			{
+				this.adapter.clear();
+				return;
+			}
 		}
+	}
 
+	private void upDirectory()
+	{
+		/* Update the breadcrumb. */
+		// TODO
+	}
+
+	private void changeDirectory( Document dir )
+	{
+		/* Add dir to the breadcrumb. */
+		LOGGER.info( "Changed directory to " + dir.getTitle() );
 	}
 
 	/**

@@ -10,9 +10,10 @@ import android.support.v4.content.AsyncTaskLoader;
 
 public class DocumentsLoader extends AsyncTaskLoader<List<Document>>
 {
-	DocumentsDataSource source;
-	int courseId;
-	Document folder;
+	public static final String ARGS_DIRECTORY = "org.cascadelms.documents.args_directory";
+	private final DocumentsDataSource source;
+	private final int courseId;
+	private final Document folder;
 
 	/**
 	 * Constructs a Loader capable of fetching Documents in the background.
@@ -35,7 +36,7 @@ public class DocumentsLoader extends AsyncTaskLoader<List<Document>>
 		this.folder = folder;
 
 		/* Validates that the Document is indeed a folder. */
-		if( folder != null && !folder.isFolder() )
+		if( this.folder != null && !this.folder.isFolder() )
 		{
 			throw new IllegalArgumentException(
 					"The document folder supplied to DocumentsLoader was not actually a folder." );
