@@ -239,7 +239,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 			}
 			default:
 			{
-				return null;
+				return new ArrayList<Document>();
 			}
 		}
 	}
