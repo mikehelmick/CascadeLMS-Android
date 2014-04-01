@@ -4,20 +4,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.cascadelms.SelectSchoolActivity.SchoolsDataSource;
 import org.cascadelms.StreamActivity.CourseDataSource;
 import org.cascadelms.data.models.Assignment;
 import org.cascadelms.data.models.BlogPost;
-import org.cascadelms.data.models.Comment;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
 import org.cascadelms.data.models.Grade;
 import org.cascadelms.data.models.School;
 import org.cascadelms.data.models.StreamItem;
-import org.cascadelms.data.models.StreamItem.SocialStreamComparator;
 import org.cascadelms.fragments.AssignmentsFragment.AssignmentsDataSource;
 import org.cascadelms.fragments.CourseBlogFragment.BlogDataSource;
 import org.cascadelms.fragments.DocumentsFragment.DocumentsDataSource;
@@ -36,11 +36,11 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		FakeDataSource.initAssignmentsData();
 		FakeDataSource.initGradesData();
 		FakeDataSource.initSchoolData();
-		FakeDataSource.initStreamData();
-		FakeDataSource.initBlogData();
+        FakeDataSource.initStreamData();
+        FakeDataSource.initBlogData();
 	}
 
-	private static FakeDataSource instance;
+    private static FakeDataSource instance;
 
 	private FakeDataSource()
 	{
@@ -55,6 +55,16 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		}
 		return instance;
 	}
+
+    /* Social Stream sort comparator class */
+    private static class SocialStreamComparator implements Comparator<StreamItem>
+    {
+        @Override
+        public int compare(StreamItem itemA, StreamItem itemB)
+        {
+            return itemA.getSummaryDate().compareTo(itemB.getSummaryDate());
+        }
+    }
 
 	/* CourseDataSource */
 	/* Course ID Constants */
@@ -244,116 +254,91 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		}
 	}
 
-	private static ArrayList<StreamItem> streamItemsListAll;
-	private static ArrayList<StreamItem> streamItemsListDesign;
-	private static ArrayList<StreamItem> streamItemsListMachine;
-	private static ArrayList<StreamItem> streamItemsListAI;
-	private static ArrayList<StreamItem> streamItemsListInfo;
-	private static ArrayList<StreamItem> streamItemsListUI;
+    private static ArrayList<StreamItem> streamItemsListAll;
+    private static ArrayList<StreamItem> streamItemsListDesign;
+    private static ArrayList<StreamItem> streamItemsListMachine;
+    private static ArrayList<StreamItem> streamItemsListAI;
+    private static ArrayList<StreamItem> streamItemsListInfo;
+    private static ArrayList<StreamItem> streamItemsListUI;
 
-	/* Stream Data */
-	private static void initStreamData()
-	{
-		streamItemsListAll = new ArrayList<StreamItem>();
-		streamItemsListDesign = new ArrayList<StreamItem>();
-		streamItemsListMachine = new ArrayList<StreamItem>();
-		streamItemsListAI = new ArrayList<StreamItem>();
-		streamItemsListInfo = new ArrayList<StreamItem>();
-		streamItemsListUI = new ArrayList<StreamItem>();
+    /* Stream Data */
+    private static void initStreamData()
+    {
+        Random random = new Random(123456);
 
-		streamItemsListAll
-				.add( new StreamItem(
-						1000,
-						StreamItem.ItemType.DOCUMENT,
-						new Date(),
-						"A new document was posted in CS5002: Senior Design: Post Design Guidelines",
-						null ) );
-		streamItemsListAll
-				.add( new StreamItem(
-						2000,
-						StreamItem.ItemType.BLOG_POST,
-						new Date( System.currentTimeMillis() - 86400 ),
-						"All FINAL abstracts (150 word count), titles and equipment needs are to be submitted no later than Wednesday February 26, 2014.  The links below are to be used for your project abstract submissions and for equipment needs – one each per project. ",
-						null ) );
-		streamItemsListAll
-				.add( new StreamItem(
-						3000,
-						StreamItem.ItemType.ASSIGNMENT,
-						new Date( System.currentTimeMillis() - 2 * 86400 ),
-						"A new assignment was poster in CS5002: Senior Design: Final Expo Poster",
-						null ) );
+        streamItemsListAll = new ArrayList<StreamItem>();
+        streamItemsListDesign = new ArrayList<StreamItem>();
+        streamItemsListMachine = new ArrayList<StreamItem>();
+        streamItemsListAI = new ArrayList<StreamItem>();
+        streamItemsListInfo = new ArrayList<StreamItem>();
+        streamItemsListUI = new ArrayList<StreamItem>();
 
-		for ( Assignment assignment : assignmentsListDesign )
-		{
-			StreamItem item = new StreamItem( assignment.getId(),
-					StreamItem.ItemType.ASSIGNMENT, assignment.getOpenDate(),
-					"New assignment posted: " + assignment.getTitle(), null );
+        for (Assignment assignment : assignmentsListDesign)
+        {
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    "Fred Annexstein", assignment.getOpenDate(),
+                    "New assignment posted: " + assignment.getTitle(),
+                    null, random.nextInt(10)));
 
-			streamItemsListAll.add( item );
-			streamItemsListDesign.add( item );
-		}
-		for ( Assignment assignment : assignmentsListMachine )
-		{
-			StreamItem item = new StreamItem( assignment.getId(),
-					StreamItem.ItemType.ASSIGNMENT, assignment.getOpenDate(),
-					"New assignment posted: " + assignment.getTitle(), null );
+            streamItemsListAll.add(item);
+            streamItemsListDesign.add(item);
+        }
+        for (Assignment assignment : assignmentsListMachine)
+        {
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    "Michael Helmick", assignment.getOpenDate(),
+                    "New assignment posted: " + assignment.getTitle(),
+                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
 
-			streamItemsListAll.add( item );
-			streamItemsListMachine.add( item );
-		}
-		for ( Assignment assignment : assignmentsListAI )
-		{
-			StreamItem item = new StreamItem( assignment.getId(),
-					StreamItem.ItemType.ASSIGNMENT, assignment.getOpenDate(),
-					"New assignment posted: " + assignment.getTitle(), null );
+            streamItemsListAll.add(item);
+            streamItemsListMachine.add(item);
+        }
+        for (Assignment assignment : assignmentsListAI)
+        {
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    "Fred Annexstein", assignment.getOpenDate(),
+                    "New assignment posted: " + assignment.getTitle(),
+                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
 
-			streamItemsListAll.add( item );
-			streamItemsListAI.add( item );
-		}
-		for ( Assignment assignment : assignmentsListMachine )
-		{
-			StreamItem item = new StreamItem( assignment.getId(),
-					StreamItem.ItemType.ASSIGNMENT, assignment.getOpenDate(),
-					"New assignment posted: " + assignment.getTitle(), null );
+            streamItemsListAll.add(item);
+            streamItemsListAI.add(item);
+        }
+        for (Assignment assignment : assignmentsListInfo)
+        {
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    "Fred Annexstein", assignment.getOpenDate(),
+                    "New assignment posted: " + assignment.getTitle(),
+                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
 
-			streamItemsListAll.add( item );
-			streamItemsListMachine.add( item );
-		}
-		for ( Assignment assignment : assignmentsListInfo )
-		{
-			StreamItem item = new StreamItem( assignment.getId(),
-					StreamItem.ItemType.ASSIGNMENT, assignment.getOpenDate(),
-					"New assignment posted: " + assignment.getTitle(), null );
+            streamItemsListAll.add(item);
+            streamItemsListInfo.add(item);
+        }
+        for (Assignment assignment : assignmentsListUI)
+        {
+            StreamItem item = new StreamItem( new StreamItem.Builder (
+                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    "Fred Annexstein", assignment.getOpenDate(),
+                    "New assignment posted: " + assignment.getTitle(),
+                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
 
-			streamItemsListAll.add( item );
-			streamItemsListInfo.add( item );
-		}
-		for ( Assignment assignment : assignmentsListUI )
-		{
-			StreamItem item = new StreamItem( assignment.getId(),
-					StreamItem.ItemType.ASSIGNMENT, assignment.getOpenDate(),
-					"New assignment posted: " + assignment.getTitle(), null );
+            streamItemsListAll.add(item);
+            streamItemsListUI.add(item);
+        }
 
-			streamItemsListAll.add( item );
-			streamItemsListUI.add( item );
-		}
+        // Sort by date
+        SocialStreamComparator comparator = new SocialStreamComparator();
 
-		// Sort by date
-		SocialStreamComparator comparator = new SocialStreamComparator();
-
-		Collections.sort( streamItemsListAll,
-				Collections.reverseOrder( comparator ) );
-		Collections.sort( streamItemsListDesign,
-				Collections.reverseOrder( comparator ) );
-		Collections.sort( streamItemsListMachine,
-				Collections.reverseOrder( comparator ) );
-		Collections.sort( streamItemsListAI,
-				Collections.reverseOrder( comparator ) );
-		Collections.sort( streamItemsListInfo,
-				Collections.reverseOrder( comparator ) );
-		Collections.sort( streamItemsListUI,
-				Collections.reverseOrder( comparator ) );
-	}
+        Collections.sort(streamItemsListAll, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListDesign, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListMachine, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListAI, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListInfo, Collections.reverseOrder(comparator));
+        Collections.sort(streamItemsListUI, Collections.reverseOrder(comparator));
+    }
 
 	/* Assignments Data */
 	private static ArrayList<Assignment> assignmentsListDesign;
@@ -589,103 +574,134 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		}
 	}
 
-	/* Blog Data */
-	private static ArrayList<BlogPost> blogListDesign;
-	private static ArrayList<BlogPost> blogListMachine;
-	private static ArrayList<BlogPost> blogListAI;
-	private static ArrayList<BlogPost> blogListInfo;
-	private static ArrayList<BlogPost> blogListUI;
+    /* Blog Data */
+    private static ArrayList<BlogPost> blogListDesign;
+    private static ArrayList<BlogPost> blogListMachine;
+    private static ArrayList<BlogPost> blogListAI;
+    private static ArrayList<BlogPost> blogListInfo;
+    private static ArrayList<BlogPost> blogListUI;
 
-	private static final String loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-			+ "Nulla viverra elit libero, et egestas magna tempus eu."
-			+ "Nam sit amet mauris at nulla aliquet auctor quis ac metus."
-			+ "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem."
-			+ "Mauris ullamcorper libero consectetur adipiscing laoreet."
-			+ "Curabitur risus enim, sollicitudin ut lorem at,"
-			+ "dictum ullamcorper tortor. Nulla facilisi."
-			+ "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque."
-			+ "Nulla facilisi.";
+    private static void initBlogData()
+    {
+        Random random = new Random(654321);
+        long now = (new Date()).getTime();
+        final long week = 604800000L;
 
-	private static void initBlogData()
-	{
-		final long now = ( new Date() ).getTime();
-		final long week = 604800000L;
+        blogListDesign = new ArrayList<BlogPost>();
 
-		blogListDesign = new ArrayList<BlogPost>();
+        blogListDesign.add(new BlogPost(new BlogPost.Builder(1,
+                "Presentation Schedule",
+                false, "Fred Annexstein",
+                new Date(now),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
+        blogListDesign.add(new BlogPost(new BlogPost.Builder(2,
+                "Submission Requirements",
+                false, "Fred Annexstein",
+                new Date(now + week),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
 
-		blogListDesign.add( new BlogPost.Builder( 1, "Presentation Schedule",
-				false, "Fred Annexstein", new Date( now ), loremIpsum, 0 )
-				.build() );
-		blogListDesign
-				.add( new BlogPost.Builder( 2, "Submission Requirements",
-						false, "Fred Annexstein", new Date( now + week ),
-						loremIpsum, 0 ).build() );
+        blogListMachine = new ArrayList<BlogPost>();
 
-		blogListMachine = new ArrayList<BlogPost>();
+        for (int i = 1; i <= 10; ++i)
+            blogListMachine.add(new BlogPost(new BlogPost.Builder(i,
+                "Blog Post " + i,
+                false, "Michael Helmick",
+                new Date(now + week),
+                "Post " + i + " description.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
 
-		for ( int i = 1; i <= 10; ++i )
-			blogListMachine.add( new BlogPost.Builder( i, "Blog Post " + i,
-					false, "Fred Annexstein", new Date( now + week ), "Post "
-							+ i + " description.", 0 ).build() );
+        blogListAI = new ArrayList<BlogPost>();
 
-		blogListAI = new ArrayList<BlogPost>();
+        blogListAI.add(new BlogPost(new BlogPost.Builder(1,
+                "A Blog Post",
+                false, "Fred Annexstein",
+                new Date(now),
+                "Hello, world!",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
 
-		blogListAI.add( new BlogPost.Builder( 1, "A Blog Post", false,
-				"Fred Annexstein", new Date( now ), "Hello, world!", 0 )
-				.build() );
+        blogListInfo = new ArrayList<BlogPost>();
 
-		blogListInfo = new ArrayList<BlogPost>();
+        blogListInfo.add(new BlogPost(new BlogPost.Builder(1,
+                "Presentation Schedule",
+                false, "Fred Annexstein",
+                new Date(now),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
+        blogListInfo.add(new BlogPost(new BlogPost.Builder(2,
+                "Submission Requirements",
+                false, "Fred Annexstein",
+                new Date(now + week),
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        "Nulla viverra elit libero, et egestas magna tempus eu." +
+                        "Nam sit amet mauris at nulla aliquet auctor quis ac metus." +
+                        "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem." +
+                        "Mauris ullamcorper libero consectetur adipiscing laoreet." +
+                        "Curabitur risus enim, sollicitudin ut lorem at," +
+                        "dictum ullamcorper tortor. Nulla facilisi." +
+                        "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque." +
+                        "Nulla facilisi.",
+                random.nextInt(10)).setCommentCount(random.nextInt(10))));
 
-		blogListInfo.add( new BlogPost.Builder( 1, "Presentation Schedule",
-				false, "Fred Annexstein", new Date( now ), loremIpsum, 0 )
-				.build() );
-		blogListInfo
-				.add( new BlogPost.Builder( 2, "Submission Requirements",
-						false, "Fred Annexstein", new Date( now + week ),
-						loremIpsum, 0 ).build() );
-
-		blogListUI = new ArrayList<BlogPost>();
-	}
+        blogListUI = new ArrayList<BlogPost>();
+    }
 
 	@Override
 	public List<BlogPost> getBlogPostsForCourse( int courseId )
 	{
+		/* TODO Return lists of fake data on a course by course basis. */
 		switch( courseId )
 		{
 			case COURSE_ID_DESIGN:
 			{
-				return blogListDesign;
+                return blogListDesign;
 			}
 			case COURSE_ID_MACHINE_LEARNING:
 			{
-				return blogListMachine;
+                return blogListMachine;
 			}
 			case COURSE_ID_AI:
 			{
-				return blogListAI;
+                return blogListAI;
 			}
 			case COURSE_ID_INFO_RETRIEVAL:
 			{
-				return blogListInfo;
+                return blogListInfo;
 			}
 			case COURSE_ID_UI:
 			{
-				return blogListUI;
+                return blogListUI;
 			}
 			default:
 			{
 				return new ArrayList<BlogPost>();
 			}
 		}
-	}
-
-	@Override
-	public BlogPost getBlogPostById( int id )
-	{
-		// TODO needs a real implementation
-		Comment[] comments = {};
-		return new BlogPost.Builder( 0, "Placeholder", false, "Nobody",
-				new Date(), loremIpsum, id ).setComments( comments ).build();
 	}
 
 	@Override
@@ -697,27 +713,28 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 	@Override
 	public List<StreamItem> getStreamItemsForCourse( int courseId )
 	{
+		/* TODO Return lists of fake data on a course by course basis. */
 		switch( courseId )
 		{
 			case COURSE_ID_DESIGN:
 			{
-				return streamItemsListDesign;
+                return streamItemsListDesign;
 			}
 			case COURSE_ID_MACHINE_LEARNING:
 			{
-				return streamItemsListMachine;
+                return streamItemsListMachine;
 			}
 			case COURSE_ID_AI:
 			{
-				return streamItemsListAI;
+                return streamItemsListAI;
 			}
 			case COURSE_ID_INFO_RETRIEVAL:
 			{
-				return streamItemsListInfo;
+                return streamItemsListInfo;
 			}
 			case COURSE_ID_UI:
 			{
-				return streamItemsListUI;
+                return streamItemsListUI;
 			}
 			default:
 			{
@@ -738,9 +755,9 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		for ( int i = 2; i <= 6; ++i )
 		{
 			schoolsList
-					.add( new School( "School " + i,
-							"http://www.cascadelms.org/",
-							"http://www.cascadelms.org/" ) );
+					.add(new School("School " + i,
+                            "http://www.cascadelms.org/",
+                            "http://www.cascadelms.org/"));
 		}
 	}
 

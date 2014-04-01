@@ -41,6 +41,16 @@ public class BlogPostAdapter extends ArrayAdapter<BlogPost>
             TextView summaryLabel = (TextView) convertView
                     .findViewById(R.id.courseblog_description);
             summaryLabel.setText( this.getItem(position).getBody() );
+            TextView scoreLabel = (TextView) convertView
+                    .findViewById(R.id.courseblog_aplus_count);
+            scoreLabel.setText( Integer.toString( this.getItem(position).getScore() ) );
+            TextView commentLabel = (TextView) convertView
+                    .findViewById(R.id.courseblog_comment_count);
+
+            int commentCount = this.getItem(position).getCommentCount();
+
+            commentLabel.setText( convertView.getResources().getQuantityString( R.plurals.comments,
+                    commentCount, commentCount ) );
         }
 
         return convertView;
