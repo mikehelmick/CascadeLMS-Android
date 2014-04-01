@@ -1,24 +1,37 @@
 package org.cascadelms.data.adapters;
 
+import org.cascadelms.R;
 import org.cascadelms.data.models.Grade;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 public class GradesAdapter extends ArrayAdapter<Grade>
 {
 	public GradesAdapter( Context context )
 	{
-		super( context, android.R.layout.simple_list_item_1 );// R.layout.list_item_grade
-																// );
+		super( context, R.layout.list_item_grade );
 	}
 
 	@Override
 	public View getView( int position, View convertView, ViewGroup parent )
 	{
-		// TODO Auto-generated method stub
-		return super.getView( position, convertView, parent );
+		View view;
+		if( convertView != null )
+		{
+			view = convertView;
+		} else
+		{
+			view = LayoutInflater.from( this.getContext() ).inflate(
+					R.layout.list_item_grade, parent, false );
+		}
+		TextView title = (TextView) view.findViewById( R.id.gradeTitle );
+		title.setText( this.getItem( position ).toString() );
+
+		return view;
 	}
 }
