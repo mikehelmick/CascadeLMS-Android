@@ -70,7 +70,15 @@ public class Grade
 	@Override
 	public String toString()
 	{
-		return this.pointsEarned + "/" + this.pointsPossible + " : "
+		String pointsEarnedString;
+		if( Double.isNaN( this.pointsEarned ) )
+		{
+			pointsEarnedString = "-";
+		} else
+		{
+			pointsEarnedString = Double.toString( this.pointsEarned );
+		}
+		return pointsEarnedString + "/" + this.pointsPossible + " : "
 				+ this.assignmentTitle;
 	}
 
