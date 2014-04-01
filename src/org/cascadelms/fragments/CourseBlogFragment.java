@@ -24,8 +24,8 @@ public class CourseBlogFragment extends ListFragment implements
 		LoaderCallbacks<List<BlogPost>>
 {
 	private BlogDataSource blogDataSource;
-	private BlogPostAdapter adapter;
-	private TextView emptyView;
+    private BlogPostAdapter adapter;
+    private TextView emptyView;
 
 	/* Constants */
 	private static final String ARGS_COURSE = "org.cascadelms.args_course";
@@ -44,7 +44,7 @@ public class CourseBlogFragment extends ListFragment implements
 	{
 		/* Initializes a data source and begins loading. */
 		this.blogDataSource = FakeDataSource.getInstance();
-		this.adapter = new BlogPostAdapter( getActivity() );
+        this.adapter = new BlogPostAdapter(getActivity());
 
 		super.onCreate( savedInstanceState );
 	}
@@ -55,28 +55,28 @@ public class CourseBlogFragment extends ListFragment implements
 	{
 		super.onCreateView( inflater, container, savedInstanceState );
 
-		View view = inflater.inflate( R.layout.fragment_courseblog, null );
-		this.emptyView = (TextView) view
-				.findViewById( R.id.fragment_courseblog_empty );
-		( (ListView) view.findViewById( android.R.id.list ) )
-				.setEmptyView( emptyView );
+        View view = inflater.inflate( R.layout.fragment_courseblog, null );
+        this.emptyView = (TextView) view
+                .findViewById( R.id.fragment_courseblog_empty );
+        ( (ListView) view.findViewById( android.R.id.list ) )
+                .setEmptyView( emptyView );
 
 		return view;
 	}
 
-	@Override
-	public void onViewCreated( View view, Bundle savedInstanceState )
-	{
-		this.getListView().setAdapter( adapter );
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        this.getListView().setAdapter( adapter );
 
-		this.getActivity().getSupportLoaderManager()
-				.initLoader( LoaderCodes.LOADER_CODE_BLOG, null, this )
-				.forceLoad();
+        this.getActivity().getSupportLoaderManager()
+                .initLoader( LoaderCodes.LOADER_CODE_BLOG, null, this )
+                .forceLoad();
 
-		super.onViewCreated( view, savedInstanceState );
-	}
+        super.onViewCreated(view, savedInstanceState);
+    }
 
-	@Override
+    @Override
 	public Loader<List<BlogPost>> onCreateLoader( int id, Bundle args )
 	{
 		switch( id )
@@ -101,10 +101,10 @@ public class CourseBlogFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_BLOG:
 			{
-				adapter.clear();
-				adapter.addAll( data );
-				this.emptyView
-						.setText( R.string.fragment_courseblog_list_empty_message );
+                adapter.clear();
+                adapter.addAll(data);
+                this.emptyView
+                        .setText( R.string.fragment_courseblog_list_empty_message );
 				break;
 			}
 		}
@@ -118,7 +118,7 @@ public class CourseBlogFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_BLOG:
 			{
-				adapter.clear();
+                adapter.clear();
 				break;
 			}
 		}
@@ -127,8 +127,6 @@ public class CourseBlogFragment extends ListFragment implements
 	public interface BlogDataSource
 	{
 		public List<BlogPost> getBlogPostsForCourse( int courseId );
-
-		public BlogPost getBlogPostById( int id );
 	}
 
 	/**

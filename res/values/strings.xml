@@ -13,15 +13,19 @@
     <string name="prompt_password">Password</string>
     <string name="process_login">Logging in&#8230;</string>
     <string name="error_general">Could not log in.</string>
-
-    <!-- Buttons/Menu items -->
+    
+    <!-- Buttons/Menu items/Action text -->
     <string name="action_next">Next</string>
     <string name="action_login">Log in</string>
     <string name="action_logout">Log out</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
     <string name="action_settings">Settings</string>
-
+    <plurals name="comments">
+        <item quantity="one">%d comment</item>
+        <item quantity="other">%d comments</item>
+    </plurals>
+    
     <!-- Content strings -->
     <string name="desc_select_school">Select your school from the list:</string>
     <string name="desc_enter_school_url">Or enter your school\'s Cascade URL:</string>
