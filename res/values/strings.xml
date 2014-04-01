@@ -53,6 +53,8 @@
     <!-- Documents Fragment -->
     <string name="fragment_documents_list_loading_message">Loading Documents&#8230;</string>
     <string name="fragment_documents_list_empty_message">No documents for this course</string>
+    <string name="fragment_documents_list_divider_folders">FOLDERS</string>
+    <string name="fragment_documents_list_divider_files">FILES</string>
     
     <!-- Assignments Fragment -->
     <string name="fragment_assignments_list_loading_message">Loading Assignments&#8230;</string>
