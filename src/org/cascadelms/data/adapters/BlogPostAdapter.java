@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+
 public class BlogPostAdapter extends ArrayAdapter<BlogPost>
 {
     public BlogPostAdapter( Context context )
@@ -29,6 +31,8 @@ public class BlogPostAdapter extends ArrayAdapter<BlogPost>
 
         if (convertView != null)
         {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, k:m a");
+
             TextView titleLabel = (TextView) convertView
                     .findViewById(R.id.courseblog_title);
             titleLabel.setText( this.getItem( position ).getTitle() );
@@ -37,7 +41,7 @@ public class BlogPostAdapter extends ArrayAdapter<BlogPost>
             authorLabel.setText( this.getItem( position ).getAuthor() );
             TextView dateLabel = (TextView) convertView
                     .findViewById(R.id.courseblog_date_course);
-            dateLabel.setText( this.getItem( position ).getPostedAt().toString() );
+            dateLabel.setText( dateFormat.format(this.getItem(position).getPostedAt()) );
             TextView summaryLabel = (TextView) convertView
                     .findViewById(R.id.courseblog_description);
             summaryLabel.setText( this.getItem(position).getBody() );
