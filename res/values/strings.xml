@@ -44,9 +44,6 @@
     <string name="fragment_assignments">Assignments</string>
     <string name="fragment_grades">Grades</string>
 
-    <!-- Other fragments -->
-    <string name="fragment_viewpost">View Post</string>
-
     <!-- Social Stream Fragment -->
     <string name="fragment_socialstream_list_loading_message">Loading Social Stream&#8230;</string>
     <string name="fragment_socialstream_list_empty_message">No posts yet. Be the first!</string>
