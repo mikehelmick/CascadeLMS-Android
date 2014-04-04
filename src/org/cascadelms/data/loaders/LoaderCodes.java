@@ -14,4 +14,5 @@ public class LoaderCodes
 	public static final int LOADER_CODE_GRADES = 6;
 	public static final int LOADER_CODE_SCHOOLS = 7;
 	public static final int LOADER_CODE_DOCUMENT_DIRECTORY = 8;
+    public static final int LOADER_CODE_STREAM_DETAIL = 9;
 }
