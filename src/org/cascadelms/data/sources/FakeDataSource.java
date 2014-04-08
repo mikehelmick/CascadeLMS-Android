@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -13,6 +14,7 @@ import org.cascadelms.SelectSchoolActivity.SchoolsDataSource;
 import org.cascadelms.StreamActivity.CourseDataSource;
 import org.cascadelms.data.models.Assignment;
 import org.cascadelms.data.models.BlogPost;
+import org.cascadelms.data.models.Comment;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
 import org.cascadelms.data.models.Grade;
@@ -254,17 +256,33 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		}
 	}
 
+    private static Comment[] generateComments(int seed)
+    {
+        Random random = new Random(seed);
+
+        Comment[] comments = new Comment[random.nextInt(6)];
+
+        for (int i = 0; i < comments.length; ++i)
+        {
+            comments[i] = new Comment("Comment " + (i + 1), "John Doe", new Date());
+        }
+
+        return comments;
+    }
+
     private static ArrayList<StreamItem> streamItemsListAll;
     private static ArrayList<StreamItem> streamItemsListDesign;
     private static ArrayList<StreamItem> streamItemsListMachine;
     private static ArrayList<StreamItem> streamItemsListAI;
     private static ArrayList<StreamItem> streamItemsListInfo;
     private static ArrayList<StreamItem> streamItemsListUI;
+    private static HashMap<Long, Integer> streamItemsIdToIndex;
 
     /* Stream Data */
     private static void initStreamData()
     {
         Random random = new Random(123456);
+        int seed = 0;
 
         streamItemsListAll = new ArrayList<StreamItem>();
         streamItemsListDesign = new ArrayList<StreamItem>();
@@ -272,14 +290,15 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
         streamItemsListAI = new ArrayList<StreamItem>();
         streamItemsListInfo = new ArrayList<StreamItem>();
         streamItemsListUI = new ArrayList<StreamItem>();
+        streamItemsIdToIndex = new HashMap<Long, Integer>();
 
         for (Assignment assignment : assignmentsListDesign)
         {
             StreamItem item = new StreamItem( new StreamItem.Builder (
-                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    streamItemsListAll.size(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10)));
+                    null, random.nextInt(10)).setComments(generateComments(++seed)));
 
             streamItemsListAll.add(item);
             streamItemsListDesign.add(item);
@@ -287,10 +306,10 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
         for (Assignment assignment : assignmentsListMachine)
         {
             StreamItem item = new StreamItem( new StreamItem.Builder (
-                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    streamItemsListAll.size(), StreamItem.ItemType.ASSIGNMENT,
                     "Michael Helmick", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
+                    null, random.nextInt(10) ).setComments(generateComments(++seed) ) );
 
             streamItemsListAll.add(item);
             streamItemsListMachine.add(item);
@@ -298,10 +317,10 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
         for (Assignment assignment : assignmentsListAI)
         {
             StreamItem item = new StreamItem( new StreamItem.Builder (
-                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    streamItemsListAll.size(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
+                    null, random.nextInt(10) ).setComments(generateComments(++seed) ) );
 
             streamItemsListAll.add(item);
             streamItemsListAI.add(item);
@@ -309,10 +328,10 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
         for (Assignment assignment : assignmentsListInfo)
         {
             StreamItem item = new StreamItem( new StreamItem.Builder (
-                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    streamItemsListAll.size(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
+                    null, random.nextInt(10) ).setComments(generateComments(++seed) ) );
 
             streamItemsListAll.add(item);
             streamItemsListInfo.add(item);
@@ -320,10 +339,10 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
         for (Assignment assignment : assignmentsListUI)
         {
             StreamItem item = new StreamItem( new StreamItem.Builder (
-                    assignment.getId(), StreamItem.ItemType.ASSIGNMENT,
+                    streamItemsListAll.size(), StreamItem.ItemType.ASSIGNMENT,
                     "Fred Annexstein", assignment.getOpenDate(),
                     "New assignment posted: " + assignment.getTitle(),
-                    null, random.nextInt(10) ).setCommentCount( random.nextInt(10) ) );
+                    null, random.nextInt(10) ).setComments(generateComments(++seed) ) );
 
             streamItemsListAll.add(item);
             streamItemsListUI.add(item);
@@ -338,6 +357,11 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
         Collections.sort(streamItemsListAI, Collections.reverseOrder(comparator));
         Collections.sort(streamItemsListInfo, Collections.reverseOrder(comparator));
         Collections.sort(streamItemsListUI, Collections.reverseOrder(comparator));
+
+        for (int i = 0; i < streamItemsListAll.size(); ++i)
+        {
+            streamItemsIdToIndex.put(streamItemsListAll.get(i).getId(), i);
+        }
     }
 
 	/* Assignments Data */
@@ -743,7 +767,13 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		}
 	}
 
-	private static ArrayList<School> schoolsList;
+    @Override
+    public StreamItem getStreamItemDetail(long postId)
+    {
+        return streamItemsListAll.get(streamItemsIdToIndex.get(postId));
+    }
+
+    private static ArrayList<School> schoolsList;
 
 	private static void initSchoolData()
 	{
