@@ -3,14 +3,15 @@ package org.cascadelms.fragments;
 import java.util.List;
 
 import org.cascadelms.R;
+import org.cascadelms.StreamDetailActivity;
 import org.cascadelms.data.adapters.StreamItemAdapter;
 import org.cascadelms.data.loaders.CourseStreamItemLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.StreamItem;
 import org.cascadelms.data.sources.FakeDataSource;
-import org.cascadelms.socialstream.SocialStreamPost;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -30,6 +31,7 @@ public class SocialStreamFragment extends ListFragment implements
     private TextView emptyView;
 
 	private static final String ARGS_COURSE = "org.cascadelms.args_course";
+    public static final String ARGS_POSTID = "org.cascadelms.extras.postid";
 
 	public static SocialStreamFragment newInstance( Course course )
 	{
@@ -68,6 +70,7 @@ public class SocialStreamFragment extends ListFragment implements
                 .initLoader(LoaderCodes.LOADER_CODE_COURSE_STREAM, null, this).forceLoad();
 
         this.getListView().setAdapter( adapter );
+        this.getListView().setOnItemClickListener(new SocialStreamItemClickListener());
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -93,31 +96,16 @@ public class SocialStreamFragment extends ListFragment implements
 		public void onItemClick( AdapterView<?> parent, View view,
 				int position, long id )
 		{
-			// TODO: Supply post object
-			goToPostDetail( null );
+            StreamItem post = adapter.getItem(position);
+			goToPostDetail(post);
 		}
 	}
 
-	private void goToPostDetail( SocialStreamPost parentPost )
+	private void goToPostDetail( StreamItem parentPost )
 	{
-		/*
-		 * TODO Modifying the parent Activity's layout is no longer an option.
-		 */
-		// ActionBarActivity activity = (ActionBarActivity) getActivity();
-		// FragmentManager manager = activity.getSupportFragmentManager();
-		// FragmentTransaction transaction = manager.beginTransaction();
-		//
-		// SocialStreamDetailFragment fragment = new
-		// SocialStreamDetailFragment();
-		//
-		// transaction.replace( R.id.content_frame, fragment );
-		// transaction.setTransition( FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-		// );
-		//
-		// // Add to back stack but only if this is not the home fragment.
-		// transaction.addToBackStack( null );
-		//
-		// transaction.commit();
+        Intent intent = new Intent( this.getActivity(), StreamDetailActivity.class );
+        intent.putExtra( ARGS_POSTID, parentPost.getId() );
+        this.startActivity( intent );
 	}
 
 	@Override
@@ -180,6 +168,8 @@ public class SocialStreamFragment extends ListFragment implements
 		public List<StreamItem> getAllStreamItems();
 
 		public List<StreamItem> getStreamItemsForCourse( int courseId );
+
+        public StreamItem getStreamItemDetail( long postId );
 	}
 
 	/**

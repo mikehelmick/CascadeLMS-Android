@@ -7,6 +7,7 @@
     <!-- Titles -->
     <string name="title_activity_login">Log in to Cascade LMS</string>
     <string name="title_activity_select_school">Select School</string>
+    <string name="title_activity_stream_detail">View Post</string>
 
     <!-- Login page -->
     <string name="prompt_username">Username</string>
@@ -42,9 +43,6 @@
     <string name="fragment_documents">Documents</string>
     <string name="fragment_assignments">Assignments</string>
     <string name="fragment_grades">Grades</string>
-
-    <!-- Other fragments -->
-    <string name="fragment_viewpost">View Post</string>
 
     <!-- Social Stream Fragment -->
     <string name="fragment_socialstream_list_loading_message">Loading Social Stream&#8230;</string>
