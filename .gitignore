@@ -29,3 +29,6 @@ local.properties
 project.properties
 /target
 /lib
+
+# Don't commit secrets
+src/org/cascadelms/auth/
