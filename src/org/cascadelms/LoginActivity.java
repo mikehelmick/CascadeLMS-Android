@@ -274,7 +274,7 @@ public class LoginActivity extends FragmentActivity
                 SharedPreferences preferences = getSharedPreferences(
                         PREFS_AUTH, 0);
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean("loggedIn", true);
+                editor.putString("token", mOauth.getOAuthToken());
                 editor.commit();
 
                 Toast.makeText(getApplicationContext(), R.string.toast_login,
