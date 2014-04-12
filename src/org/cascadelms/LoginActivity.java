@@ -30,27 +30,27 @@ import java.io.IOException;
  */
 public class LoginActivity extends FragmentActivity
 {
-	private static final String PREFS_AUTH = "AuthenticationData";
+    private static final String PREFS_AUTH = "AuthenticationData";
 
-	/**
-	 * Keep track of the login task to ensure we can cancel it if requested.
-	 */
-	private OAuthPhaseOneTask mAuthOneTask = null;
+    /**
+     * Keep track of the login task to ensure we can cancel it if requested.
+     */
+    private OAuthPhaseOneTask mAuthOneTask = null;
     private OAuthPhaseTwoTask mAuthTwoTask = null;
 
     // OAuth object
     private SimpleOAuth mOauth = null;
 
-	// UI references.
-	private WebView mLoginWebView;
+    // UI references.
+    private WebView mLoginWebView;
     private View mLoginStatusView;
 
-	@Override
-	protected void onCreate( Bundle savedInstanceState )
-	{
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		setContentView( R.layout.activity_login );
+        setContentView(R.layout.activity_login);
 
         String schoolUrl;
 
@@ -73,10 +73,9 @@ public class LoginActivity extends FragmentActivity
 
             mAuthOneTask = new OAuthPhaseOneTask();
             mAuthOneTask.execute((Void) null);
-        }
-        else
+        } else
             showAuthError("No school URL provided.");
-	}
+    }
 
     @Override
     protected void onStop()
@@ -90,9 +89,9 @@ public class LoginActivity extends FragmentActivity
     }
 
     /**
-	 * Opens the WebView so the user can authorize the app.
-	 */
-	@TargetApi( Build.VERSION_CODES.HONEYCOMB_MR2 )
+     * Opens the WebView so the user can authorize the app.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showLogin()
     {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -105,7 +104,7 @@ public class LoginActivity extends FragmentActivity
 
             mLoginStatusView.setVisibility(View.VISIBLE);
             mLoginStatusView.animate().setDuration(shortAnimTime)
-                    .alpha( 0)
+                    .alpha(0)
                     .setListener(new AnimatorListenerAdapter()
                     {
                         @Override
@@ -126,8 +125,7 @@ public class LoginActivity extends FragmentActivity
                             mLoginWebView.setVisibility(View.VISIBLE);
                         }
                     });
-        }
-        else
+        } else
         {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
@@ -192,7 +190,7 @@ public class LoginActivity extends FragmentActivity
     public class OAuthPhaseOneTask extends AsyncTask<Void, Void, Boolean>
     {
         @Override
-        protected Boolean doInBackground( Void... params )
+        protected Boolean doInBackground(Void... params)
         {
             Boolean success = true;
             Log.i(getLocalClassName(), "Starting OAuth.");
@@ -200,8 +198,7 @@ public class LoginActivity extends FragmentActivity
             try
             {
                 mOauth.getRequestToken();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 success = false;
                 showAuthError(e.getLocalizedMessage());
@@ -212,11 +209,11 @@ public class LoginActivity extends FragmentActivity
         }
 
         @Override
-        protected void onPostExecute( final Boolean success )
+        protected void onPostExecute(final Boolean success)
         {
             mAuthOneTask = null;
 
-            if( success )
+            if (success)
             {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
 
@@ -236,8 +233,8 @@ public class LoginActivity extends FragmentActivity
         protected void onCancelled()
         {
             mAuthOneTask = null;
-            Toast.makeText( getApplicationContext(), R.string.toast_login_cancel,
-                    Toast.LENGTH_SHORT ).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_login_cancel,
+                    Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -246,15 +243,14 @@ public class LoginActivity extends FragmentActivity
     public class OAuthPhaseTwoTask extends AsyncTask<Void, Void, Boolean>
     {
         @Override
-        protected Boolean doInBackground( Void... params )
+        protected Boolean doInBackground(Void... params)
         {
             Boolean success = true;
 
             try
             {
                 mOauth.exchangeToken();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 success = false;
                 showAuthError(e.getLocalizedMessage());
@@ -265,30 +261,30 @@ public class LoginActivity extends FragmentActivity
         }
 
         @Override
-        protected void onPostExecute( final Boolean success )
+        protected void onPostExecute(final Boolean success)
         {
             mAuthTwoTask = null;
 
-            if( success )
+            if (success)
             {
                 CookieManager cookieManager = CookieManager.getInstance();
                 cookieManager.removeAllCookie();
 
                 // TODO: Make this better.
                 SharedPreferences preferences = getSharedPreferences(
-                        PREFS_AUTH, 0 );
+                        PREFS_AUTH, 0);
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean( "loggedIn", true );
+                editor.putBoolean("loggedIn", true);
                 editor.commit();
 
-                Toast.makeText( getApplicationContext(), R.string.toast_login,
-                        Toast.LENGTH_SHORT ).show();
+                Toast.makeText(getApplicationContext(), R.string.toast_login,
+                        Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent( LoginActivity.this,
-                        StreamActivity.class );
+                Intent intent = new Intent(LoginActivity.this,
+                        StreamActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                         | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity( intent );
+                startActivity(intent);
                 finish();
             }
         }
@@ -297,8 +293,8 @@ public class LoginActivity extends FragmentActivity
         protected void onCancelled()
         {
             mAuthTwoTask = null;
-            Toast.makeText( getApplicationContext(), R.string.toast_login_cancel,
-                    Toast.LENGTH_SHORT ).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_login_cancel,
+                    Toast.LENGTH_SHORT).show();
             finish();
         }
     }
