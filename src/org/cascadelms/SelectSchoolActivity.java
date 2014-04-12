@@ -8,6 +8,8 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import org.cascadelms.data.adapters.SchoolsAdapter;
@@ -22,8 +24,12 @@ import java.util.List;
 public class SelectSchoolActivity extends FragmentActivity
         implements LoaderCallbacks<List<School>>
 {
+    public static final String ARGS_SCHOOL_URL = "org.cascadelms.extras.school_url";
+
     private SchoolsDataSource dataSource;
     private SchoolsAdapter adapter;
+
+    private EditText mSchoolUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +49,37 @@ public class SelectSchoolActivity extends FragmentActivity
                     }
                 } );
 
-        Spinner spinner = (Spinner) findViewById(R.id.school_spinner);
+        final Spinner spinner = (Spinner) findViewById(R.id.school_spinner);
 
         if (spinner != null)
         {
             spinner.setAdapter(adapter);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+                {
+                    School school = (School) spinner.getSelectedItem();
+
+                    if (school != null)
+                    {
+                        String cascadeUrl = school.getCascadeUrl();
+
+                        if (cascadeUrl != null)
+                            mSchoolUrl.setText(cascadeUrl);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView)
+                {
+
+                }
+            });
         }
+
+        mSchoolUrl = (EditText) findViewById(R.id.cascade_url_editview);
 
         getSupportLoaderManager().initLoader(LoaderCodes.LOADER_CODE_SCHOOLS, null, this).forceLoad();
     }
@@ -58,6 +89,7 @@ public class SelectSchoolActivity extends FragmentActivity
         Intent intent = new Intent( SelectSchoolActivity.this,
                 LoginActivity.class );
 
+        intent.putExtra( ARGS_SCHOOL_URL, mSchoolUrl.getText().toString() );
         startActivity( intent );
     }
 
