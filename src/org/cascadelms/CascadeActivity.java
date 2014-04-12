@@ -78,7 +78,7 @@ public class CascadeActivity extends ActionBarActivity
 		// TODO: Change the way login status is stored.
 		SharedPreferences preferences = getSharedPreferences( PREFS_AUTH, 0 );
 		SharedPreferences.Editor editor = preferences.edit();
-		editor.putBoolean( "loggedIn", false );
+		editor.putString( "token", null );
 		editor.commit();
 
 		Toast.makeText( getApplicationContext(), R.string.toast_logout,
