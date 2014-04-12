@@ -12,8 +12,6 @@
     <!-- Login page -->
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
-    <string name="process_login">Logging in&#8230;</string>
-    <string name="error_general">Could not log in.</string>
     
     <!-- Buttons/Menu items/Action text -->
     <string name="action_next">Next</string>
@@ -30,8 +28,11 @@
     <!-- Content strings -->
     <string name="desc_select_school">Select your school from the list:</string>
     <string name="desc_enter_school_url">Or enter your school\'s Cascade URL:</string>
+    <string name="desc_login_instructions">A web browser will now open.\n\nPlease log into Cascade LMS and check the \"Authorize access\" box, then click \"Save changes\".</string>
 
     <!-- Toasts -->
+    <string name="toast_login_cancel">Login cancelled by user!</string>
+    <string name="toast_login_fail">Login failed!</string>
     <string name="toast_login">Successfully logged in!</string>
     <string name="toast_logout">Successfully logged out!</string>
     <string name="text_username">Username</string>
