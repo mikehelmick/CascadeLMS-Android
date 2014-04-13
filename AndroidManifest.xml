@@ -19,14 +19,12 @@
         android:theme="@style/CascadeTheme" >
         <activity
             android:name="org.cascadelms.SelectSchoolActivity"
-            android:label="@string/title_activity_select_school"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:label="@string/title_activity_select_school" >
         </activity>
         <activity
             android:name="org.cascadelms.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible"
-            android:parentActivityName="org.cascadelms.SelectSchoolActivity">
+            android:parentActivityName="org.cascadelms.SelectSchoolActivity" >
         </activity>
         <activity
             android:name="org.cascadelms.StreamActivity"
