@@ -2,13 +2,17 @@ package org.cascadelms.data.sources;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
+import org.cascadelms.data.models.Assignment;
 import org.cascadelms.data.models.BlogPost;
-import org.cascadelms.data.models.BlogPost.Builder;
+import org.cascadelms.data.models.Comment;
+import org.cascadelms.data.models.Grade;
+import org.cascadelms.data.models.StreamItem;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -16,6 +20,10 @@ import org.jdom2.input.SAXBuilder;
 
 public class XMLParser
 {
+	/* Social Feed Constants */
+	private static final String NAME_FEED_HOME = "home";
+	private static final String NAME_FEED_ITEMS = "feed_items";
+
 	private static SAXBuilder builder;
 
 	{
@@ -24,88 +32,138 @@ public class XMLParser
 
 	private Document document;
 
-	/* BlogPost Constants */
-	private static final String NAME_BLOG_POST = "blog_post";
-	private static final String NAME_BLOG_POST_ID = "id";
-	private static final String NAME_BLOG_POST_TITLE = "title";
-	private static final String NAME_BLOG_POST_FEATURED = "featured";
-	private static final String NAME_BLOG_POST_AUTHOR_NAME = "author";
-	private static final String NAME_BLOG_POST_POSTED_DATE = "posted_at";
-	private static final String NAME_BLOG_POST_COMMENT_COUNT = "comments";
-	private static final String NAME_BLOG_POST_BODY = "body";
-
-	public XMLParser( InputStream source ) throws IOException, JDOMException
+	/**
+	 * Creates an XMLParser to read XML from a String.
+	 * 
+	 * @param source
+	 *            a <code>String</code>
+	 * @throws IOException
+	 * @throws JDOMException
+	 */
+	private XMLParser( String source ) throws ParseException
 	{
-		this.document = XMLParser.builder.build( source );
+		try
+		{
+			Reader reader = new StringReader( source );
+			this.document = XMLParser.builder.build( reader );
+		} catch( JDOMException e )
+		{
+			throw new ParseException( e );
+		} catch( IOException e )
+		{
+			throw new ParseException( e );
+		}
+	}
+
+	/**
+	 * Creates an XMLParser to read from an InputStream.
+	 * 
+	 * @param source
+	 *            an <code>InputStrea</code>
+	 * @throws JDOMException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	private XMLParser( InputStream source ) throws ParseException
+	{
+		try
+		{
+			this.document = XMLParser.builder.build( source );
+		} catch( JDOMException e )
+		{
+			throw new ParseException( e );
+		} catch( IOException e )
+		{
+			throw new ParseException( e );
+		}
+	}
+
+	/**
+	 * Parses a list of StreamItems from an XML InputStream.
+	 * 
+	 * @param xmlStream
+	 * @return
+	 * @throws ParseException
+	 */
+	public static List<StreamItem> parseFeed( InputStream xmlStream )
+			throws ParseException
+	{
+		List<StreamItem> items = new ArrayList<StreamItem>();
+
+		XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+		if( parser.document.getRootElement().getName()
+				.equalsIgnoreCase( NAME_FEED_HOME ) )
+		{
+			/* Gets the container element for feed items and parses each item. */
+			Element feedItemsElement = parser.getChildElementOrThrow(
+					parser.getRootElement(), NAME_FEED_ITEMS );
+			for ( Element feedItem : feedItemsElement.getChildren() )
+			{
+				items.add( parser.parseFeedItem( feedItem ) );
+			}
+			return items;
+		} else
+		{
+			throw new ParseException( "Root element of feed must be "
+					+ NAME_FEED_HOME );
+		}
+	}
+
+	public static List<StreamItem> parseCourseFeed( InputStream xmlStream )
+	{
+		throw new RuntimeException( "Method Stub" ); // TODO
+	}
+
+	public static List<Document> parseDocuments( InputStream xmlStream )
+	{
+		throw new RuntimeException( "Method Stub" ); // TODO
+	}
+
+	public static List<Assignment> parseAssignments( InputStream xmlStream )
+	{
+		throw new RuntimeException( "Method Stub" ); // TODO
+	}
+
+	public static List<Grade> parseGrades( InputStream xmlStream )
+	{
+		throw new RuntimeException( "Method Stub" ); // TODO
+	}
+
+	private Element getRootElement()
+	{
+		return this.document.getRootElement();
+	}
+
+	private StreamItem parseFeedItem( Element feedItem )
+	{
+		throw new RuntimeException( "Unimplemented method." ); // TODO
+	}
+
+	private Assignment parseAssignment( Element element )
+	{
+		throw new RuntimeException( "Unimplemented method." ); // TODO
 	}
 
 	private BlogPost parseBlogPost( Element element ) throws JDOMException
 	{
-		int id;
-		String title;
-		boolean featured;
-		String author;
-		Date postedDate;
-		int commentCount;
+		throw new RuntimeException( "Unimplemented method" ); // TODO
+	}
 
-		/* Optional */
-		String body;
+	private Comment parseComment( Element element )
+	{
+		throw new RuntimeException( "Unimplemented method." ); // TODO
+	}
 
-		if( element.getName().equals( NAME_BLOG_POST ) )
-		{
-			/* Parses the BlogPost fields */
-			id = Integer.parseInt( this.getChildElementOrThrow( element,
-					NAME_BLOG_POST_ID ).getTextNormalize() );
-			title = this.getChildElementOrThrow( element, NAME_BLOG_POST_TITLE )
-					.getTextNormalize();
-			featured = Boolean.parseBoolean( this.getChildElementOrThrow(
-					element, NAME_BLOG_POST_FEATURED ).getTextNormalize() );
-			author = this.getChildElementOrThrow( element,
-					NAME_BLOG_POST_AUTHOR_NAME ).getTextNormalize();
-			DateFormat dateFormat = new SimpleDateFormat( "" );
-			try
-			{
-				postedDate = dateFormat.parse( this.getChildElementOrThrow(
-						element, NAME_BLOG_POST_POSTED_DATE )
-						.getTextNormalize() );
-			} catch( ParseException e )
-			{
-				throw new JDOMException(
-						"Could not parse a date from the date string "
-								+ this.getChildElementOrThrow( element,
-										NAME_BLOG_POST_POSTED_DATE )
-										.getTextNormalize() );
-			}
-			commentCount = Integer.parseInt( this.getChildElementOrThrow(
-					element, NAME_BLOG_POST_COMMENT_COUNT ).getTextNormalize() );
+	private Document parseDocument( Element element )
+	{
+		throw new RuntimeException( "Unimplemented method." ); // TODO
+	}
 
-			BlogPost.Builder builder = new Builder( id, title, featured,
-					author, postedDate, null, commentCount );
-
-			// /* Parses the body field, which may not be present. */
-			// try
-			// {
-			// builder.setBody( this.getChildElementOrThrow( element,
-			// NAME_BLOG_POST_BODY ).getTextNormalize() );
-			// } catch( JDOMException e )
-			// {
-			// /* Does not set the body, if not present. */
-			// }
-
-			// /* */
-			// try
-			// {
-			// builder.setComments( this.parseComments(
-			// this.getChildElementOrThrow( element, NAME_BLOG_POST_COMMENTS ) )
-			// );
-			// }
-			return new BlogPost( builder );
-			// return builder.build();
-		} else
-		{
-			throw new IllegalArgumentException( "Root element must be <"
-					+ NAME_BLOG_POST + ">" );
-		}
+	private StreamItem parseStreamItem()
+	{
+		throw new RuntimeException( "Unimplemented method" ); // TODO
 	}
 
 	/**
@@ -122,16 +180,38 @@ public class XMLParser
 	 *             if there is no child element with that name
 	 */
 	private Element getChildElementOrThrow( Element element, String cname )
-			throws JDOMException
+			throws ParseException
 	{
 		Element child = element.getChild( cname );
 		if( child == null )
 		{
-			throw new JDOMException( element.getName()
+			throw new ParseException( element.getName()
 					+ " has no child element " + "\"" + cname + "\"." );
 		} else
 		{
 			return child;
 		}
 	}
+
+	/**
+	 * An Exception thrown when {@link XMLParser} is unable to parse XML for any
+	 * reason.
+	 */
+	static class ParseException extends Exception
+	{
+		public ParseException( String message )
+		{
+			super( message );
+		}
+
+		public ParseException( Throwable cause )
+		{
+			super( cause );
+		}
+
+		private static final long serialVersionUID = 1L;
+	}
+
+	private static final Logger LOGGER = Logger.getLogger( XMLParser.class
+			.getName() );
 }
