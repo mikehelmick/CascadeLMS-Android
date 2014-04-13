@@ -12,18 +12,17 @@ import android.widget.Toast;
 public class CascadeActivity extends ActionBarActivity
 {
 	/* Constants */
-	protected static final String PREFS_AUTH = "AuthenticationData";
+	public static final String PREFS_AUTH = "AuthenticationData";
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 
-		// TODO: Store the login status in a different way.
 		SharedPreferences preferences = getSharedPreferences( PREFS_AUTH, 0 );
-		boolean loggedIn = preferences.getBoolean( "loggedIn", false );
+		String token = preferences.getString( "token", null );
 
-		if( !loggedIn )
+		if( token == null )
 		{
 			startLoginActivity();
 		}
@@ -79,7 +78,7 @@ public class CascadeActivity extends ActionBarActivity
 		// TODO: Change the way login status is stored.
 		SharedPreferences preferences = getSharedPreferences( PREFS_AUTH, 0 );
 		SharedPreferences.Editor editor = preferences.edit();
-		editor.putBoolean( "loggedIn", false );
+		editor.putString( "token", null );
 		editor.commit();
 
 		Toast.makeText( getApplicationContext(), R.string.toast_logout,

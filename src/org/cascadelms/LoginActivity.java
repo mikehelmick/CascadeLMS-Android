@@ -1,8 +1,12 @@
 package org.cascadelms;
 
+import java.io.IOException;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -10,11 +14,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.IntentCompat;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.webkit.CookieManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 /**
@@ -28,18 +33,15 @@ public class LoginActivity extends FragmentActivity
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
-	private UserLoginTask mAuthTask = null;
+	private OAuthPhaseOneTask mAuthOneTask = null;
+	private OAuthPhaseTwoTask mAuthTwoTask = null;
 
-	// Values for email and password at the time of the login attempt.
-	private String mUsername;
-	private String mPassword;
+	// OAuth object
+	private SimpleOAuth mOauth = null;
 
 	// UI references.
-	private EditText mUsernameView;
-	private EditText mPasswordView;
-	private View mLoginFormView;
+	private WebView mLoginWebView;
 	private View mLoginStatusView;
-	private TextView mLoginStatusMessageView;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -48,75 +50,49 @@ public class LoginActivity extends FragmentActivity
 
 		setContentView( R.layout.activity_login );
 
-		// Set up the login form.
-		mUsernameView = (EditText) findViewById( R.id.username );
+		String schoolUrl;
 
-		mPasswordView = (EditText) findViewById( R.id.password );
-		mPasswordView
-				.setOnEditorActionListener( new TextView.OnEditorActionListener()
-				{
-					@Override
-					public boolean onEditorAction( TextView textView, int id,
-							KeyEvent keyEvent )
-					{
-						if( id == R.id.login || id == EditorInfo.IME_NULL )
-						{
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				} );
+		/* Gets the Course data provided by the Intent that started this. */
+		Bundle extras = this.getIntent().getExtras();
 
-		mLoginFormView = findViewById( R.id.login_form );
-		mLoginStatusView = findViewById( R.id.login_status );
-		mLoginStatusMessageView = (TextView) findViewById( R.id.login_status_message );
-
-		findViewById( R.id.sign_in_button ).setOnClickListener(
-				new View.OnClickListener()
-				{
-					@Override
-					public void onClick( View view )
-					{
-						attemptLogin();
-					}
-				} );
-	}
-
-	/**
-	 * Attempts to log in with the given username and password, launching a
-	 * background task to do so.
-	 */
-	public void attemptLogin()
-	{
-		if( mAuthTask != null )
+		if( extras != null )
 		{
-			return;
-		}
+			schoolUrl = extras.getString( SelectSchoolActivity.ARGS_SCHOOL_URL );
 
-		// Reset errors.
-		mUsernameView.setError( null );
-		mPasswordView.setError( null );
+			mOauth = new SimpleOAuth( ConsumerSecretsProvider.getConsumerKey(),
+					ConsumerSecretsProvider.getConsumerSecret(), schoolUrl
+							+ "/oauth/request_token", schoolUrl
+							+ "/oauth/access_token", schoolUrl
+							+ "/oauth/authorize" );
 
-		// Store values at the time of the login attempt.
-		mUsername = mUsernameView.getText().toString();
-		mPassword = mPasswordView.getText().toString();
+			mLoginWebView = (WebView) findViewById( R.id.login_view );
+			mLoginStatusView = findViewById( R.id.login_status );
 
-		// Show a progress spinner, and kick off a background task to
-		// perform the user login attempt.
-		showProgress( true );
-		mAuthTask = new UserLoginTask();
-		mAuthTask.execute( (Void) null );
+			mAuthOneTask = new OAuthPhaseOneTask();
+			mAuthOneTask.execute( (Void) null );
+		} else
+			showAuthError( "No school URL provided." );
+	}
+
+	@Override
+	protected void onStop()
+	{
+		if( mAuthOneTask != null )
+			mAuthOneTask.cancel( true );
+		if( mAuthTwoTask != null )
+			mAuthTwoTask.cancel( true );
+
+		super.onStop();
 	}
 
 	/**
-	 * Shows the progress UI and hides the login form.
+	 * Opens the WebView so the user can authorize the app.
 	 */
 	@TargetApi( Build.VERSION_CODES.HONEYCOMB_MR2 )
-	private void showProgress( final boolean show )
+	private void showLogin()
 	{
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs to fade-in
+		// for very easy animations. If available, use these APIs to fade-out
 		// the progress spinner.
 		if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2 )
 		{
@@ -124,74 +100,192 @@ public class LoginActivity extends FragmentActivity
 					android.R.integer.config_shortAnimTime );
 
 			mLoginStatusView.setVisibility( View.VISIBLE );
-			mLoginStatusView.animate().setDuration( shortAnimTime )
-					.alpha( show ? 1 : 0 )
+			mLoginStatusView.animate().setDuration( shortAnimTime ).alpha( 0 )
 					.setListener( new AnimatorListenerAdapter()
 					{
 						@Override
 						public void onAnimationEnd( Animator animation )
 						{
-							mLoginStatusView.setVisibility( show ? View.VISIBLE
-									: View.GONE );
+							mLoginStatusView.setVisibility( View.GONE );
 						}
 					} );
 
-			mLoginFormView.setVisibility( View.VISIBLE );
-			mLoginFormView.animate().setDuration( shortAnimTime )
-					.alpha( show ? 0 : 1 )
+			mLoginWebView.setVisibility( View.VISIBLE );
+			mLoginWebView.animate().setDuration( shortAnimTime ).alpha( 1 )
 					.setListener( new AnimatorListenerAdapter()
 					{
 						@Override
 						public void onAnimationEnd( Animator animation )
 						{
-							mLoginFormView.setVisibility( show ? View.GONE
-									: View.VISIBLE );
+							mLoginWebView.setVisibility( View.VISIBLE );
 						}
 					} );
 		} else
 		{
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
-			mLoginStatusView.setVisibility( show ? View.VISIBLE : View.GONE );
-			mLoginFormView.setVisibility( show ? View.GONE : View.VISIBLE );
+			mLoginStatusView.setVisibility( View.GONE );
+			mLoginWebView.setVisibility( View.VISIBLE );
 		}
+
+		mLoginWebView.setWebViewClient( new WebViewClient()
+		{
+			@Override
+			public boolean shouldOverrideUrlLoading( WebView view, String url )
+			{
+				// Check for the callback URL.
+				if( url.startsWith( "cascade://androidapp" ) )
+				{
+					mAuthTwoTask = new OAuthPhaseTwoTask();
+					mAuthTwoTask.execute( (Void) null );
+
+					return true;
+				}
+
+				return false;
+			}
+		} );
+
+		CookieManager cookieManager = CookieManager.getInstance();
+		cookieManager.removeAllCookie();
+
+		WebSettings settings = mLoginWebView.getSettings();
+		settings.setSaveFormData( false );
+		settings.setSavePassword( false );
+
+		mLoginWebView.loadUrl( mOauth.getAuthorizeUrl() );
 	}
 
-	/**
-	 * Represents an asynchronous login task used to authenticate the user.
+	/*
+	 * Displays the specified error and returns to the Select School screen when
+	 * dismissed.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean>
+	private void showAuthError( final String message )
+	{
+		runOnUiThread( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+						LoginActivity.this );
+
+				dialogBuilder
+						.setTitle( "Authentication failed" )
+						.setMessage( message )
+						.setPositiveButton( android.R.string.ok,
+								new DialogInterface.OnClickListener()
+								{
+									@Override
+									public void onClick(
+											DialogInterface dialogInterface,
+											int i )
+									{
+										Toast.makeText(
+												getApplicationContext(),
+												R.string.toast_login_fail,
+												Toast.LENGTH_SHORT ).show();
+										finish();
+									}
+								} ).setCancelable( false ).show();
+			}
+		} );
+	}
+
+	/* Phase one: Retrieves the request token. If successful, opens the WebView. */
+	public class OAuthPhaseOneTask extends AsyncTask<Void, Void, Boolean>
 	{
 		@Override
 		protected Boolean doInBackground( Void... params )
 		{
-			// TODO: attempt authentication against a network service.
+			Boolean success = true;
+			Log.i( getLocalClassName(), "Starting OAuth." );
 
 			try
 			{
-				// Simulate network access.
-				Thread.sleep( 2000 );
-			} catch( InterruptedException e )
+				mOauth.getRequestToken();
+			} catch( IOException e )
 			{
-				return false;
+				success = false;
+				showAuthError( e.getLocalizedMessage() );
+				e.printStackTrace();
 			}
 
-			return true;
+			return success;
 		}
 
 		@Override
 		protected void onPostExecute( final Boolean success )
 		{
-			mAuthTask = null;
-			showProgress( false );
+			mAuthOneTask = null;
 
 			if( success )
 			{
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+						LoginActivity.this );
+
+				dialogBuilder
+						.setMessage( R.string.desc_login_instructions )
+						.setPositiveButton( android.R.string.ok,
+								new DialogInterface.OnClickListener()
+								{
+									@Override
+									public void onClick(
+											DialogInterface dialogInterface,
+											int i )
+									{
+										showLogin();
+									}
+								} ).setCancelable( false ).show();
+			}
+		}
+
+		@Override
+		protected void onCancelled()
+		{
+			mAuthOneTask = null;
+			Toast.makeText( getApplicationContext(),
+					R.string.toast_login_cancel, Toast.LENGTH_SHORT ).show();
+			finish();
+		}
+	}
+
+	/* Phase two: Does the token exchange. If successful, completes login. */
+	public class OAuthPhaseTwoTask extends AsyncTask<Void, Void, Boolean>
+	{
+		@Override
+		protected Boolean doInBackground( Void... params )
+		{
+			Boolean success = true;
+
+			try
+			{
+				mOauth.exchangeToken();
+			} catch( IOException e )
+			{
+				success = false;
+				showAuthError( e.getLocalizedMessage() );
+				e.printStackTrace();
+			}
+
+			return success;
+		}
+
+		@Override
+		protected void onPostExecute( final Boolean success )
+		{
+			mAuthTwoTask = null;
+
+			if( success )
+			{
+				CookieManager cookieManager = CookieManager.getInstance();
+				cookieManager.removeAllCookie();
+
 				// TODO: Make this better.
 				SharedPreferences preferences = getSharedPreferences(
 						PREFS_AUTH, 0 );
 				SharedPreferences.Editor editor = preferences.edit();
-				editor.putBoolean( "loggedIn", true );
+				editor.putString( "token", mOauth.getOAuthToken() );
 				editor.commit();
 
 				Toast.makeText( getApplicationContext(), R.string.toast_login,
@@ -199,23 +293,20 @@ public class LoginActivity extends FragmentActivity
 
 				Intent intent = new Intent( LoginActivity.this,
 						StreamActivity.class );
-
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+				intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK
+						| IntentCompat.FLAG_ACTIVITY_CLEAR_TASK );
 				startActivity( intent );
 				finish();
-			} else
-			{
-				mPasswordView.setError( getString( R.string.error_general ) );
-				mPasswordView.requestFocus();
 			}
 		}
 
 		@Override
 		protected void onCancelled()
 		{
-			mAuthTask = null;
-			showProgress( false );
+			mAuthTwoTask = null;
+			Toast.makeText( getApplicationContext(),
+					R.string.toast_login_cancel, Toast.LENGTH_SHORT ).show();
+			finish();
 		}
 	}
 }
