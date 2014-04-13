@@ -22,6 +22,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import org.cascadelms.auth.*;
+
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
@@ -100,26 +102,26 @@ public class LoginActivity extends FragmentActivity
 					android.R.integer.config_shortAnimTime );
 
 			mLoginStatusView.setVisibility( View.VISIBLE );
-			mLoginStatusView.animate().setDuration( shortAnimTime ).alpha( 0 )
-					.setListener( new AnimatorListenerAdapter()
-					{
-						@Override
-						public void onAnimationEnd( Animator animation )
-						{
-							mLoginStatusView.setVisibility( View.GONE );
-						}
-					} );
+			mLoginStatusView.animate().setDuration( shortAnimTime ).alpha(0)
+					.setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mLoginStatusView.setVisibility(View.GONE);
+                        }
+                    });
 
 			mLoginWebView.setVisibility( View.VISIBLE );
-			mLoginWebView.animate().setDuration( shortAnimTime ).alpha( 1 )
-					.setListener( new AnimatorListenerAdapter()
-					{
-						@Override
-						public void onAnimationEnd( Animator animation )
-						{
-							mLoginWebView.setVisibility( View.VISIBLE );
-						}
-					} );
+			mLoginWebView.animate().setDuration( shortAnimTime ).alpha(1)
+					.setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mLoginWebView.setVisibility(View.VISIBLE);
+                        }
+                    });
 		} else
 		{
 			// The ViewPropertyAnimator APIs are not available, so simply show
@@ -171,23 +173,24 @@ public class LoginActivity extends FragmentActivity
 						LoginActivity.this );
 
 				dialogBuilder
-						.setTitle( "Authentication failed" )
-						.setMessage( message )
-						.setPositiveButton( android.R.string.ok,
-								new DialogInterface.OnClickListener()
-								{
-									@Override
-									public void onClick(
-											DialogInterface dialogInterface,
-											int i )
-									{
-										Toast.makeText(
-												getApplicationContext(),
-												R.string.toast_login_fail,
-												Toast.LENGTH_SHORT ).show();
-										finish();
-									}
-								} ).setCancelable( false ).show();
+						.setTitle("Authentication failed")
+						.setMessage(message)
+						.setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(
+                                            DialogInterface dialogInterface,
+                                            int i)
+                                    {
+                                        Toast.makeText(
+                                                getApplicationContext(),
+                                                R.string.toast_login_fail,
+                                                Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                }
+                        ).setCancelable( false ).show();
 			}
 		} );
 	}
@@ -225,18 +228,19 @@ public class LoginActivity extends FragmentActivity
 						LoginActivity.this );
 
 				dialogBuilder
-						.setMessage( R.string.desc_login_instructions )
-						.setPositiveButton( android.R.string.ok,
-								new DialogInterface.OnClickListener()
-								{
-									@Override
-									public void onClick(
-											DialogInterface dialogInterface,
-											int i )
-									{
-										showLogin();
-									}
-								} ).setCancelable( false ).show();
+						.setMessage(R.string.desc_login_instructions)
+						.setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(
+                                            DialogInterface dialogInterface,
+                                            int i)
+                                    {
+                                        showLogin();
+                                    }
+                                }
+                        ).setCancelable( false ).show();
 			}
 		}
 
