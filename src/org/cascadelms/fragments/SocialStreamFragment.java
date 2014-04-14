@@ -9,7 +9,7 @@ import org.cascadelms.data.loaders.CourseStreamItemLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.StreamItem;
-import org.cascadelms.data.sources.FakeDataSource;
+import org.cascadelms.data.sources.CascadeDataSource;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SocialStreamFragment extends ListFragment implements
 		LoaderCallbacks<List<StreamItem>>
@@ -46,7 +47,7 @@ public class SocialStreamFragment extends ListFragment implements
 	public void onCreate( Bundle savedInstanceState )
 	{
 		/* Initializes a data source and begins loading. */
-		this.streamDataSource = FakeDataSource.getInstance();
+		this.streamDataSource = CascadeDataSource.getInstance();
         this.adapter = new StreamItemAdapter(getActivity());
 
 		super.onCreate( savedInstanceState );
@@ -140,7 +141,11 @@ public class SocialStreamFragment extends ListFragment implements
 			case LoaderCodes.LOADER_CODE_TOTAL_STREAM:
 			{
                 adapter.clear();
-                adapter.addAll(data);
+                if (data != null)
+                    adapter.addAll(data);
+                else
+                    Toast.makeText(getActivity(), R.string.fragment_socialstream_list_failed,
+                            Toast.LENGTH_SHORT).show();
                 this.emptyView
                         .setText( R.string.fragment_socialstream_list_empty_message );
 				break;

@@ -1,12 +1,10 @@
 package org.cascadelms;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -16,6 +14,7 @@ import org.cascadelms.data.adapters.SchoolsAdapter;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.loaders.SchoolLoader;
 import org.cascadelms.data.models.School;
+import org.cascadelms.data.sources.AuthTokenInfo;
 import org.cascadelms.data.sources.FakeDataSource;
 
 import java.util.List;
@@ -24,8 +23,6 @@ import java.util.List;
 public class SelectSchoolActivity extends FragmentActivity
         implements LoaderCallbacks<List<School>>
 {
-    public static final String ARGS_SCHOOL_URL = "org.cascadelms.extras.school_url";
-
     private SchoolsDataSource dataSource;
     private SchoolsAdapter adapter;
 
@@ -86,10 +83,13 @@ public class SelectSchoolActivity extends FragmentActivity
 
     private void confirmSchool()
     {
+        AuthTokenInfo tokenInfo = new AuthTokenInfo(this);
+
+        tokenInfo.setCascadeUrl(mSchoolUrl.getText().toString());
+
         Intent intent = new Intent( SelectSchoolActivity.this,
                 LoginActivity.class );
 
-        intent.putExtra( ARGS_SCHOOL_URL, mSchoolUrl.getText().toString() );
         startActivity( intent );
     }
 
@@ -115,7 +115,8 @@ public class SelectSchoolActivity extends FragmentActivity
             case LoaderCodes.LOADER_CODE_SCHOOLS:
             {
                 adapter.clear();
-                adapter.addAll(data);
+                if (data != null)
+                    adapter.addAll(data);
                 return;
             }
         }

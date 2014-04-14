@@ -8,7 +8,7 @@ import org.cascadelms.data.loaders.AssignmentsLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Assignment;
 import org.cascadelms.data.models.Course;
-import org.cascadelms.data.sources.FakeDataSource;
+import org.cascadelms.data.sources.CascadeDataSource;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AssignmentsFragment extends ListFragment implements
 		LoaderCallbacks<List<Assignment>>
@@ -43,7 +44,7 @@ public class AssignmentsFragment extends ListFragment implements
 	public void onCreate( Bundle savedInstanceState )
 	{
 		/* Creates the data source and begins loading. */
-		this.assigmentsDataSource = FakeDataSource.getInstance();
+		this.assigmentsDataSource = CascadeDataSource.getInstance();
 		this.adapter = new AssignmentsAdapter( this.getActivity() );
 		this.setListAdapter( adapter );
 
@@ -111,7 +112,11 @@ public class AssignmentsFragment extends ListFragment implements
 		{
 			case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
 			{
-				this.adapter.setData( data );
+                if (data != null)
+                    this.adapter.setData( data );
+                else
+                    Toast.makeText(getActivity(), R.string.fragment_assignments_list_failed,
+                            Toast.LENGTH_SHORT).show();
 				this.setEmptyText( this
 						.getString( R.string.fragment_assignments_list_empty_message ) );
 				break;

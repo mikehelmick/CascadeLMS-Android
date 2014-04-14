@@ -48,20 +48,24 @@
     <!-- Social Stream Fragment -->
     <string name="fragment_socialstream_list_loading_message">Loading Social Stream&#8230;</string>
     <string name="fragment_socialstream_list_empty_message">No posts yet. Be the first!</string>
+    <string name="fragment_socialstream_list_failed">Failed to get Social Stream!</string>
 
     <!-- Course Blog Fragment -->
     <string name="fragment_courseblog_list_loading_message">Loading Course Blog&#8230;</string>
     <string name="fragment_courseblog_list_empty_message">No blog posts for this course</string>
+    <string name="fragment_courseblog_list_failed">Failed to get Course Blog!</string>
 
     <!-- Documents Fragment -->
     <string name="fragment_documents_list_loading_message">Loading Documents&#8230;</string>
     <string name="fragment_documents_list_empty_message">No documents for this course</string>
+    <string name="fragment_documents_list_failed">Failed to get Documents!</string>
     <string name="fragment_documents_list_divider_folders">FOLDERS</string>
     <string name="fragment_documents_list_divider_files">FILES</string>
 
     <!-- Assignments Fragment -->
     <string name="fragment_assignments_list_loading_message">Loading Assignments&#8230;</string>
     <string name="fragment_assignments_list_empty_message">No assignments for this course</string>
+    <string name="fragment_assignments_list_failed">Failed to get Assignments!</string>
     <string name="fragment_assignments_list_divider_closed">CLOSED</string>
     <string name="fragment_assignments_list_divider_past">PAST DUE</string>
     <string name="fragment_assignments_list_divider_current">CURRENT</string>
@@ -76,9 +80,11 @@
     <!-- Grades Fragment -->
     <string name="fragment_grades_list_loading_message">Loading Grades&#8230;</string>
     <string name="fragment_grades_list_empty_message">No grades for this course</string>
+    <string name="fragment_grades_list_failed">Failed to get Grades!</string>
     <string name="course_navigation_home">Home</string>
 
     <!-- Stream Activity -->
     <string name="activity_stream_drawer_title">Courses</string>
+    <string name="course_list_failed">Failed to get course list!</string>
 
 </resources>
