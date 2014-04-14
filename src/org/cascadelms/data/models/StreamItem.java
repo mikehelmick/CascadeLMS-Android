@@ -1,146 +1,228 @@
 package org.cascadelms.data.models;
 
-import android.graphics.drawable.Drawable;
-
-import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
  * An immutable data model class representing a single stream item.
- * <p>
- * Note this class does not use the Builder pattern because all of its fields are mandatory.
- * 
  */
-public class StreamItem 
+public class StreamItem
 {
 	/* Required Attributes */
-	private final long id;
-	private final ItemType type;
-    private final String author;
-    private final Drawable authorAvatar;
-	private final Date summaryDate;
-	private final String summary;
-	private final URL linkFor;
-    private final int score;
-    private final int commentCount;
+	private final int id;
+	private final Date postDate;
+	private final User author;
 
-    /* Optional Attributes */
-    private final Comment[] comments;
-	
-	public StreamItem( StreamItem.Builder builder )
+	private final int aPlusCount;
+	private final User[] aPlusUsers;
+
+	private final int commentCount;
+
+	private final String body;
+	private final String bodyHTML;
+
+	/* Optional Attributes */
+	private final Comment[] comments;
+
+	/**
+	 * Private constructor to be used by the Builder class.
+	 * 
+	 * @param builder
+	 */
+	private StreamItem( StreamItem.Builder builder )
 	{
 		this.id = builder.id;
-		this.type = builder.type;
-        this.author = builder.author;
-        this.authorAvatar = builder.authorAvatar;
-		this.summaryDate = builder.summaryDate;
-		this.summary = builder.summary;
-		this.linkFor = builder.linkFor;
-        this.score = builder.score;
-        this.commentCount = builder.commentCount;
-        this.comments = builder.comments;
+		this.postDate = builder.postDate;
+		this.author = builder.author;
+		this.aPlusCount = builder.aPlusCount;
+		this.aPlusUsers = builder.aPlusUsers;
+		this.commentCount = builder.commentCount;
+		this.body = builder.body;
+		this.bodyHTML = builder.bodyHTML;
+
+		this.comments = builder.comments;
+
+		if( this.comments != null )
+		{
+			assert comments.length == commentCount;
+		}
 	}
 
-	public long getId() 
+	public static class Builder
+	{
+		/* Required Attributes */
+		private int id;
+		private Date postDate;
+		private User author;
+
+		private int aPlusCount;
+		private User[] aPlusUsers;
+
+		private int commentCount = 0;
+
+		private String body;
+		private String bodyHTML;
+
+		/* Optional Attributes */
+		private Comment[] comments;
+
+		/**
+		 * Constructs a Builder with all the required attributes of a
+		 * StreamItem.
+		 * 
+		 * @param id
+		 * @param postDate
+		 * @param author
+		 * @param aPlusCount
+		 * @param aPlusUsers
+		 * @param commentCount
+		 * @param body
+		 * @param bodyHTML
+		 */
+		public Builder( int id, Date postDate, User author, int aPlusCount,
+				User[] aPlusUsers, int commentCount, String body,
+				String bodyHTML )
+		{
+			this.id = id;
+			this.postDate = postDate;
+			this.author = author;
+			this.aPlusCount = aPlusCount;
+			this.aPlusUsers = aPlusUsers;
+			this.commentCount = commentCount;
+			this.body = body;
+			this.bodyHTML = bodyHTML;
+		}
+
+		public Builder setComments( Comment[] comments )
+		{
+			this.comments = comments;
+			return this;
+		}
+
+		public StreamItem build()
+		{
+			return new StreamItem( this );
+		}
+	}
+
+	public int getId()
 	{
 		return id;
 	}
 
-	public ItemType getType() 
+	public Date getPostDate()
 	{
-		return type;
+		return postDate;
 	}
 
-    public String getAuthor()
-    {
-        return author;
-    }
-
-    public Drawable getAuthorAvatar()
-    {
-        return authorAvatar;
-    }
-
-	public Date getSummaryDate() 
+	public User getAuthor()
 	{
-		return summaryDate;
+		return author;
 	}
 
-	public String getSummary() 
+	public int getAPlusCount()
 	{
-		return summary;
+		return aPlusCount;
 	}
 
-	public URL getLinkFor() 
+	public User[] getAPlusUsers()
 	{
-		return linkFor;
+		return aPlusUsers;
 	}
 
-    public int getScore()
-    {
-        return score;
-    }
-
-    public int getCommentCount()
-    {
-        return commentCount;
-    }
-
-    public Comment[] getComments()
-    {
-        return comments;
-    }
-
-    public enum ItemType
+	public int getCommentCount()
 	{
-		ASSIGNMENT, BLOG_POST, DOCUMENT, STATUS_UPDATE
+		return commentCount;
 	}
 
-    public static class Builder
-    {
-        /* Required Attributes */
-        private long id;
-        private ItemType type;
-        private String author;
-        private Drawable authorAvatar = null;
-        private Date summaryDate;
-        private String summary;
-        private URL linkFor;
-        private int score;
-        private int commentCount = 0;
+	public String getBody()
+	{
+		return body;
+	}
 
-        /* Optional Attributes */
-        private Comment[] comments;
+	public String getBodyHTML()
+	{
+		return bodyHTML;
+	}
 
-        public Builder( int id, ItemType type, String author, Date summaryDate,
-                        String summary, URL linkFor, int score )
-        {
-            this.id = id;
-            this.type = type;
-            this.author = author;
-            this.summaryDate = summaryDate;
-            this.summary = summary;
-            this.linkFor = linkFor;
-            this.score = score;
-        }
+	public Comment[] getComments()
+	{
+		return comments;
+	}
 
-        public Builder setAuthorAvatar( Drawable authorAvatar )
-        {
-            this.authorAvatar = authorAvatar;
-            return this;
-        }
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + aPlusCount;
+		result = prime * result + Arrays.hashCode( aPlusUsers );
+		result = prime * result + ( ( author == null ) ? 0 : author.hashCode() );
+		result = prime * result + ( ( body == null ) ? 0 : body.hashCode() );
+		result = prime * result
+				+ ( ( bodyHTML == null ) ? 0 : bodyHTML.hashCode() );
+		result = prime * result + commentCount;
+		result = prime * result + Arrays.hashCode( comments );
+		result = prime * result + (int) ( id ^ ( id >>> 32 ) );
+		result = prime * result
+				+ ( ( postDate == null ) ? 0 : postDate.hashCode() );
+		return result;
+	}
 
-        public Builder setCommentCount( int commentCount )
-        {
-            this.commentCount = commentCount;
-            return this;
-        }
+	@Override
+	public boolean equals( Object obj )
+	{
+		if( this == obj )
+			return true;
+		if( obj == null )
+			return false;
+		if( getClass() != obj.getClass() )
+			return false;
+		StreamItem other = (StreamItem) obj;
+		if( aPlusCount != other.aPlusCount )
+			return false;
+		if( !Arrays.equals( aPlusUsers, other.aPlusUsers ) )
+			return false;
+		if( author == null )
+		{
+			if( other.author != null )
+				return false;
+		} else if( !author.equals( other.author ) )
+			return false;
+		if( body == null )
+		{
+			if( other.body != null )
+				return false;
+		} else if( !body.equals( other.body ) )
+			return false;
+		if( bodyHTML == null )
+		{
+			if( other.bodyHTML != null )
+				return false;
+		} else if( !bodyHTML.equals( other.bodyHTML ) )
+			return false;
+		if( commentCount != other.commentCount )
+			return false;
+		if( !Arrays.equals( comments, other.comments ) )
+			return false;
+		if( id != other.id )
+			return false;
+		if( postDate == null )
+		{
+			if( other.postDate != null )
+				return false;
+		} else if( !postDate.equals( other.postDate ) )
+			return false;
+		return true;
+	}
 
-        public Builder setComments( Comment[] comments )
-        {
-            this.comments = comments;
-            this.commentCount = comments.length;
-            return this;
-        }
-    }
+	@Override
+	public String toString()
+	{
+		return "StreamItem [id=" + id + ", postDate=" + postDate + ", author="
+				+ author + ", aPlusCount=" + aPlusCount + ", aPlusUsers="
+				+ Arrays.toString( aPlusUsers ) + ", commentCount="
+				+ commentCount + ", body=" + body + ", bodyHTML=" + bodyHTML
+				+ ", comments=" + Arrays.toString( comments ) + "]";
+	}
 }
