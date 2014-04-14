@@ -23,6 +23,8 @@ public class XMLParser
 	/* Social Feed Constants */
 	private static final String NAME_FEED_HOME = "home";
 	private static final String NAME_FEED_ITEMS = "feed_items";
+	private static final String NAME_FEED_ITEM = "item";
+	private static final String NAME_ID = "id";
 
 	private static SAXBuilder builder;
 
@@ -116,6 +118,11 @@ public class XMLParser
 		throw new RuntimeException( "Method Stub" ); // TODO
 	}
 
+	public static List<BlogPost> parseBlogPosts( InputStream xmlStream )
+	{
+		throw new RuntimeException( "Method Stub" ); // TODO
+	}
+
 	public static List<Document> parseDocuments( InputStream xmlStream )
 	{
 		throw new RuntimeException( "Method Stub" ); // TODO
@@ -136,9 +143,28 @@ public class XMLParser
 		return this.document.getRootElement();
 	}
 
-	private StreamItem parseFeedItem( Element feedItem )
+	/**
+	 * Parses a single Item element and returns a StreamItem.
+	 * 
+	 * @param feedItemElement
+	 * @return
+	 * @throws ParseException
+	 */
+	private StreamItem parseFeedItem( Element feedItemElement )
+			throws ParseException
 	{
-		throw new RuntimeException( "Unimplemented method." ); // TODO
+		if( feedItemElement.getName().equals( NAME_FEED_ITEM ) )
+		{
+			int id = Integer.parseInt( this.getChildElementOrThrow(
+					feedItemElement, NAME_ID ).getTextNormalize() );
+
+			return new StreamItem.Builder( id, null, null, id, null, id, null,
+					null ).build(); // TODO
+		} else
+		{
+			throw new ParseException( "Root element of a feed item should be "
+					+ NAME_FEED_ITEM );
+		}
 	}
 
 	private Assignment parseAssignment( Element element )
@@ -156,7 +182,7 @@ public class XMLParser
 		throw new RuntimeException( "Unimplemented method." ); // TODO
 	}
 
-	private Document parseDocument( Element element )
+	private org.cascadelms.data.models.Document parseDocument( Element element )
 	{
 		throw new RuntimeException( "Unimplemented method." ); // TODO
 	}
@@ -197,7 +223,7 @@ public class XMLParser
 	 * An Exception thrown when {@link XMLParser} is unable to parse XML for any
 	 * reason.
 	 */
-	static class ParseException extends Exception
+	public static class ParseException extends Exception
 	{
 		public ParseException( String message )
 		{
