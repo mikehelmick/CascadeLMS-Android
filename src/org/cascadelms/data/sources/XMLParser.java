@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import org.cascadelms.data.models.Assignment;
 import org.cascadelms.data.models.BlogPost;
 import org.cascadelms.data.models.Comment;
+import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Grade;
 import org.cascadelms.data.models.StreamItem;
 import org.cascadelms.data.models.User;
@@ -129,6 +130,11 @@ public class XMLParser
 			throw new ParseException( "Root element of feed must be "
 					+ NAME_FEED_HOME );
 		}
+	}
+
+	public static List<Course> parseCourseList( InputStream xmlStream )
+	{
+		throw new RuntimeException( "Method Stub" ); // TODO
 	}
 
 	public static List<StreamItem> parseCourseFeed( InputStream xmlStream )
