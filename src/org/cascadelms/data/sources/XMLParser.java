@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -301,9 +302,20 @@ public class XMLParser
 	}
 
 	public static Date dateFromDateString( String dateString )
+			throws ParseException
 	{
-		/* TODO: implement */
-		return new Date( 1000L );
+		SimpleDateFormat df = new SimpleDateFormat(
+				"EEE MMM FF HH:mm:ss ZZZ yyyy" );
+		Date parsedDate;
+		try
+		{
+			parsedDate = df.parse( dateString );
+		} catch( java.text.ParseException e )
+		{
+			throw new ParseException(
+					"Could not parse a date from the date string." );
+		}
+		return parsedDate;
 	}
 
 	/**
