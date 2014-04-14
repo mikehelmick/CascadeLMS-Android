@@ -8,7 +8,7 @@ import org.cascadelms.data.loaders.GradesLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Grade;
-import org.cascadelms.data.sources.FakeDataSource;
+import org.cascadelms.data.sources.CascadeDataSource;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GradesFragment extends ListFragment implements
 		LoaderCallbacks<List<Grade>>
@@ -42,7 +43,7 @@ public class GradesFragment extends ListFragment implements
 	@Override
 	public void onCreate( Bundle savedInstanceState )
 	{
-		this.dataSource = FakeDataSource.getInstance();
+		this.dataSource = CascadeDataSource.getInstance();
 		this.adapter = new GradesAdapter( this.getActivity() );
 		super.onCreate( savedInstanceState );
 	}
@@ -98,7 +99,11 @@ public class GradesFragment extends ListFragment implements
 			case LoaderCodes.LOADER_CODE_GRADES:
 			{
 				this.adapter.clear();
-				this.adapter.addAll( data );
+                if (data != null)
+                    this.adapter.addAll( data );
+                else
+                    Toast.makeText(getActivity(), R.string.fragment_grades_list_failed,
+                            Toast.LENGTH_SHORT).show();
 				this.emptyView
 						.setText( R.string.fragment_grades_list_empty_message );
 				return;

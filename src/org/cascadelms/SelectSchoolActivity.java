@@ -115,7 +115,8 @@ public class SelectSchoolActivity extends FragmentActivity
             case LoaderCodes.LOADER_CODE_SCHOOLS:
             {
                 adapter.clear();
-                adapter.addAll(data);
+                if (data != null)
+                    adapter.addAll(data);
                 return;
             }
         }
