@@ -10,7 +10,7 @@ import org.cascadelms.data.loaders.DocumentsLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
-import org.cascadelms.data.sources.FakeDataSource;
+import org.cascadelms.data.sources.CascadeDataSource;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
@@ -76,7 +76,7 @@ public class DocumentsFragment extends ListFragment implements
 		this.adapter = new DocumentAdapter( this.getActivity() );
 
 		/* Creates a data source and begins loading */
-		this.dataSource = FakeDataSource.getInstance();
+		this.dataSource = CascadeDataSource.getInstance();
 
 		this.directoryStack = new LinkedList<Document>();
 		this.directoryStack.add( Document.rootDocument() );
@@ -178,7 +178,11 @@ public class DocumentsFragment extends ListFragment implements
 			case LoaderCodes.LOADER_CODE_DOCUMENTS:
 			{
 				LOGGER.info( "DocumentsFragment finished loading root directory." );
-				this.adapter.setData( data );
+                if (data != null)
+                    this.adapter.setData( data );
+                else
+                    Toast.makeText(getActivity(), R.string.fragment_documents_list_failed,
+                            Toast.LENGTH_SHORT).show();
 				this.setEmptyText( this
 						.getString( R.string.fragment_documents_list_empty_message ) );
 				return;

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import org.cascadelms.data.loaders.CourseLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
-import org.cascadelms.data.sources.FakeDataSource;
+import org.cascadelms.data.sources.CascadeDataSource;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * The main activity for the CascadeLMS app. This activity shows the
@@ -47,7 +48,7 @@ public class StreamActivity extends CascadeActivity implements
 		this.setContentView( R.layout.activity_stream );
 
 		/* Sets up a CourseDataSource and begins course loading. */
-		this.courseDataSource = FakeDataSource.getInstance();
+		this.courseDataSource = CascadeDataSource.getInstance();
 		this.getSupportLoaderManager()
 				.initLoader( LoaderCodes.LOADER_CODE_COURSES, null, this )
 				.forceLoad();
@@ -186,7 +187,11 @@ public class StreamActivity extends CascadeActivity implements
 			{
 				LOGGER.info( "MainActivity finished loading courses." );
 				this.mCourseNavAdapter.clear();
-				this.mCourseNavAdapter.addAll( data );
+                if (data != null)
+                    this.mCourseNavAdapter.addAll( data );
+                else
+                    Toast.makeText(this, R.string.course_list_failed,
+                            Toast.LENGTH_SHORT).show();
 				return;
 			}
 		}

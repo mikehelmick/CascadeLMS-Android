@@ -22,14 +22,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import org.cascadelms.auth.*;
+import org.cascadelms.data.sources.AuthTokenInfo;
+
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
 public class LoginActivity extends FragmentActivity
 {
-	private static final String PREFS_AUTH = "AuthenticationData";
-
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
@@ -43,6 +44,9 @@ public class LoginActivity extends FragmentActivity
 	private WebView mLoginWebView;
 	private View mLoginStatusView;
 
+    // Stored OAuth data.
+    AuthTokenInfo mTokenInfo = null;
+
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
@@ -50,15 +54,12 @@ public class LoginActivity extends FragmentActivity
 
 		setContentView( R.layout.activity_login );
 
-		String schoolUrl;
+        mTokenInfo = new AuthTokenInfo(this);
 
-		/* Gets the Course data provided by the Intent that started this. */
-		Bundle extras = this.getIntent().getExtras();
+        String schoolUrl = mTokenInfo.getCascadeUrl();
 
-		if( extras != null )
+		if( schoolUrl != null )
 		{
-			schoolUrl = extras.getString( SelectSchoolActivity.ARGS_SCHOOL_URL );
-
 			mOauth = new SimpleOAuth( ConsumerSecretsProvider.getConsumerKey(),
 					ConsumerSecretsProvider.getConsumerSecret(), schoolUrl
 							+ "/oauth/request_token", schoolUrl
@@ -70,7 +71,8 @@ public class LoginActivity extends FragmentActivity
 
 			mAuthOneTask = new OAuthPhaseOneTask();
 			mAuthOneTask.execute( (Void) null );
-		} else
+		}
+        else
 			showAuthError( "No school URL provided." );
 	}
 
@@ -100,26 +102,26 @@ public class LoginActivity extends FragmentActivity
 					android.R.integer.config_shortAnimTime );
 
 			mLoginStatusView.setVisibility( View.VISIBLE );
-			mLoginStatusView.animate().setDuration( shortAnimTime ).alpha( 0 )
-					.setListener( new AnimatorListenerAdapter()
-					{
-						@Override
-						public void onAnimationEnd( Animator animation )
-						{
-							mLoginStatusView.setVisibility( View.GONE );
-						}
-					} );
+			mLoginStatusView.animate().setDuration( shortAnimTime ).alpha(0)
+					.setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mLoginStatusView.setVisibility(View.GONE);
+                        }
+                    });
 
 			mLoginWebView.setVisibility( View.VISIBLE );
-			mLoginWebView.animate().setDuration( shortAnimTime ).alpha( 1 )
-					.setListener( new AnimatorListenerAdapter()
-					{
-						@Override
-						public void onAnimationEnd( Animator animation )
-						{
-							mLoginWebView.setVisibility( View.VISIBLE );
-						}
-					} );
+			mLoginWebView.animate().setDuration( shortAnimTime ).alpha(1)
+					.setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mLoginWebView.setVisibility(View.VISIBLE);
+                        }
+                    });
 		} else
 		{
 			// The ViewPropertyAnimator APIs are not available, so simply show
@@ -171,23 +173,24 @@ public class LoginActivity extends FragmentActivity
 						LoginActivity.this );
 
 				dialogBuilder
-						.setTitle( "Authentication failed" )
-						.setMessage( message )
-						.setPositiveButton( android.R.string.ok,
-								new DialogInterface.OnClickListener()
-								{
-									@Override
-									public void onClick(
-											DialogInterface dialogInterface,
-											int i )
-									{
-										Toast.makeText(
-												getApplicationContext(),
-												R.string.toast_login_fail,
-												Toast.LENGTH_SHORT ).show();
-										finish();
-									}
-								} ).setCancelable( false ).show();
+						.setTitle("Authentication failed")
+						.setMessage(message)
+						.setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(
+                                            DialogInterface dialogInterface,
+                                            int i)
+                                    {
+                                        Toast.makeText(
+                                                getApplicationContext(),
+                                                R.string.toast_login_fail,
+                                                Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                }
+                        ).setCancelable( false ).show();
 			}
 		} );
 	}
@@ -225,18 +228,19 @@ public class LoginActivity extends FragmentActivity
 						LoginActivity.this );
 
 				dialogBuilder
-						.setMessage( R.string.desc_login_instructions )
-						.setPositiveButton( android.R.string.ok,
-								new DialogInterface.OnClickListener()
-								{
-									@Override
-									public void onClick(
-											DialogInterface dialogInterface,
-											int i )
-									{
-										showLogin();
-									}
-								} ).setCancelable( false ).show();
+						.setMessage(R.string.desc_login_instructions)
+						.setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(
+                                            DialogInterface dialogInterface,
+                                            int i)
+                                    {
+                                        showLogin();
+                                    }
+                                }
+                        ).setCancelable( false ).show();
 			}
 		}
 
@@ -281,12 +285,7 @@ public class LoginActivity extends FragmentActivity
 				CookieManager cookieManager = CookieManager.getInstance();
 				cookieManager.removeAllCookie();
 
-				// TODO: Make this better.
-				SharedPreferences preferences = getSharedPreferences(
-						PREFS_AUTH, 0 );
-				SharedPreferences.Editor editor = preferences.edit();
-				editor.putString( "token", mOauth.getOAuthToken() );
-				editor.commit();
+                mTokenInfo.setAuthToken(mOauth.getOAuthToken());
 
 				Toast.makeText( getApplicationContext(), R.string.toast_login,
 						Toast.LENGTH_SHORT ).show();
