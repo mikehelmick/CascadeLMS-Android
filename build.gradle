@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:19.0.+'
-    compile 'org.jdom:jdom:2.0.0'
+    compile 'org.jdom:jdom2:2.0.5'
 }
 
 android {
