@@ -143,5 +143,10 @@ public class BlogPost extends Item
 			this.commentCount = comments.length;
 			return this;
 		}
+
+		public BlogPost build()
+		{
+			return new BlogPost( this );
+		}
 	}
 }

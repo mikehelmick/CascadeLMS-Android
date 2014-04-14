@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -13,6 +14,7 @@ import org.cascadelms.data.models.BlogPost;
 import org.cascadelms.data.models.Comment;
 import org.cascadelms.data.models.Grade;
 import org.cascadelms.data.models.StreamItem;
+import org.cascadelms.data.models.User;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -20,9 +22,26 @@ import org.jdom2.input.SAXBuilder;
 
 public class XMLParser
 {
+	/* Shared Constants */
+	private static final String NAME_ID = "id";
+
+	/* User Constants */
+	private static final String NAME_USERS = "user";
+	private static final String NAME_USER = "user";
+	private static final String NAME_USER_NAME = "name";
+	private static final String NAME_USER_GRAVATAR = "gravatar_url";
+	private static final String NAME_COMMENT_COUNT = "comment_count";
+
 	/* Social Feed Constants */
 	private static final String NAME_FEED_HOME = "home";
 	private static final String NAME_FEED_ITEMS = "feed_items";
+	private static final String NAME_FEED_ITEM = "item";
+	private static final String NAME_FEED_ITEM_POST_DATE = "date";
+	private static final String NAME_FEED_ITEM_AUTHOR = "user";
+	private static final String NAME_A_PLUS_COUNT = "aplus_count";
+	private static final String NAME_A_PLUS_USERS = "aplus_users";
+	private static final String NAME_FEED_ITEM_BODY = "body";
+	private static final String NAME_FEED_ITEM_BODY_HTML = "body_html";
 
 	private static SAXBuilder builder;
 
@@ -116,6 +135,11 @@ public class XMLParser
 		throw new RuntimeException( "Method Stub" ); // TODO
 	}
 
+	public static List<BlogPost> parseBlogPosts( InputStream xmlStream )
+	{
+		throw new RuntimeException( "Method Stub" ); // TODO
+	}
+
 	public static List<Document> parseDocuments( InputStream xmlStream )
 	{
 		throw new RuntimeException( "Method Stub" ); // TODO
@@ -136,9 +160,86 @@ public class XMLParser
 		return this.document.getRootElement();
 	}
 
-	private StreamItem parseFeedItem( Element feedItem )
+	/**
+	 * Parses a single User element.
+	 * 
+	 * @param userElement
+	 * @return
+	 * @throws ParseException
+	 */
+	private User parseUser( Element userElement ) throws ParseException
 	{
-		throw new RuntimeException( "Unimplemented method." ); // TODO
+		if( userElement.getName().equalsIgnoreCase( NAME_USER ) )
+		{
+			int id = Integer.parseInt( this.getChildTextOrThrow( userElement,
+					NAME_ID ) );
+			String name = this
+					.getChildTextOrThrow( userElement, NAME_USER_NAME );
+			String gravatarURL = this.getChildTextOrThrow( userElement,
+					NAME_USER_GRAVATAR );
+			return new User( id, name, gravatarURL );
+		} else
+		{
+			throw new ParseException( "Expected top tag of user to be <"
+					+ NAME_USER + "> instead got <" + userElement.getName()
+					+ ">" );
+		}
+	}
+
+	private User[] parseUsers( Element usersElement ) throws ParseException
+	{
+		if( usersElement.getName().equalsIgnoreCase( NAME_USERS ) )
+		{
+			List<User> users = new ArrayList<User>();
+			for ( Element userElement : usersElement.getChildren() )
+			{
+				users.add( this.parseUser( userElement ) );
+			}
+			return users.toArray( new User[users.size()] );
+		} else
+		{
+			throw new ParseException( "Expected top tag of users group to be "
+					+ NAME_USERS );
+		}
+	}
+
+	/**
+	 * Parses a single Item element and returns a StreamItem.
+	 * 
+	 * @param feedItemElement
+	 * @return
+	 * @throws ParseException
+	 */
+	private StreamItem parseFeedItem( Element feedItemElement )
+			throws ParseException
+	{
+		if( feedItemElement.getName().equals( NAME_FEED_ITEM ) )
+		{
+			int id = Integer.parseInt( this.getChildTextOrThrow(
+					feedItemElement, NAME_ID ) );
+			Date postDate = XMLParser.dateFromDateString( this
+					.getChildTextOrThrow( feedItemElement,
+							NAME_FEED_ITEM_POST_DATE ) );
+			User author = this.parseUser( this.getChildElementOrThrow(
+					feedItemElement, NAME_FEED_ITEM_AUTHOR ) );
+			int aPlusCount = Integer.parseInt( this.getChildTextOrThrow(
+					feedItemElement, NAME_A_PLUS_COUNT ) );
+			User[] aPlusUsers = this.parseUsers( this.getChildElementOrThrow(
+					this.getChildElementOrThrow( feedItemElement,
+							NAME_A_PLUS_USERS ), NAME_USERS ) );
+			int commentCount = Integer.parseInt( this.getChildTextOrThrow(
+					feedItemElement, NAME_COMMENT_COUNT ) );
+			String body = this.getChildTextOrThrow( feedItemElement,
+					NAME_FEED_ITEM_BODY );
+			String bodyHTML = this.getChildTextOrThrow( feedItemElement,
+					NAME_FEED_ITEM_BODY_HTML );
+			return new StreamItem.Builder( id, postDate, author, aPlusCount,
+					aPlusUsers, commentCount, body, bodyHTML ).build();
+		} else
+		{
+			throw new ParseException( "Root element of a feed item should be "
+					+ NAME_FEED_ITEM );
+		}
 	}
 
 	private Assignment parseAssignment( Element element )
@@ -156,7 +257,7 @@ public class XMLParser
 		throw new RuntimeException( "Unimplemented method." ); // TODO
 	}
 
-	private Document parseDocument( Element element )
+	private org.cascadelms.data.models.Document parseDocument( Element element )
 	{
 		throw new RuntimeException( "Unimplemented method." ); // TODO
 	}
@@ -193,11 +294,23 @@ public class XMLParser
 		}
 	}
 
+	private String getChildTextOrThrow( Element element, String cname )
+			throws ParseException
+	{
+		return this.getChildElementOrThrow( element, cname ).getTextNormalize();
+	}
+
+	public static Date dateFromDateString( String dateString )
+	{
+		/* TODO: implement */
+		return new Date( 1000L );
+	}
+
 	/**
 	 * An Exception thrown when {@link XMLParser} is unable to parse XML for any
 	 * reason.
 	 */
-	static class ParseException extends Exception
+	public static class ParseException extends Exception
 	{
 		public ParseException( String message )
 		{
