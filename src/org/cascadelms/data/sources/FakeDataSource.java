@@ -85,15 +85,21 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		/* Builds the course list */
 		courseList = new ArrayList<Course>();
 		courseList.add( ( new Course.Builder( COURSE_ID_DESIGN,
-				"CS5002-Senior Design" ) ).build() );
+				"CS5002-Senior Design", "Senior Design Class", 2, "Fall 2013",
+				true ) ).build() );
 		courseList.add( ( new Course.Builder( COURSE_ID_MACHINE_LEARNING,
-				"CS6037-Machine Learning" ) ).build() );
+				"CS6037-Machine Learning", "Machine Learning Description", 2,
+				"Fall 2013", true ) ).build() );
 		courseList.add( ( new Course.Builder( COURSE_ID_AI,
-				"CS6033-Artificial Intellegence" ) ).build() );
+				"CS6033-Artificial Intellegence", "AI Description", 2,
+				"Fall 2013", true ) ).build() );
 		courseList.add( ( new Course.Builder( COURSE_ID_INFO_RETRIEVAL,
-				"CS6054-Info Retrieval" ) ).build() );
-		courseList.add( ( new Course.Builder( COURSE_ID_UI,
-				"CS6067-User Interface" ) ).build() );
+				"CS6054-Info Retrieval", "Info Retrieval Description", 2,
+				"Fall 2013", true ) ).build() );
+		courseList
+				.add( ( new Course.Builder( COURSE_ID_UI,
+						"CS6067-User Interface", "UI Description", 2,
+						"Fall 2013", true ) ).build() );
 	}
 
 	@Override
