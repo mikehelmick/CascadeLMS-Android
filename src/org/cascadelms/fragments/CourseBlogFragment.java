@@ -8,7 +8,7 @@ import org.cascadelms.data.loaders.BlogPostLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.BlogPost;
 import org.cascadelms.data.models.Course;
-import org.cascadelms.data.sources.FakeDataSource;
+import org.cascadelms.data.sources.CascadeDataSource;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CourseBlogFragment extends ListFragment implements
 		LoaderCallbacks<List<BlogPost>>
@@ -43,7 +44,7 @@ public class CourseBlogFragment extends ListFragment implements
 	public void onCreate( Bundle savedInstanceState )
 	{
 		/* Initializes a data source and begins loading. */
-		this.blogDataSource = FakeDataSource.getInstance();
+		this.blogDataSource = CascadeDataSource.getInstance();
         this.adapter = new BlogPostAdapter(getActivity());
 
 		super.onCreate( savedInstanceState );
@@ -102,7 +103,11 @@ public class CourseBlogFragment extends ListFragment implements
 			case LoaderCodes.LOADER_CODE_BLOG:
 			{
                 adapter.clear();
-                adapter.addAll(data);
+                if (data != null)
+                    adapter.addAll(data);
+                else
+                    Toast.makeText(getActivity(), R.string.fragment_courseblog_list_failed,
+                            Toast.LENGTH_SHORT).show();
                 this.emptyView
                         .setText( R.string.fragment_courseblog_list_empty_message );
 				break;

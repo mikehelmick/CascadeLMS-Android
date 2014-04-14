@@ -4,7 +4,7 @@ import org.cascadelms.data.adapters.StreamItemDetailAdapter;
 import org.cascadelms.data.loaders.StreamItemDetailLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.StreamItem;
-import org.cascadelms.data.sources.FakeDataSource;
+import org.cascadelms.data.sources.CascadeDataSource;
 import org.cascadelms.fragments.SocialStreamFragment;
 
 import android.os.Bundle;
@@ -31,7 +31,7 @@ public class StreamDetailActivity extends CascadeActivity implements
         this.postId = extras.getLong(SocialStreamFragment.ARGS_POSTID);
 
 		/* Initializes a data source and begins loading. */
-        this.streamDataSource = FakeDataSource.getInstance();
+        this.streamDataSource = CascadeDataSource.getInstance();
         this.adapter = new StreamItemDetailAdapter(this);
 
         this.getSupportLoaderManager()

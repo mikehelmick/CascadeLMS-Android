@@ -29,6 +29,22 @@ public class CascadeDataSource implements CourseDataSource,
         DocumentsDataSource, AssignmentsDataSource, BlogDataSource,
         StreamDataSource, GradesDataSource
 {
+    private static CascadeDataSource instance;
+
+    private CascadeDataSource()
+    {
+		/* Private constructor */
+    }
+
+    public static CascadeDataSource getInstance()
+    {
+        if( instance == null )
+        {
+            instance = new CascadeDataSource();
+        }
+        return instance;
+    }
+
     private InputStream getInputStream(String path)
     {
         AuthTokenInfo tokenInfo = new AuthTokenInfo(CascadeApp.getContext());
@@ -62,7 +78,21 @@ public class CascadeDataSource implements CourseDataSource,
     @Override
     public List<Assignment> getAssignmentsForCourse(int courseId)
     {
-        return null;
+        List<Assignment> data = null;
+
+        InputStream stream = getInputStream("course/" + courseId + "/assignments");
+
+        try
+        {
+            if (stream != null)
+                data = XMLParser.parseAssignments(stream);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 
     @Override
@@ -92,19 +122,61 @@ public class CascadeDataSource implements CourseDataSource,
     @Override
     public List<Grade> getGradesForCourse(int courseId)
     {
-        return null;
+        List<Grade> data = null;
+
+        InputStream stream = getInputStream("course/" + courseId + "/grades");
+
+        try
+        {
+            if (stream != null)
+                data = XMLParser.parseGrades(stream);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 
     @Override
     public List<StreamItem> getAllStreamItems()
     {
-        return null;
+        List<StreamItem> data = null;
+
+        InputStream stream = getInputStream("home");
+
+        try
+        {
+            if (stream != null)
+                data = XMLParser.parseFeed(stream);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 
     @Override
     public List<StreamItem> getStreamItemsForCourse(int courseId)
     {
-        return null;
+        List<StreamItem> data = null;
+
+        InputStream stream = getInputStream("course/" + courseId);
+
+        try
+        {
+            if (stream != null)
+                data = XMLParser.parseCourseFeed(stream);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 
     @Override
