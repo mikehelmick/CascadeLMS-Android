@@ -1,7 +1,6 @@
 package org.cascadelms;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -9,20 +8,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.cascadelms.data.sources.AuthTokenInfo;
+
 public class CascadeActivity extends ActionBarActivity
 {
-	/* Constants */
-	public static final String PREFS_AUTH = "AuthenticationData";
+    AuthTokenInfo mTokenInfo = null;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 
-		SharedPreferences preferences = getSharedPreferences( PREFS_AUTH, 0 );
-		String token = preferences.getString( "token", null );
+        mTokenInfo = new AuthTokenInfo(this);
 
-		if( token == null )
+		if( !mTokenInfo.isValid() )
 		{
 			startLoginActivity();
 		}
@@ -75,11 +74,7 @@ public class CascadeActivity extends ActionBarActivity
 	 */
 	protected void logOut()
 	{
-		// TODO: Change the way login status is stored.
-		SharedPreferences preferences = getSharedPreferences( PREFS_AUTH, 0 );
-		SharedPreferences.Editor editor = preferences.edit();
-		editor.putString( "token", null );
-		editor.commit();
+        mTokenInfo.clearData();
 
 		Toast.makeText( getApplicationContext(), R.string.toast_logout,
 				Toast.LENGTH_SHORT ).show();
