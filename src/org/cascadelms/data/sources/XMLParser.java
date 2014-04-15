@@ -285,8 +285,22 @@ public class XMLParser
 	}
 
 	public static List<Grade> parseGrades( InputStream xmlStream )
+			throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+		List<Grade> grades = new ArrayList<Grade>();
+
+		XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+		parser.assertElementName( parser.getRootElement(), NAME_GRADES );
+		/*
+		 * Gets the container element for grades and parses each grade.
+		 */
+		for ( Element gradeElement : parser.getRootElement().getChildren() )
+		{
+			grades.add( parser.parseGrade( gradeElement ) );
+		}
+		return grades;
 	}
 
 	public static StreamItem parseFeedPost( InputStream xmlStream )
@@ -416,6 +430,11 @@ public class XMLParser
 
 		return new BlogPost.Builder( id, title, featured, authorName, postDate,
 				body, aPlusCount, aPlusUsers, commentCount ).build();
+	}
+
+	private Grade parseGrade( Element element )
+	{
+		throw new RuntimeException( "Unimplemented method" ); // TODO
 	}
 
 	private Comment parseComment( Element element )
