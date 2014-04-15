@@ -470,7 +470,7 @@ public class XMLParser
 			throws ParseException
 	{
 		SimpleDateFormat df = new SimpleDateFormat(
-				"EEE MMM FF HH:mm:ss ZZZ yyyy" );
+				"EEE MMM d HH:mm:ss ZZZ yyyy" );
 		Date parsedDate;
 		try
 		{
