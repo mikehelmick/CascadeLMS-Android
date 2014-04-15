@@ -32,7 +32,6 @@ public class XMLParser
 	private static final String NAME_USER = "user";
 	private static final String NAME_USER_NAME = "name";
 	private static final String NAME_USER_GRAVATAR = "gravatar_url";
-	private static final String NAME_COMMENT_COUNT = "comment_count";
 
 	/* Course Constants */
 	private static final String NAME_COURSE_CONTAINER = "courses";
@@ -63,6 +62,19 @@ public class XMLParser
 	private static final String NAME_A_PLUS_USERS = "aplus_users";
 	private static final String NAME_FEED_ITEM_BODY = "body";
 	private static final String NAME_FEED_ITEM_BODY_HTML = "body_html";
+	private static final String NAME_FEED_ITEM_COMMENT_COUNT = "comment_count";
+
+	/* Blog Post Constants */
+	private static final String NAME_BLOG_POSTS = "blog_posts";
+	private static final String NAME_BLOG_POST = "blog_post";
+	private static final String NAME_BLOG_POST_TITLE = "title";
+	private static final String NAME_BLOG_POST_FEATURED_FLAG = "featured";
+	private static final String NAME_BLOG_POST_AUTHOR_NAME = "author";
+	private static final String NAME_BLOG_POST_POSTED_DATE = "posted_at";
+	private static final String NAME_BLOG_POST_COMMENT_COUNT = "comments";
+	private static final String NAME_BLOG_POST_BODY = "body";
+	private static final String NAME_BLOG_POST_APLUS_COUNT = "aplus_count";
+	private static final String NAME_BLOG_POST_APLUS_USERS = "aplus_users";
 
 	private static SAXBuilder builder;
 
@@ -181,8 +193,22 @@ public class XMLParser
 	}
 
 	public static List<BlogPost> parseBlogPosts( InputStream xmlStream )
+			throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+		List<BlogPost> posts = new ArrayList<BlogPost>();
+
+		XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+		parser.assertElementName( parser.getRootElement(), NAME_BLOG_POSTS );
+		/*
+		 * Gets the container element for blog posts and parses each document.
+		 */
+		for ( Element blogPostElement : parser.getRootElement().getChildren() )
+		{
+			posts.add( parser.parseBlogPost( blogPostElement ) );
+		}
+		return posts;
 	}
 
 	public static List<org.cascadelms.data.models.Document> parseDocuments(
@@ -235,30 +261,24 @@ public class XMLParser
 
 	private Course parseCourse( Element courseElement ) throws ParseException
 	{
-		if( courseElement.getName().equalsIgnoreCase( NAME_COURSE ) )
-		{
-			int id = Integer.parseInt( this.getChildTextOrThrow( courseElement,
-					NAME_ID ) );
-			String title = this.getChildTextOrThrow( courseElement,
-					NAME_COURSE_TITLE );
-			String description = this.getChildTextOrThrow( courseElement,
-					NAME_COURSE_DESCRIPTION );
-			Element termElement = this.getChildElementOrThrow( courseElement,
-					NAME_COURSE_TERM );
-			int termId = Integer.parseInt( this.getChildTextOrThrow(
-					termElement, NAME_COURSE_TERM_ID ) );
-			String semester = this.getChildTextOrThrow( termElement,
-					NAME_COURSE_TERM_SEMESTER );
-			boolean current = Boolean.parseBoolean( this.getChildTextOrThrow(
-					termElement, NAME_COURSE_CURRENT_FLAG ) );
-			return new Course.Builder( id, title, description, termId,
-					semester, current ).build();
-		} else
-		{
-			throw new ParseException( "Expected top tag of course to be <"
-					+ NAME_COURSE + "> instead got <" + courseElement.getName()
-					+ ">" );
-		}
+		this.assertElementName( courseElement, NAME_COURSE );
+
+		int id = Integer.parseInt( this.getChildTextOrThrow( courseElement,
+				NAME_ID ) );
+		String title = this.getChildTextOrThrow( courseElement,
+				NAME_COURSE_TITLE );
+		String description = this.getChildTextOrThrow( courseElement,
+				NAME_COURSE_DESCRIPTION );
+		Element termElement = this.getChildElementOrThrow( courseElement,
+				NAME_COURSE_TERM );
+		int termId = Integer.parseInt( this.getChildTextOrThrow( termElement,
+				NAME_COURSE_TERM_ID ) );
+		String semester = this.getChildTextOrThrow( termElement,
+				NAME_COURSE_TERM_SEMESTER );
+		boolean current = Boolean.parseBoolean( this.getChildTextOrThrow(
+				termElement, NAME_COURSE_CURRENT_FLAG ) );
+		return new Course.Builder( id, title, description, termId, semester,
+				current ).build();
 	}
 
 	/**
@@ -270,38 +290,25 @@ public class XMLParser
 	 */
 	private User parseUser( Element userElement ) throws ParseException
 	{
-		if( userElement.getName().equalsIgnoreCase( NAME_USER ) )
-		{
-			int id = Integer.parseInt( this.getChildTextOrThrow( userElement,
-					NAME_ID ) );
-			String name = this
-					.getChildTextOrThrow( userElement, NAME_USER_NAME );
-			String gravatarURL = this.getChildTextOrThrow( userElement,
-					NAME_USER_GRAVATAR );
-			return new User( id, name, gravatarURL );
-		} else
-		{
-			throw new ParseException( "Expected top tag of user to be <"
-					+ NAME_USER + "> instead got <" + userElement.getName()
-					+ ">" );
-		}
+		this.assertElementName( userElement, NAME_USER );
+
+		int id = Integer.parseInt( this.getChildTextOrThrow( userElement,
+				NAME_ID ) );
+		String name = this.getChildTextOrThrow( userElement, NAME_USER_NAME );
+		String gravatarURL = this.getChildTextOrThrow( userElement,
+				NAME_USER_GRAVATAR );
+		return new User( id, name, gravatarURL );
 	}
 
 	private User[] parseUsers( Element usersElement ) throws ParseException
 	{
-		if( usersElement.getName().equalsIgnoreCase( NAME_USERS ) )
+		this.assertElementName( usersElement, NAME_USERS );
+		List<User> users = new ArrayList<User>();
+		for ( Element userElement : usersElement.getChildren() )
 		{
-			List<User> users = new ArrayList<User>();
-			for ( Element userElement : usersElement.getChildren() )
-			{
-				users.add( this.parseUser( userElement ) );
-			}
-			return users.toArray( new User[users.size()] );
-		} else
-		{
-			throw new ParseException( "Expected top tag of users group to be "
-					+ NAME_USERS );
+			users.add( this.parseUser( userElement ) );
 		}
+		return users.toArray( new User[users.size()] );
 	}
 
 	/**
@@ -314,33 +321,27 @@ public class XMLParser
 	private StreamItem parseFeedItem( Element feedItemElement )
 			throws ParseException
 	{
-		if( feedItemElement.getName().equals( NAME_FEED_ITEM ) )
-		{
-			int id = Integer.parseInt( this.getChildTextOrThrow(
-					feedItemElement, NAME_ID ) );
-			Date postDate = XMLParser.dateFromDateString( this
-					.getChildTextOrThrow( feedItemElement,
-							NAME_FEED_ITEM_POST_DATE ) );
-			User author = this.parseUser( this.getChildElementOrThrow(
-					feedItemElement, NAME_FEED_ITEM_AUTHOR ) );
-			int aPlusCount = Integer.parseInt( this.getChildTextOrThrow(
-					feedItemElement, NAME_A_PLUS_COUNT ) );
-			User[] aPlusUsers = this.parseUsers( this.getChildElementOrThrow(
-					this.getChildElementOrThrow( feedItemElement,
-							NAME_A_PLUS_USERS ), NAME_USERS ) );
-			int commentCount = Integer.parseInt( this.getChildTextOrThrow(
-					feedItemElement, NAME_COMMENT_COUNT ) );
-			String body = this.getChildTextOrThrow( feedItemElement,
-					NAME_FEED_ITEM_BODY );
-			String bodyHTML = this.getChildTextOrThrow( feedItemElement,
-					NAME_FEED_ITEM_BODY_HTML );
-			return new StreamItem.Builder( id, postDate, author, aPlusCount,
-					aPlusUsers, commentCount, body, bodyHTML ).build();
-		} else
-		{
-			throw new ParseException( "Root element of a feed item should be "
-					+ NAME_FEED_ITEM );
-		}
+		this.assertElementName( feedItemElement, NAME_FEED_ITEM );
+
+		int id = Integer.parseInt( this.getChildTextOrThrow( feedItemElement,
+				NAME_ID ) );
+		Date postDate = XMLParser.dateFromDateString( this.getChildTextOrThrow(
+				feedItemElement, NAME_FEED_ITEM_POST_DATE ) );
+		User author = this.parseUser( this.getChildElementOrThrow(
+				feedItemElement, NAME_FEED_ITEM_AUTHOR ) );
+		int aPlusCount = Integer.parseInt( this.getChildTextOrThrow(
+				feedItemElement, NAME_A_PLUS_COUNT ) );
+		User[] aPlusUsers = this.parseUsers( this.getChildElementOrThrow( this
+				.getChildElementOrThrow( feedItemElement, NAME_A_PLUS_USERS ),
+				NAME_USERS ) );
+		int commentCount = Integer.parseInt( this.getChildTextOrThrow(
+				feedItemElement, NAME_FEED_ITEM_COMMENT_COUNT ) );
+		String body = this.getChildTextOrThrow( feedItemElement,
+				NAME_FEED_ITEM_BODY );
+		String bodyHTML = this.getChildTextOrThrow( feedItemElement,
+				NAME_FEED_ITEM_BODY_HTML );
+		return new StreamItem.Builder( id, postDate, author, aPlusCount,
+				aPlusUsers, commentCount, body, bodyHTML ).build();
 	}
 
 	private Assignment parseAssignment( Element element )
@@ -348,9 +349,33 @@ public class XMLParser
 		throw new RuntimeException( "Unimplemented method." ); // TODO
 	}
 
-	private BlogPost parseBlogPost( Element element ) throws JDOMException
+	private BlogPost parseBlogPost( Element postElement ) throws ParseException
 	{
-		throw new RuntimeException( "Unimplemented method" ); // TODO
+		this.assertElementName( postElement, NAME_BLOG_POST );
+
+		int id = Integer.parseInt( this.getChildTextOrThrow( postElement,
+				NAME_ID ) );
+		String title = this.getChildTextOrThrow( postElement,
+				NAME_BLOG_POST_TITLE );
+		boolean featured = Boolean.parseBoolean( this.getChildTextOrThrow(
+				postElement, NAME_BLOG_POST_FEATURED_FLAG ) );
+		String authorName = this.getChildTextOrThrow( postElement,
+				NAME_BLOG_POST_AUTHOR_NAME );
+		Date postDate = XMLParser
+				.dateFromAlternateDateString( this.getChildTextOrThrow(
+						postElement, NAME_BLOG_POST_POSTED_DATE ) );
+		String body = this.getChildTextOrThrow( postElement,
+				NAME_BLOG_POST_BODY );
+		int aPlusCount = Integer.parseInt( this.getChildTextOrThrow(
+				postElement, NAME_BLOG_POST_APLUS_COUNT ) );
+		User[] aPlusUsers = this.parseUsers( this.getChildElementOrThrow( this
+				.getChildElementOrThrow( postElement,
+						NAME_BLOG_POST_APLUS_USERS ), NAME_USERS ) );
+		int commentCount = Integer.parseInt( this.getChildTextOrThrow(
+				postElement, NAME_BLOG_POST_COMMENT_COUNT ) );
+
+		return new BlogPost.Builder( id, title, featured, authorName, postDate,
+				body, aPlusCount, aPlusUsers, commentCount ).build();
 	}
 
 	private Comment parseComment( Element element )
@@ -361,41 +386,35 @@ public class XMLParser
 	private org.cascadelms.data.models.Document parseDocument(
 			Element documentElement ) throws ParseException
 	{
-		if( documentElement.getName().equals( NAME_DOCUMENT ) )
+		this.assertElementName( documentElement, NAME_DOCUMENT );
+
+		int id = Integer.parseInt( this.getChildTextOrThrow( documentElement,
+				NAME_ID ) );
+		String title = this.getChildTextOrThrow( documentElement,
+				NAME_DOCUMENT_TITLE );
+		try
 		{
-			int id = Integer.parseInt( this.getChildTextOrThrow(
-					documentElement, NAME_ID ) );
-			String title = this.getChildTextOrThrow( documentElement,
-					NAME_DOCUMENT_TITLE );
-			try
+			/* If the XML contains a <folder> element it is a folder. */
+			Element folderElement = this.getChildElementOrThrow(
+					documentElement, NAME_DOCUMENT_FOLDER );
+			if( folderElement.getTextNormalize().equalsIgnoreCase( "true" ) )
 			{
-				/* If the XML contains a <folder> element it is a folder. */
-				Element folderElement = this.getChildElementOrThrow(
-						documentElement, NAME_DOCUMENT_FOLDER );
-				if( folderElement.getTextNormalize().equalsIgnoreCase( "true" ) )
-				{
-					return org.cascadelms.data.models.Document.Builder
-							.getFolderBuilder( id, title ).build();
-				} else
-				{
-					throw new ParseException( "Document is not a folder." );
-				}
-			} catch( ParseException e )
-			{
-				String extension = this.getChildTextOrThrow( documentElement,
-						NAME_DOCUMENT_EXTENSION );
-				int size = Integer.parseInt( this.getChildTextOrThrow(
-						documentElement, NAME_DOCUMENT_SIZE ) );
-				String documentURL = this.getChildTextOrThrow( documentElement,
-						NAME_DOCUMENT_URL );
 				return org.cascadelms.data.models.Document.Builder
-						.getFileBuilder( id, title, extension, size,
-								documentURL ).build();
+						.getFolderBuilder( id, title ).build();
+			} else
+			{
+				throw new ParseException( "Document is not a folder." );
 			}
-		} else
+		} catch( ParseException e )
 		{
-			throw new ParseException( "Root element of a document should be "
-					+ NAME_DOCUMENT + ">." );
+			String extension = this.getChildTextOrThrow( documentElement,
+					NAME_DOCUMENT_EXTENSION );
+			int size = Integer.parseInt( this.getChildTextOrThrow(
+					documentElement, NAME_DOCUMENT_SIZE ) );
+			String documentURL = this.getChildTextOrThrow( documentElement,
+					NAME_DOCUMENT_URL );
+			return org.cascadelms.data.models.Document.Builder.getFileBuilder(
+					id, title, extension, size, documentURL ).build();
 		}
 	}
 
@@ -437,6 +456,16 @@ public class XMLParser
 		return this.getChildElementOrThrow( element, cname ).getTextNormalize();
 	}
 
+	private void assertElementName( Element element, String expectedName )
+			throws ParseException
+	{
+		if( !element.getName().equalsIgnoreCase( expectedName ) )
+		{
+			throw new ParseException( "Expected " + expectedName + " but got "
+					+ element.getName() );
+		}
+	}
+
 	public static Date dateFromDateString( String dateString )
 			throws ParseException
 	{
@@ -450,6 +479,31 @@ public class XMLParser
 		{
 			throw new ParseException(
 					"Could not parse a date from the date string." );
+		}
+		return parsedDate;
+	}
+
+	/**
+	 * Parses a Date from the alternate date format used by Cascade. Ex: Wed, 15
+	 * Jan 2014 18:27:00 GMT
+	 * 
+	 * @param dateString
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Date dateFromAlternateDateString( String dateString )
+			throws ParseException
+	{
+		SimpleDateFormat df = new SimpleDateFormat(
+				"EEE, FF MMM yyyy HH:mm:ss zzz" );
+		Date parsedDate;
+		try
+		{
+			parsedDate = df.parse( dateString );
+		} catch( java.text.ParseException e )
+		{
+			throw new ParseException(
+					"Could not parse a date from the alternate style date string." );
 		}
 		return parsedDate;
 	}
