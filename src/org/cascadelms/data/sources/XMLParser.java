@@ -44,6 +44,15 @@ public class XMLParser
 	private static final String NAME_COURSE_TERM_SEMESTER = "semester";
 	private static final String NAME_COURSE_CURRENT_FLAG = "current";
 
+	/* Document Constants */
+	private static final String NAME_DOCUMENTS = "documents";
+	private static final String NAME_DOCUMENT = "document";
+	private static final String NAME_DOCUMENT_TITLE = "title";
+	private static final String NAME_DOCUMENT_EXTENSION = "extension";
+	private static final String NAME_DOCUMENT_SIZE = "size";
+	private static final String NAME_DOCUMENT_URL = "document_url";
+	private static final String NAME_DOCUMENT_FOLDER = "folder";
+
 	/* Social Feed Constants */
 	private static final String NAME_FEED_HOME = "home";
 	private static final String NAME_FEED_ITEMS = "feed_items";
@@ -177,9 +186,31 @@ public class XMLParser
 	}
 
 	public static List<org.cascadelms.data.models.Document> parseDocuments(
-			InputStream xmlStream )
+			InputStream xmlStream ) throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+		List<org.cascadelms.data.models.Document> documents = new ArrayList<org.cascadelms.data.models.Document>();
+
+		XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+		if( parser.document.getRootElement().getName()
+				.equalsIgnoreCase( NAME_DOCUMENTS ) )
+		{
+			/*
+			 * Gets the container element for documents and parses each
+			 * document.
+			 */
+			for ( Element documentElement : parser.getRootElement()
+					.getChildren() )
+			{
+				documents.add( parser.parseDocument( documentElement ) );
+			}
+			return documents;
+		} else
+		{
+			throw new ParseException( "Root element of document list must be <"
+					+ NAME_DOCUMENTS + ">." );
+		}
 	}
 
 	public static List<Assignment> parseAssignments( InputStream xmlStream )
@@ -327,9 +358,45 @@ public class XMLParser
 		throw new RuntimeException( "Unimplemented method." ); // TODO
 	}
 
-	private org.cascadelms.data.models.Document parseDocument( Element element )
+	private org.cascadelms.data.models.Document parseDocument(
+			Element documentElement ) throws ParseException
 	{
-		throw new RuntimeException( "Unimplemented method." ); // TODO
+		if( documentElement.getName().equals( NAME_DOCUMENT ) )
+		{
+			int id = Integer.parseInt( this.getChildTextOrThrow(
+					documentElement, NAME_ID ) );
+			String title = this.getChildTextOrThrow( documentElement,
+					NAME_DOCUMENT_TITLE );
+			try
+			{
+				/* If the XML contains a <folder> element it is a folder. */
+				Element folderElement = this.getChildElementOrThrow(
+						documentElement, NAME_DOCUMENT_FOLDER );
+				if( folderElement.getTextNormalize().equalsIgnoreCase( "true" ) )
+				{
+					return org.cascadelms.data.models.Document.Builder
+							.getFolderBuilder( id, title ).build();
+				} else
+				{
+					throw new ParseException( "Document is not a folder." );
+				}
+			} catch( ParseException e )
+			{
+				String extension = this.getChildTextOrThrow( documentElement,
+						NAME_DOCUMENT_EXTENSION );
+				int size = Integer.parseInt( this.getChildTextOrThrow(
+						documentElement, NAME_DOCUMENT_SIZE ) );
+				String documentURL = this.getChildTextOrThrow( documentElement,
+						NAME_DOCUMENT_URL );
+				return org.cascadelms.data.models.Document.Builder
+						.getFileBuilder( id, title, extension, size,
+								documentURL ).build();
+			}
+		} else
+		{
+			throw new ParseException( "Root element of a document should be "
+					+ NAME_DOCUMENT + ">." );
+		}
 	}
 
 	private StreamItem parseStreamItem()
