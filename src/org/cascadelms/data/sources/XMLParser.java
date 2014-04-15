@@ -92,6 +92,14 @@ public class XMLParser
 	/* Grades Constants */
 	private static final String NAME_GRADE = "grade";
 	private static final String NAME_GRADES = "grades";
+	private static final String NAME_GRADE_ASSIGNMENT_ID = "assignment_id";
+	private static final String NAME_GRADE_ASSIGNMENT_NAME = "assignment";
+	private static final String NAME_GRADE_CATEGORY = "category";
+	private static final String NAME_GRADE_POST_DATE = "date";
+	private static final String NAME_GRADE_TYPE = "grade_type";
+	private static final String NAME_GRADE_POINTS_EARNED = "grade";
+	private static final String NAME_GRADE_POINTS_POSSIBLE = "points_possible";
+	private static final String NAME_GRADE_PERCENTAGE = "percentage";
 
 	private static SAXBuilder builder;
 
@@ -466,9 +474,35 @@ public class XMLParser
 				body, aPlusCount, aPlusUsers, commentCount ).build();
 	}
 
-	private Grade parseGrade( Element element )
+	private Grade parseGrade( Element gradeElement ) throws ParseException
 	{
-		throw new RuntimeException( "Unimplemented method" ); // TODO
+		this.assertElementName( gradeElement, NAME_GRADE );
+
+		int assignmentId = Integer.parseInt( this.getChildTextOrThrow(
+				gradeElement, NAME_GRADE_ASSIGNMENT_ID ) );
+		String assignmentTitle = this.getChildTextOrThrow( gradeElement,
+				NAME_GRADE_ASSIGNMENT_NAME );
+		Assignment.Category category = Category.fromString( this
+				.getChildTextOrThrow( gradeElement, NAME_GRADE_CATEGORY ) );
+		Date postDate = XMLParser.dateFromAlternateDateString( this
+				.getChildTextOrThrow( gradeElement, NAME_GRADE_POST_DATE ) );
+		Grade.Type type = Grade.Type.fromString( this.getChildTextOrThrow(
+				gradeElement, NAME_GRADE_TYPE ) );
+		String pointsEarnedString = this.getChildTextOrThrow( gradeElement,
+				NAME_GRADE_POINTS_EARNED );
+		double pointsPossible = Double.parseDouble( this.getChildTextOrThrow(
+				gradeElement, NAME_GRADE_POINTS_POSSIBLE ) );
+		/* Points earned may not exist. */
+		try
+		{
+			double pointsEarned = Double.parseDouble( pointsEarnedString );
+			return new Grade( assignmentId, assignmentTitle, category,
+					postDate, type, pointsEarned, pointsPossible );
+		} catch( NumberFormatException e )
+		{
+			return new Grade( assignmentId, assignmentTitle, category,
+					postDate, type, pointsPossible );
+		}
 	}
 
 	private Comment parseComment( Element element )
