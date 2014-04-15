@@ -3,11 +3,14 @@ package org.cascadelms.data.adapters;
 import java.text.SimpleDateFormat;
 
 import org.cascadelms.R;
+import org.cascadelms.data.loaders.ImageViewDownloadTask;
 import org.cascadelms.data.models.Comment;
 import org.cascadelms.data.models.StreamItem;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.support.v4.util.LruCache;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +21,17 @@ import android.widget.TextView;
 
 public class StreamItemDetailAdapter extends BaseAdapter
 {
+    private static final int CACHE_SIZE = 20 * 1024 * 1024;
+    private static LruCache<String, Bitmap> mImageMemCache;
+
 	Context context;
 	StreamItem item;
 
 	public StreamItemDetailAdapter( Context context )
 	{
 		this.context = context;
+
+        mImageMemCache = new LruCache<String, Bitmap>(CACHE_SIZE);
 	}
 
 	public void setItem( StreamItem item )
@@ -63,7 +71,7 @@ public class StreamItemDetailAdapter extends BaseAdapter
 		if( item == null )
 			return null;
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM d, K:m a" );
+		SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM d" );
 
 		if( position == 0 )
 		{
@@ -97,19 +105,12 @@ public class StreamItemDetailAdapter extends BaseAdapter
 						.getQuantityString( R.plurals.comments, commentCount,
 								commentCount ) );
 
-				String authorAvatarURL = item.getAuthor().getGravatarURL();
-				Drawable authorAvatar = null;
-				/*
-				 * TODO: the StreamItem can only provide the URL to the author's
-				 * avatar image. The drawable needs to be loaded here.
-				 */
+                String authorAvatarURL = item.getAuthor()
+                        .getGravatarURL();
+                ImageView authorAvatar = (ImageView) convertView
+                        .findViewById( R.id.socialstream_avatar );
 
-				if( authorAvatar != null )
-				{
-					ImageView avatarImage = (ImageView) convertView
-							.findViewById( R.id.socialstream_avatar );
-					avatarImage.setImageDrawable( authorAvatar );
-				}
+                setAvatar(authorAvatarURL, authorAvatar);
 			}
 		} else
 		{
@@ -129,13 +130,40 @@ public class StreamItemDetailAdapter extends BaseAdapter
 				dateLabel.setText( dateFormat.format( comment.getCreatedAt() ) );
 				TextView authorLabel = (TextView) convertView
 						.findViewById( R.id.socialstream_author );
-				authorLabel.setText( comment.getAuthor() );
+				authorLabel.setText( comment.getAuthor().getName() );
 				TextView summaryLabel = (TextView) convertView
 						.findViewById( R.id.socialstream_description );
                 summaryLabel.setText(Html.fromHtml( comment.getBody() ) );
+
+                String authorAvatarURL = comment.getAuthor()
+                        .getGravatarURL();
+                ImageView authorAvatar = (ImageView) convertView
+                        .findViewById( R.id.socialstream_avatar );
+
+                setAvatar(authorAvatarURL, authorAvatar);
 			}
 		}
 
 		return convertView;
 	}
+
+    private void setAvatar(String authorAvatarURL, ImageView authorAvatar)
+    {
+        authorAvatar.setImageDrawable(null);
+
+        Bitmap cachedBitmap = mImageMemCache.get(authorAvatarURL);
+
+        if (cachedBitmap != null)
+        {
+            authorAvatar.setImageBitmap(cachedBitmap);
+            authorAvatar.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }
+        else
+        {
+            ImageViewDownloadTask downloadTask = new ImageViewDownloadTask(authorAvatar,
+                    mImageMemCache);
+
+            downloadTask.execute(authorAvatarURL);
+        }
+    }
 }
