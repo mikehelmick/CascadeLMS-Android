@@ -265,4 +265,46 @@ public class Document extends Item implements Parcelable
 		}
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ( ( documentURL == null ) ? 0 : documentURL.hashCode() );
+		result = prime * result
+				+ ( ( extension == null ) ? 0 : extension.hashCode() );
+		result = prime * result + (int) ( fileSize ^ ( fileSize >>> 32 ) );
+		result = prime * result + ( isFolder ? 1231 : 1237 );
+		return result;
+	}
+
+	@Override
+	public boolean equals( Object obj )
+	{
+		if( this == obj )
+			return true;
+		if( obj == null )
+			return false;
+		if( getClass() != obj.getClass() )
+			return false;
+		Document other = (Document) obj;
+		if( documentURL == null )
+		{
+			if( other.documentURL != null )
+				return false;
+		} else if( !documentURL.equals( other.documentURL ) )
+			return false;
+		if( extension == null )
+		{
+			if( other.extension != null )
+				return false;
+		} else if( !extension.equals( other.extension ) )
+			return false;
+		if( fileSize != other.fileSize )
+			return false;
+		if( isFolder != other.isFolder )
+			return false;
+		return true;
+	}
 }
