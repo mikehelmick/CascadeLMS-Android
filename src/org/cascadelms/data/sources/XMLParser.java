@@ -77,6 +77,14 @@ public class XMLParser
 	private static final String NAME_BLOG_POST_APLUS_COUNT = "aplus_count";
 	private static final String NAME_BLOG_POST_APLUS_USERS = "aplus_users";
 
+	/* Assignments Constants */
+	private static final String NAME_ASSIGNMENT = "assignment";
+	private static final String NAME_ASSIGNMENTS = "assignments";
+
+	/* Grades Constants */
+	private static final String NAME_GRADE = "grade";
+	private static final String NAME_GRADES = "grades";
+
 	private static SAXBuilder builder;
 
 	{
@@ -257,8 +265,23 @@ public class XMLParser
 	}
 
 	public static List<Assignment> parseAssignments( InputStream xmlStream )
+			throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+		List<Assignment> assignments = new ArrayList<Assignment>();
+
+		XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+		parser.assertElementName( parser.getRootElement(), NAME_ASSIGNMENTS );
+		/*
+		 * Gets the container element for assignments and parses each
+		 * assignment.
+		 */
+		for ( Element assignmentElement : parser.getRootElement().getChildren() )
+		{
+			assignments.add( parser.parseAssignment( assignmentElement ) );
+		}
+		return assignments;
 	}
 
 	public static List<Grade> parseGrades( InputStream xmlStream )
