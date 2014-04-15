@@ -39,8 +39,9 @@ public class XMLParser
 	private static final String NAME_COURSE = "course";
 	private static final String NAME_COURSE_TITLE = "title";
 	private static final String NAME_COURSE_DESCRIPTION = "description";
+	private static final String NAME_COURSE_TERM = "term";
 	private static final String NAME_COURSE_TERM_ID = "id";
-	private static final String NAME_COURSE_TERM_SEMESTER = "title";
+	private static final String NAME_COURSE_TERM_SEMESTER = "semester";
 	private static final String NAME_COURSE_CURRENT_FLAG = "current";
 
 	/* Social Feed Constants */
@@ -211,12 +212,14 @@ public class XMLParser
 					NAME_COURSE_TITLE );
 			String description = this.getChildTextOrThrow( courseElement,
 					NAME_COURSE_DESCRIPTION );
+			Element termElement = this.getChildElementOrThrow( courseElement,
+					NAME_COURSE_TERM );
 			int termId = Integer.parseInt( this.getChildTextOrThrow(
-					courseElement, NAME_COURSE_TERM_ID ) );
-			String semester = this.getChildTextOrThrow( courseElement,
+					termElement, NAME_COURSE_TERM_ID ) );
+			String semester = this.getChildTextOrThrow( termElement,
 					NAME_COURSE_TERM_SEMESTER );
 			boolean current = Boolean.parseBoolean( this.getChildTextOrThrow(
-					courseElement, NAME_COURSE_CURRENT_FLAG ) );
+					termElement, NAME_COURSE_CURRENT_FLAG ) );
 			return new Course.Builder( id, title, description, termId,
 					semester, current ).build();
 		} else
@@ -353,8 +356,8 @@ public class XMLParser
 		Element child = element.getChild( cname );
 		if( child == null )
 		{
-			throw new ParseException( element.getName()
-					+ " has no child element " + "\"" + cname + "\"." );
+			throw new ParseException( "<" + element.getName()
+					+ "> has no child element " + "<" + cname + ">." );
 		} else
 		{
 			return child;
