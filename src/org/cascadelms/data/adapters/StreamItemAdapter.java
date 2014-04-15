@@ -3,9 +3,11 @@ package org.cascadelms.data.adapters;
 import java.text.SimpleDateFormat;
 
 import org.cascadelms.R;
+import org.cascadelms.data.loaders.ImageViewDownloadTask;
 import org.cascadelms.data.models.StreamItem;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -61,18 +63,13 @@ public class StreamItemAdapter extends ArrayAdapter<StreamItem>
 
 			String authorAvatarURL = this.getItem( position ).getAuthor()
 					.getGravatarURL();
-			Drawable authorAvatar = null;
-			/*
-			 * TODO: The Stream Item class can only provide the URL to fetch the
-			 * author's avatar. The drawable needs to be loaded here.
-			 */
+            ImageView authorAvatar = (ImageView) convertView
+                    .findViewById( R.id.socialstream_avatar );
+            authorAvatar.setImageDrawable(null);
 
-			if( authorAvatar != null )
-			{
-				ImageView avatarImage = (ImageView) convertView
-						.findViewById( R.id.socialstream_avatar );
-				avatarImage.setImageDrawable( authorAvatar );
-			}
+            ImageViewDownloadTask downloadTask = new ImageViewDownloadTask(authorAvatar);
+
+            downloadTask.execute(authorAvatarURL);
 		}
 
 		return convertView;
