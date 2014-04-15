@@ -34,6 +34,15 @@ public class XMLParser
 	private static final String NAME_USER_GRAVATAR = "gravatar_url";
 	private static final String NAME_COMMENT_COUNT = "comment_count";
 
+	/* Course Constants */
+	private static final String NAME_COURSE_CONTAINER = "courses";
+	private static final String NAME_COURSE = "course";
+	private static final String NAME_COURSE_TITLE = "title";
+	private static final String NAME_COURSE_DESCRIPTION = "description";
+	private static final String NAME_COURSE_TERM_ID = "id";
+	private static final String NAME_COURSE_TERM_SEMESTER = "title";
+	private static final String NAME_COURSE_CURRENT_FLAG = "current";
+
 	/* Social Feed Constants */
 	private static final String NAME_FEED_HOME = "home";
 	private static final String NAME_FEED_ITEMS = "feed_items";
@@ -133,8 +142,27 @@ public class XMLParser
 	}
 
 	public static List<Course> parseCourseList( InputStream xmlStream )
+			throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+		List<Course> courses = new ArrayList<Course>();
+
+		XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+		if( parser.document.getRootElement().getName()
+				.equalsIgnoreCase( NAME_COURSE_CONTAINER ) )
+		{
+			/* Gets the container element for courses and parses each item. */
+			for ( Element courseElement : parser.getRootElement().getChildren() )
+			{
+				courses.add( parser.parseCourse( courseElement ) );
+			}
+			return courses;
+		} else
+		{
+			throw new ParseException( "Root element of course list must be "
+					+ NAME_COURSE_CONTAINER );
+		}
 	}
 
 	public static List<StreamItem> parseCourseFeed( InputStream xmlStream )
@@ -165,6 +193,32 @@ public class XMLParser
 	private Element getRootElement()
 	{
 		return this.document.getRootElement();
+	}
+
+	private Course parseCourse( Element courseElement ) throws ParseException
+	{
+		if( courseElement.getName().equalsIgnoreCase( NAME_COURSE ) )
+		{
+			int id = Integer.parseInt( this.getChildTextOrThrow( courseElement,
+					NAME_ID ) );
+			String title = this.getChildTextOrThrow( courseElement,
+					NAME_COURSE_TITLE );
+			String description = this.getChildTextOrThrow( courseElement,
+					NAME_COURSE_DESCRIPTION );
+			int termId = Integer.parseInt( this.getChildTextOrThrow(
+					courseElement, NAME_COURSE_TERM_ID ) );
+			String semester = this.getChildTextOrThrow( courseElement,
+					NAME_COURSE_TERM_SEMESTER );
+			boolean current = Boolean.parseBoolean( this.getChildTextOrThrow(
+					courseElement, NAME_COURSE_CURRENT_FLAG ) );
+			return new Course.Builder( id, title, description, termId,
+					semester, current ).build();
+		} else
+		{
+			throw new ParseException( "Expected top tag of course to be <"
+					+ NAME_COURSE + "> instead got <" + courseElement.getName()
+					+ ">" );
+		}
 	}
 
 	/**
