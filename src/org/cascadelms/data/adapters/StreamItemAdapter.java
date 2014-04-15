@@ -7,8 +7,6 @@ import org.cascadelms.data.loaders.ImageViewDownloadTask;
 import org.cascadelms.data.models.StreamItem;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;

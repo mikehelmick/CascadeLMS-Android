@@ -79,20 +79,17 @@
             <ImageView
                 style="@style/SocialStreamAvatarSmall"
                 android:id="@+id/courseblog_commentor1"
-                android:contentDescription="User avatar"
-                android:src="@drawable/avatar_example_1" />
+                android:contentDescription="User avatar" />
 
             <ImageView
                 style="@style/SocialStreamAvatarSmall"
                 android:id="@+id/courseblog_commentor2"
-                android:contentDescription="User avatar"
-                android:src="@drawable/avatar_example_2" />
+                android:contentDescription="User avatar" />
 
             <ImageView
                 style="@style/SocialStreamAvatarSmall"
                 android:id="@+id/courseblog_commentor3"
-                android:contentDescription="User avatar"
-                android:src="@drawable/avatar_example_3" />
+                android:contentDescription="User avatar" />
 
         </LinearLayout>
 
