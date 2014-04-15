@@ -77,6 +77,7 @@ public class StreamItemAdapter extends ArrayAdapter<StreamItem>
             if (cachedBitmap != null)
             {
                 authorAvatar.setImageBitmap(cachedBitmap);
+                authorAvatar.setScaleType(ImageView.ScaleType.FIT_CENTER);
             }
             else
             {
