@@ -383,7 +383,10 @@ public class Assignment extends Item
 	 */
 	public enum Category
 	{
-		ASSIGNMENT;
+		ASSIGNMENT,
+        SURVEY,
+        EXAM,
+        OTHER;
 
 		public static Category fromString( String string )
 		{
@@ -394,7 +397,7 @@ public class Assignment extends Item
 					return cat;
 				}
 			}
-			throw new IllegalArgumentException( "No Category named " + string );
+			return OTHER;
 		}
 	}
 }
