@@ -98,25 +98,82 @@ public class CascadeDataSource implements CourseDataSource,
     @Override
     public List<BlogPost> getBlogPostsForCourse(int courseId)
     {
-        return null;
+        List<BlogPost> data = null;
+
+        InputStream stream = getInputStream("course/" + courseId + "/blog");
+
+        try
+        {
+            if (stream != null)
+                data = XMLParser.parseBlogPosts(stream);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 
     @Override
     public List<Course> getAvailableCourses()
     {
-        return null;
+        List<Course> data = null;
+
+        InputStream stream = getInputStream("home/courses");
+
+        try
+        {
+            if (stream != null)
+                data = XMLParser.parseCourseList(stream);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 
     @Override
     public List<Document> getDocumentsForCourse(int courseId)
     {
-        return null;
+        List<Document> data = null;
+
+        InputStream stream = getInputStream("course/" + courseId + "/documents");
+
+        try
+        {
+            if (stream != null)
+                data = XMLParser.parseDocuments(stream);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 
     @Override
-    public List<Document> getDocumentsInFolder(Document folder)
+    public List<Document> getDocumentsInFolder(int courseId, Document folder)
     {
-        return null;
+        List<Document> data = null;
+
+        InputStream stream = getInputStream("course/" + courseId + "/documents/index/"
+                + folder.getId());
+
+        try
+        {
+            if (stream != null)
+                data = XMLParser.parseDocuments(stream);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 
     @Override
@@ -182,6 +239,20 @@ public class CascadeDataSource implements CourseDataSource,
     @Override
     public StreamItem getStreamItemDetail(long postId)
     {
-        return null;
+        StreamItem data = null;
+
+        InputStream stream = getInputStream("post/view/" + postId);
+
+        try
+        {
+            if (stream != null)
+                data = XMLParser.parseFeedPost(stream);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 }
