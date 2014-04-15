@@ -308,7 +308,7 @@ public class DocumentsFragment extends ListFragment implements
 	{
 		public List<Document> getDocumentsForCourse( int courseId );
 
-		public List<Document> getDocumentsInFolder( Document folder );
+		public List<Document> getDocumentsInFolder( int courseId, Document folder );
 	}
 
 	private static Logger LOGGER = Logger.getLogger( DocumentsFragment.class

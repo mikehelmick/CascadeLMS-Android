@@ -239,7 +239,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 	}
 
 	@Override
-	public List<Document> getDocumentsInFolder( Document folder )
+	public List<Document> getDocumentsInFolder( int courseId, Document folder )
 	{
 		switch( folder.getId() )
 		{
