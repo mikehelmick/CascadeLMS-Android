@@ -1,7 +1,5 @@
 package org.cascadelms.data.sources;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -125,14 +123,8 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 	{
 		/* Builds Documents lists for each course. */
 		documentsListDesign = new ArrayList<Document>();
-		URL cascadeImageURL = null;
-		try
-		{
-			cascadeImageURL = new URL(
-					"http://www.cascadelms.org/assets/img/cascade.png" );
-		} catch( MalformedURLException e )
-		{
-		}
+		String cascadeImageURL = "http://www.cascadelms.org/assets/img/cascade.png";
+
 		/* List for Senior Design */
 		documentsListDesign.add( Document.Builder.getFileBuilder( 0,
 				"Syllabus-2013", ".pdf", 20000, cascadeImageURL ).build() );
