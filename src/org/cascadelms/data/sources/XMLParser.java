@@ -1,5 +1,7 @@
 package org.cascadelms.data.sources;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -440,8 +442,9 @@ public class XMLParser
 	public static Date dateFromDateString( String dateString )
 			throws ParseException
 	{
+        Log.i("XMLParser", "Date string: " + dateString);
 		SimpleDateFormat df = new SimpleDateFormat(
-				"EEE MMM FF HH:mm:ss ZZZ yyyy" );
+				"EEE MMM d HH:mm:ss ZZZ yyyy" );
 		Date parsedDate;
 		try
 		{
