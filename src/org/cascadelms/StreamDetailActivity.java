@@ -16,7 +16,7 @@ import android.widget.ListView;
 public class StreamDetailActivity extends CascadeActivity implements
         LoaderCallbacks<StreamItem>
 {
-    private long postId;
+    private int postId;
     private SocialStreamFragment.StreamDataSource streamDataSource;
     private StreamItemDetailAdapter adapter;
 
@@ -28,7 +28,7 @@ public class StreamDetailActivity extends CascadeActivity implements
 
         /* Gets the Course data provided by the Intent that started this. */
         Bundle extras = this.getIntent().getExtras();
-        this.postId = extras.getLong(SocialStreamFragment.ARGS_POSTID);
+        this.postId = extras.getInt(SocialStreamFragment.ARGS_POSTID);
 
 		/* Initializes a data source and begins loading. */
         this.streamDataSource = CascadeDataSource.getInstance();
