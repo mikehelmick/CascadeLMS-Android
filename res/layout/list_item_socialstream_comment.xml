@@ -7,8 +7,7 @@
     <ImageView
         android:id="@+id/socialstream_avatar"
         style="@style/SocialStreamAvatar"
-        android:contentDescription="User avatar"
-        android:src="@drawable/avatar_example_2" />
+        android:contentDescription="User avatar" />
 
    <LinearLayout
        android:layout_width="match_parent"
