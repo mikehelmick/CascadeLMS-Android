@@ -1,7 +1,5 @@
 package org.cascadelms.data.models;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Comparator;
 
 import android.os.Parcel;
@@ -21,7 +19,7 @@ public class Document extends Item implements Parcelable
 	/* Optional Attributes */
 	private final String extension;
 	private final long fileSize;
-	private final URL documentURL;
+	private final String documentURL;
 
 	/* Constants */
 	private static final int ROOT_ID = -1;
@@ -84,17 +82,16 @@ public class Document extends Item implements Parcelable
 	 */
 	public String getFileName()
 	{
-		// TODO Add error handling.
-		String urlString = this.documentURL.getFile();
-		return urlString.substring( urlString.lastIndexOf( "/" ) + 1 );
+		// TODO Add error handling.;
+		return this.documentURL.substring( documentURL.lastIndexOf( "/" ) + 1 );
 	}
 
 	/**
-	 * Returns a URL to this document's associated file.
+	 * Returns a String URL to this document's associated file.
 	 * 
-	 * @return a {@link URL}
+	 * @return
 	 */
-	public URL getDocumentURL()
+	public String getDocumentURL()
 	{
 		return documentURL;
 	}
@@ -137,7 +134,7 @@ public class Document extends Item implements Parcelable
 		/* Optional Attributes */
 		private String extension;
 		private long fileSize;
-		private URL documentURL;
+		private String documentURL;
 
 		/**
 		 * Construct a <code>Builder</code> instance for building a
@@ -151,7 +148,7 @@ public class Document extends Item implements Parcelable
 		 * @return
 		 */
 		public static Builder getFileBuilder( int id, String title,
-				String extension, long fileSize, URL documentURL )
+				String extension, long fileSize, String documentURL )
 		{
 			return new Builder( id, title, false, extension, fileSize,
 					documentURL );
@@ -171,7 +168,7 @@ public class Document extends Item implements Parcelable
 		}
 
 		private Builder( int id, String title, boolean isFolder,
-				String extension, long fileSize, URL documentURL )
+				String extension, long fileSize, String documentURL )
 		{
 			this.id = id;
 			this.title = title;
@@ -225,20 +222,8 @@ public class Document extends Item implements Parcelable
 				return Builder.getFolderBuilder( id, title ).build();
 			} else
 			{
-				URL documentURL = null;
-				if( urlString != null )
-				{
-					try
-					{
-						documentURL = new URL( urlString );
-					} catch( MalformedURLException e )
-					{
-						throw new RuntimeException(
-								"Unable to create Document from Parcel.  The documentURL was malformed." );
-					}
-				}
 				return Builder.getFileBuilder( id, title, extension, fileSize,
-						documentURL ).build();
+						urlString ).build();
 			}
 		}
 
