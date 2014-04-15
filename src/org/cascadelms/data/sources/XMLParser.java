@@ -42,6 +42,7 @@ public class XMLParser
 	private static final String NAME_COURSE_TERM_ID = "id";
 	private static final String NAME_COURSE_TERM_SEMESTER = "semester";
 	private static final String NAME_COURSE_CURRENT_FLAG = "current";
+	private static final String NAME_COURSE_OVERVIEW = "course_overview";
 
 	/* Document Constants */
 	private static final String NAME_DOCUMENTS = "documents";
@@ -188,8 +189,24 @@ public class XMLParser
 	}
 
 	public static List<StreamItem> parseCourseFeed( InputStream xmlStream )
+			throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+		List<StreamItem> feedItems = new ArrayList<StreamItem>();
+
+		XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+		parser.assertElementName( parser.getRootElement(), NAME_COURSE_OVERVIEW );
+		/*
+		 * Gets the container element for feed items and parses each one.
+		 */
+		Element feedItemContainer = parser.getChildElementOrThrow(
+				parser.getRootElement(), NAME_FEED_ITEMS );
+		for ( Element feedItemElement : feedItemContainer.getChildren() )
+		{
+			feedItems.add( parser.parseFeedItem( feedItemElement ) );
+		}
+		return feedItems;
 	}
 
 	public static List<BlogPost> parseBlogPosts( InputStream xmlStream )
