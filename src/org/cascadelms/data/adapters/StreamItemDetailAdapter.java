@@ -8,6 +8,7 @@ import org.cascadelms.data.models.StreamItem;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,7 @@ public class StreamItemDetailAdapter extends BaseAdapter
 				authorLabel.setText( item.getAuthor().getName() );
 				TextView summaryLabel = (TextView) convertView
 						.findViewById( R.id.socialstream_description );
-				summaryLabel.setText( item.getBody() );
+                summaryLabel.setText(Html.fromHtml( item.getBody() ) );
 				TextView scoreLabel = (TextView) convertView
 						.findViewById( R.id.socialstream_aplus_count );
 				scoreLabel.setText( Integer.toString( item.getAPlusCount() ) );
@@ -131,7 +132,7 @@ public class StreamItemDetailAdapter extends BaseAdapter
 				authorLabel.setText( comment.getAuthor() );
 				TextView summaryLabel = (TextView) convertView
 						.findViewById( R.id.socialstream_description );
-				summaryLabel.setText( comment.getBody() );
+                summaryLabel.setText(Html.fromHtml( comment.getBody() ) );
 			}
 		}
 

@@ -14,7 +14,7 @@ import java.util.List;
 public class StreamItemDetailLoader extends AsyncTaskLoader<StreamItem>
 {
 	private StreamDataSource dataSource;
-	private long postId;
+	private int postId;
 
 	/**
 	 * This constructor creates a Loader to load a more detailed StreamItem for the
@@ -25,7 +25,7 @@ public class StreamItemDetailLoader extends AsyncTaskLoader<StreamItem>
 	 * @param postId
 	 */
 	public StreamItemDetailLoader(Context context,
-                                  StreamDataSource dataSource, long postId)
+                                  StreamDataSource dataSource, int postId)
 	{
 		super( context );
 		this.dataSource = dataSource;
