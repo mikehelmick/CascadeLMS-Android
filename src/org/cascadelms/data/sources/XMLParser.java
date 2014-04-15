@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,8 +55,10 @@ public class XMLParser
 
 	/* Social Feed Constants */
 	private static final String NAME_FEED_HOME = "home";
+    private static final String NAME_FEED_COURSE = "course_overview";
 	private static final String NAME_FEED_ITEMS = "feed_items";
 	private static final String NAME_FEED_ITEM = "item";
+    private static final String NAME_FEED_POST = "post";
 	private static final String NAME_FEED_ITEM_POST_DATE = "date";
 	private static final String NAME_FEED_ITEM_AUTHOR = "user";
 	private static final String NAME_A_PLUS_COUNT = "aplus_count";
@@ -63,6 +66,7 @@ public class XMLParser
 	private static final String NAME_FEED_ITEM_BODY = "body";
 	private static final String NAME_FEED_ITEM_BODY_HTML = "body_html";
 	private static final String NAME_FEED_ITEM_COMMENT_COUNT = "comment_count";
+    private static final String NAME_FEED_ITEM_COMMENTS = "comments";
 
 	/* Blog Post Constants */
 	private static final String NAME_BLOG_POSTS = "blog_posts";
@@ -75,6 +79,12 @@ public class XMLParser
 	private static final String NAME_BLOG_POST_BODY = "body";
 	private static final String NAME_BLOG_POST_APLUS_COUNT = "aplus_count";
 	private static final String NAME_BLOG_POST_APLUS_USERS = "aplus_users";
+
+    /* Comment Constants */
+    private static final String NAME_COMMENT = "comment";
+    private static final String NAME_COMMENT_USER = "user";
+    private static final String NAME_COMMENT_CREATED_AT = "created_at";
+    private static final String NAME_COMMENT_BODY = "body_html";
 
 	private static SAXBuilder builder;
 
@@ -153,6 +163,7 @@ public class XMLParser
 					parser.getRootElement(), NAME_FEED_ITEMS );
 			for ( Element feedItem : feedItemsElement.getChildren() )
 			{
+                parser.assertElementName( feedItem, NAME_FEED_ITEM );
 				items.add( parser.parseFeedItem( feedItem ) );
 			}
 			return items;
@@ -188,8 +199,30 @@ public class XMLParser
 	}
 
 	public static List<StreamItem> parseCourseFeed( InputStream xmlStream )
+            throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+        List<StreamItem> items = new ArrayList<StreamItem>();
+
+        XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+        if( parser.document.getRootElement().getName()
+                .equalsIgnoreCase( NAME_FEED_COURSE ) )
+        {
+			/* Gets the container element for feed items and parses each item. */
+            Element feedItemsElement = parser.getChildElementOrThrow(
+                    parser.getRootElement(), NAME_FEED_ITEMS );
+            for ( Element feedItem : feedItemsElement.getChildren() )
+            {
+                parser.assertElementName(feedItem, NAME_FEED_ITEM);
+                items.add( parser.parseFeedItem( feedItem ) );
+            }
+            return items;
+        } else
+        {
+            throw new ParseException( "Root element of feed must be "
+                    + NAME_FEED_COURSE );
+        }
 	}
 
 	public static List<BlogPost> parseBlogPosts( InputStream xmlStream )
@@ -250,8 +283,22 @@ public class XMLParser
 	}
 
 	public static StreamItem parseFeedPost( InputStream xmlStream )
+            throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+        StreamItem item = null;
+
+        XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+        if( parser.document.getRootElement().getName()
+                .equalsIgnoreCase( NAME_FEED_POST ) )
+        {
+            return parser.parseFeedItem( parser.document.getRootElement() );
+        } else
+        {
+            throw new ParseException( "Root element of post must be "
+                    + NAME_FEED_POST );
+        }
 	}
 
 	private Element getRootElement()
@@ -321,8 +368,6 @@ public class XMLParser
 	private StreamItem parseFeedItem( Element feedItemElement )
 			throws ParseException
 	{
-		this.assertElementName( feedItemElement, NAME_FEED_ITEM );
-
 		int id = Integer.parseInt( this.getChildTextOrThrow( feedItemElement,
 				NAME_ID ) );
 		Date postDate = XMLParser.dateFromDateString( this.getChildTextOrThrow(
@@ -340,8 +385,24 @@ public class XMLParser
 				NAME_FEED_ITEM_BODY );
 		String bodyHTML = this.getChildTextOrThrow( feedItemElement,
 				NAME_FEED_ITEM_BODY_HTML );
-		return new StreamItem.Builder( id, postDate, author, aPlusCount,
-				aPlusUsers, commentCount, body, bodyHTML ).build();
+        List<Comment> commentList = new ArrayList<Comment>();
+
+        Element commentsElement = feedItemElement.getChild(NAME_FEED_ITEM_COMMENTS);
+
+        if (commentsElement != null)
+        {
+            for (Element comment : commentsElement.getChildren())
+            {
+                commentList.add(parseComment(comment));
+            }
+
+            return new StreamItem.Builder(id, postDate, author, aPlusCount,
+                    aPlusUsers, commentCount, body, bodyHTML)
+                    .setComments(commentList.toArray(new Comment[commentList.size()])).build();
+        }
+
+        return new StreamItem.Builder(id, postDate, author, aPlusCount,
+                aPlusUsers, commentCount, body, bodyHTML).build();
 	}
 
 	private Assignment parseAssignment( Element element )
@@ -379,8 +440,18 @@ public class XMLParser
 	}
 
 	private Comment parseComment( Element element )
+            throws ParseException
 	{
-		throw new RuntimeException( "Unimplemented method." ); // TODO
+        assertElementName( element, NAME_COMMENT );
+
+        String body = this.getChildTextOrThrow( element,
+                NAME_COMMENT_BODY );
+        User author = parseUser( this.getChildElementOrThrow(
+                element, NAME_COMMENT_USER ) );
+        Date createdAt = XMLParser.dateFromDateString( this.getChildTextOrThrow(
+                element, NAME_COMMENT_CREATED_AT ) );
+
+        return new Comment(body, author, createdAt);
 	}
 
 	private org.cascadelms.data.models.Document parseDocument(
@@ -477,9 +548,20 @@ public class XMLParser
 			parsedDate = df.parse( dateString );
 		} catch( java.text.ParseException e )
 		{
-			throw new ParseException(
-					"Could not parse a date from the date string." );
-		}
+            // Sometimes the Cascade API spits out a different date format. Huh.
+            df = new SimpleDateFormat(
+                    "MMM d, yyyy" );
+
+            try
+            {
+                parsedDate = df.parse( dateString );
+            } catch (java.text.ParseException e1)
+            {
+                throw new ParseException(
+                        "Could not parse a date from the date string." );
+            }
+        }
+
 		return parsedDate;
 	}
 

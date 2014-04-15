@@ -86,6 +86,7 @@ public class StreamDetailActivity extends CascadeActivity implements
             case LoaderCodes.LOADER_CODE_STREAM_DETAIL:
             {
                 adapter.setItem(data);
+                adapter.notifyDataSetChanged();
                 break;
             }
         }
@@ -100,6 +101,7 @@ public class StreamDetailActivity extends CascadeActivity implements
             case LoaderCodes.LOADER_CODE_STREAM_DETAIL:
             {
                 adapter.setItem(null);
+                adapter.notifyDataSetChanged();
                 break;
             }
         }

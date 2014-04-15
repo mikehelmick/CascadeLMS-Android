@@ -264,7 +264,7 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 
 		for ( int i = 0; i < comments.length; ++i )
 		{
-			comments[i] = new Comment( "Comment " + ( i + 1 ), "John Doe",
+			comments[i] = new Comment( "Comment " + ( i + 1 ), new User(-1, "John Doe", ""),
 					new Date() );
 		}
 
