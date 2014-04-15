@@ -51,7 +51,7 @@ public class DocumentsLoader extends AsyncTaskLoader<List<Document>>
 			return this.source.getDocumentsForCourse( courseId );
 		} else
 		{
-			return this.source.getDocumentsInFolder( folder );
+			return this.source.getDocumentsInFolder( courseId, folder );
 		}
 	}
 }

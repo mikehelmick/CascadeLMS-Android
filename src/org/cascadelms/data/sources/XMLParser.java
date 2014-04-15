@@ -108,6 +108,11 @@ public class XMLParser
 		}
 	}
 
+    public static List<Course> parseCourseList( InputStream xmlStream )
+    {
+        throw new RuntimeException( "Method Stub" ); // TODO
+    }
+
 	/**
 	 * Parses a list of StreamItems from an XML InputStream.
 	 * 
@@ -175,7 +180,7 @@ public class XMLParser
 		throw new RuntimeException( "Method Stub" ); // TODO
 	}
 
-	public static List<Document> parseDocuments( InputStream xmlStream )
+	public static List<org.cascadelms.data.models.Document> parseDocuments( InputStream xmlStream )
 	{
 		throw new RuntimeException( "Method Stub" ); // TODO
 	}
@@ -189,6 +194,11 @@ public class XMLParser
 	{
 		throw new RuntimeException( "Method Stub" ); // TODO
 	}
+
+    public static StreamItem parseFeedPost( InputStream xmlStream )
+    {
+        throw new RuntimeException( "Method Stub" ); // TODO
+    }
 
 	private Element getRootElement()
 	{
