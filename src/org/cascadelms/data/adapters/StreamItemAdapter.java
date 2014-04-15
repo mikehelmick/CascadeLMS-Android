@@ -7,6 +7,8 @@ import org.cascadelms.data.loaders.ImageViewDownloadTask;
 import org.cascadelms.data.models.StreamItem;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +19,14 @@ import android.widget.TextView;
 
 public class StreamItemAdapter extends ArrayAdapter<StreamItem>
 {
+    private static final int CACHE_SIZE = 20 * 1024 * 1024;
+    private static LruCache<String, Bitmap> mImageMemCache;
+
 	public StreamItemAdapter( Context context )
 	{
 		super( context, R.layout.list_item_socialstream_post );
+
+        mImageMemCache = new LruCache<String, Bitmap>(CACHE_SIZE);
 	}
 
 	@Override
@@ -65,9 +72,19 @@ public class StreamItemAdapter extends ArrayAdapter<StreamItem>
                     .findViewById( R.id.socialstream_avatar );
             authorAvatar.setImageDrawable(null);
 
-            ImageViewDownloadTask downloadTask = new ImageViewDownloadTask(authorAvatar);
+            Bitmap cachedBitmap = mImageMemCache.get(authorAvatarURL);
 
-            downloadTask.execute(authorAvatarURL);
+            if (cachedBitmap != null)
+            {
+                authorAvatar.setImageBitmap(cachedBitmap);
+            }
+            else
+            {
+                ImageViewDownloadTask downloadTask = new ImageViewDownloadTask(authorAvatar,
+                        mImageMemCache);
+
+                downloadTask.execute(authorAvatarURL);
+            }
 		}
 
 		return convertView;

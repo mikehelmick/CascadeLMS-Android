@@ -25,16 +25,13 @@ import java.net.URL;
 public class ImageViewDownloadTask extends AsyncTask<String, Void, Bitmap>
 {
     private static final int CACHE_SIZE = 20 * 1024 * 1024;
-    private static LruCache<String, Bitmap> mImageMemCache;
     private final WeakReference<ImageView> mImageViewRef;
+    private LruCache<String, Bitmap> mCache;
 
-    {
-        mImageMemCache = new LruCache<String, Bitmap>(CACHE_SIZE);
-    }
-
-    public ImageViewDownloadTask(ImageView imageView)
+    public ImageViewDownloadTask(ImageView imageView, LruCache cache)
     {
         mImageViewRef = new WeakReference<ImageView>(imageView);
+        mCache = cache;
     }
 
     @Override
@@ -46,34 +43,26 @@ public class ImageViewDownloadTask extends AsyncTask<String, Void, Bitmap>
 
         try
         {
-            synchronized (mImageMemCache)
-            {
-                bitmap = mImageMemCache.get(strings[0]);
+            // TODO: Cache that works with older versions of Android.
+            HttpResponseCache.install(new File(CascadeApp.getContext().getCacheDir(), "http"),
+                    CACHE_SIZE);
 
-                if (bitmap == null)
-                {
-                    // TODO: Cache that works with older versions of Android.
-                    HttpResponseCache.install(new File(CascadeApp.getContext().getCacheDir(), "http"),
-                            CACHE_SIZE);
+            URL url = new URL(strings[0]);
 
-                    URL url = new URL(strings[0]);
+            request = (HttpURLConnection) url.openConnection();
+            request.setUseCaches(true);
+            request.addRequestProperty("Accept", "text/xml");
+            request.setRequestProperty(SimpleOAuth.OAUTH_TOKEN, tokenInfo.getAuthToken());
 
-                    request = (HttpURLConnection) url.openConnection();
-                    request.setUseCaches(true);
-                    request.addRequestProperty("Accept", "text/xml");
-                    request.setRequestProperty(SimpleOAuth.OAUTH_TOKEN, tokenInfo.getAuthToken());
+            request.connect();
 
-                    request.connect();
+            InputStream stream = request.getInputStream();
 
-                    InputStream stream = request.getInputStream();
+            bitmap = BitmapFactory.decodeStream(stream);
 
-                    bitmap = BitmapFactory.decodeStream(stream);
+            mCache.put(strings[0], bitmap);
 
-                    mImageMemCache.put(strings[0], bitmap);
-
-                    stream.close();
-                }
-            }
+            stream.close();
         }
         catch (MalformedURLException e)
         {
