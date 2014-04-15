@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.cascadelms.data.models.Assignment;
+import org.cascadelms.data.models.Assignment.Category;
 import org.cascadelms.data.models.BlogPost;
 import org.cascadelms.data.models.Comment;
 import org.cascadelms.data.models.Course;
@@ -80,6 +81,13 @@ public class XMLParser
 	/* Assignments Constants */
 	private static final String NAME_ASSIGNMENT = "assignment";
 	private static final String NAME_ASSIGNMENTS = "assignments";
+	private static final String NAME_ASSIGNMENT_TITLE = "title";
+	private static final String NAME_ASSIGNMENT_CATEGORY = "category";
+	private static final String NAME_ASSIGNMENT_OPEN_DATE = "open_date";
+	private static final String NAME_ASSIGNMENT_DUE_DATE = "due_date";
+	private static final String NAME_ASSIGNMENT_CLOSE_DATE = "close_date";
+	private static final String NAME_ASSIGNMENT_GRADE_RELEASED = "grades_released";
+	private static final String NAME_ASSIGNMENT_POINTS_POSSIBLE = "points_possible";
 
 	/* Grades Constants */
 	private static final String NAME_GRADE = "grade";
@@ -398,9 +406,35 @@ public class XMLParser
 				aPlusUsers, commentCount, body, bodyHTML ).build();
 	}
 
-	private Assignment parseAssignment( Element element )
+	private Assignment parseAssignment( Element assignmentElement )
+			throws ParseException
 	{
-		throw new RuntimeException( "Unimplemented method." ); // TODO
+		this.assertElementName( assignmentElement, NAME_ASSIGNMENT );
+
+		int id = Integer.parseInt( this.getChildTextOrThrow( assignmentElement,
+				NAME_ID ) );
+		String title = this.getChildTextOrThrow( assignmentElement,
+				NAME_ASSIGNMENT_TITLE );
+		Assignment.Category category = Category.fromString( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_CATEGORY ) );
+		Date openDate = XMLParser.dateFromAlternateDateString( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_OPEN_DATE ) );
+		Date dueDate = XMLParser.dateFromAlternateDateString( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_DUE_DATE ) );
+		Date closeDate = XMLParser.dateFromAlternateDateString( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_CLOSE_DATE ) );
+		boolean gradesReleased = Boolean.parseBoolean( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_GRADE_RELEASED ) );
+		double pointsPossible = Double.parseDouble( this.getChildTextOrThrow(
+				assignmentElement, NAME_ASSIGNMENT_POINTS_POSSIBLE ) );
+
+		return new Assignment.Builder( id, title, category, openDate, dueDate,
+				closeDate, gradesReleased, pointsPossible ).build();
 	}
 
 	private BlogPost parseBlogPost( Element postElement ) throws ParseException
