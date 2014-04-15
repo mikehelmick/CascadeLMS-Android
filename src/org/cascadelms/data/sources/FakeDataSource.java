@@ -627,101 +627,91 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 		blogListDesign = new ArrayList<BlogPost>();
 
 		blogListDesign
-				.add( new BlogPost(
-						new BlogPost.Builder(
-								1,
-								"Presentation Schedule",
-								false,
-								"Fred Annexstein",
-								new Date( now ),
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-										+ "Nulla viverra elit libero, et egestas magna tempus eu."
-										+ "Nam sit amet mauris at nulla aliquet auctor quis ac metus."
-										+ "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem."
-										+ "Mauris ullamcorper libero consectetur adipiscing laoreet."
-										+ "Curabitur risus enim, sollicitudin ut lorem at,"
-										+ "dictum ullamcorper tortor. Nulla facilisi."
-										+ "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque."
-										+ "Nulla facilisi.", random
-										.nextInt( 10 ) )
-								.setCommentCount( random.nextInt( 10 ) ) ) );
+				.add( new BlogPost.Builder(
+						1,
+						"Presentation Schedule",
+						false,
+						"Fred Annexstein",
+						new Date( now ),
+						"Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+								+ "Nulla viverra elit libero, et egestas magna tempus eu."
+								+ "Nam sit amet mauris at nulla aliquet auctor quis ac metus."
+								+ "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem."
+								+ "Mauris ullamcorper libero consectetur adipiscing laoreet."
+								+ "Curabitur risus enim, sollicitudin ut lorem at,"
+								+ "dictum ullamcorper tortor. Nulla facilisi."
+								+ "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque."
+								+ "Nulla facilisi.", random.nextInt( 10 ),
+						new User[] {}, random.nextInt( 10 ) ).build() );
 		blogListDesign
-				.add( new BlogPost(
-						new BlogPost.Builder(
-								2,
-								"Submission Requirements",
-								false,
-								"Fred Annexstein",
-								new Date( now + week ),
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-										+ "Nulla viverra elit libero, et egestas magna tempus eu."
-										+ "Nam sit amet mauris at nulla aliquet auctor quis ac metus."
-										+ "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem."
-										+ "Mauris ullamcorper libero consectetur adipiscing laoreet."
-										+ "Curabitur risus enim, sollicitudin ut lorem at,"
-										+ "dictum ullamcorper tortor. Nulla facilisi."
-										+ "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque."
-										+ "Nulla facilisi.", random
-										.nextInt( 10 ) )
-								.setCommentCount( random.nextInt( 10 ) ) ) );
+				.add( new BlogPost.Builder(
+						2,
+						"Submission Requirements",
+						false,
+						"Fred Annexstein",
+						new Date( now + week ),
+						"Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+								+ "Nulla viverra elit libero, et egestas magna tempus eu."
+								+ "Nam sit amet mauris at nulla aliquet auctor quis ac metus."
+								+ "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem."
+								+ "Mauris ullamcorper libero consectetur adipiscing laoreet."
+								+ "Curabitur risus enim, sollicitudin ut lorem at,"
+								+ "dictum ullamcorper tortor. Nulla facilisi."
+								+ "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque."
+								+ "Nulla facilisi.", random.nextInt( 10 ),
+						new User[] {}, random.nextInt( 10 ) ).build() );
 
 		blogListMachine = new ArrayList<BlogPost>();
 
 		for ( int i = 1; i <= 10; ++i )
-			blogListMachine.add( new BlogPost( new BlogPost.Builder( i,
-					"Blog Post " + i, false, "Michael Helmick", new Date( now
-							+ week ), "Post " + i + " description.", random
-							.nextInt( 10 ) ).setCommentCount( random
-					.nextInt( 10 ) ) ) );
+			blogListMachine.add( new BlogPost.Builder( i, "Blog Post " + i,
+					false, "Michael Helmick", new Date( now + week ), "Post "
+							+ i + " description.", random.nextInt( 10 ),
+					new User[] {}, random.nextInt( 10 ) ).build() );
 
 		blogListAI = new ArrayList<BlogPost>();
 
-		blogListAI
-				.add( new BlogPost( new BlogPost.Builder( 1, "A Blog Post",
-						false, "Fred Annexstein", new Date( now ),
-						"Hello, world!", random.nextInt( 10 ) )
-						.setCommentCount( random.nextInt( 10 ) ) ) );
+		blogListAI.add( new BlogPost.Builder( 1, "A Blog Post", false,
+				"Fred Annexstein", new Date( now ), "Hello, world!", random
+						.nextInt( 10 ), new User[] {}, random.nextInt( 10 ) )
+				.build() );
 
 		blogListInfo = new ArrayList<BlogPost>();
 
 		blogListInfo
-				.add( new BlogPost(
-						new BlogPost.Builder(
-								1,
-								"Presentation Schedule",
-								false,
-								"Fred Annexstein",
-								new Date( now ),
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-										+ "Nulla viverra elit libero, et egestas magna tempus eu."
-										+ "Nam sit amet mauris at nulla aliquet auctor quis ac metus."
-										+ "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem."
-										+ "Mauris ullamcorper libero consectetur adipiscing laoreet."
-										+ "Curabitur risus enim, sollicitudin ut lorem at,"
-										+ "dictum ullamcorper tortor. Nulla facilisi."
-										+ "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque."
-										+ "Nulla facilisi.", random
-										.nextInt( 10 ) )
-								.setCommentCount( random.nextInt( 10 ) ) ) );
+				.add( new BlogPost.Builder(
+						1,
+						"Presentation Schedule",
+						false,
+						"Fred Annexstein",
+						new Date( now ),
+						"Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+								+ "Nulla viverra elit libero, et egestas magna tempus eu."
+								+ "Nam sit amet mauris at nulla aliquet auctor quis ac metus."
+								+ "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem."
+								+ "Mauris ullamcorper libero consectetur adipiscing laoreet."
+								+ "Curabitur risus enim, sollicitudin ut lorem at,"
+								+ "dictum ullamcorper tortor. Nulla facilisi."
+								+ "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque."
+								+ "Nulla facilisi.", random.nextInt( 10 ),
+						new User[] {}, random.nextInt( 10 ) ).build() );
 		blogListInfo
-				.add( new BlogPost(
-						new BlogPost.Builder(
-								2,
-								"Submission Requirements",
-								false,
-								"Fred Annexstein",
-								new Date( now + week ),
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-										+ "Nulla viverra elit libero, et egestas magna tempus eu."
-										+ "Nam sit amet mauris at nulla aliquet auctor quis ac metus."
-										+ "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem."
-										+ "Mauris ullamcorper libero consectetur adipiscing laoreet."
-										+ "Curabitur risus enim, sollicitudin ut lorem at,"
-										+ "dictum ullamcorper tortor. Nulla facilisi."
-										+ "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque."
-										+ "Nulla facilisi.", random
-										.nextInt( 10 ) )
-								.setCommentCount( random.nextInt( 10 ) ) ) );
+				.add( new BlogPost.Builder(
+						2,
+						"Submission Requirements",
+						false,
+						"Fred Annexstein",
+						new Date( now + week ),
+						"Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+								+ "Nulla viverra elit libero, et egestas magna tempus eu."
+								+ "Nam sit amet mauris at nulla aliquet auctor quis ac metus."
+								+ "Proin a est imperdiet, iaculis tortor sed, ullamcorper lorem."
+								+ "Mauris ullamcorper libero consectetur adipiscing laoreet."
+								+ "Curabitur risus enim, sollicitudin ut lorem at,"
+								+ "dictum ullamcorper tortor. Nulla facilisi."
+								+ "Etiam bibendum justo sit amet erat aliquet, ut auctor est pellentesque."
+								+ "Nulla facilisi.", random.nextInt( 10 ),
+						new User[] {}, random.nextInt( 10 ) ).build() );
 
 		blogListUI = new ArrayList<BlogPost>();
 	}
@@ -729,7 +719,6 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 	@Override
 	public List<BlogPost> getBlogPostsForCourse( int courseId )
 	{
-		/* TODO Return lists of fake data on a course by course basis. */
 		switch( courseId )
 		{
 			case COURSE_ID_DESIGN:
@@ -768,7 +757,6 @@ public class FakeDataSource implements SchoolsDataSource, CourseDataSource,
 	@Override
 	public List<StreamItem> getStreamItemsForCourse( int courseId )
 	{
-		/* TODO Return lists of fake data on a course by course basis. */
 		switch( courseId )
 		{
 			case COURSE_ID_DESIGN:

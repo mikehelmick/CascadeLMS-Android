@@ -13,24 +13,32 @@ public class BlogPost extends Item
 	/* Required Attributes */
 	private final boolean featured;
 	private final String author;
-	private final Date postedAt;
-	private final int score;
+	private final Date postedDate;
 	private final int commentCount;
+	private final String body;
+	private final int aPlusCount;
+	private final User[] aPlusUsers;
 
 	/* Optional Attributes */
 	private final Comment[] comments;
-	private final String body;
 
-	public BlogPost( BlogPost.Builder builder )
+	private BlogPost( BlogPost.Builder builder )
 	{
 		super( builder.id, builder.title );
 		this.featured = builder.featured;
 		this.author = builder.author;
-		this.postedAt = builder.postedAt;
+		this.postedDate = builder.postedDate;
 		this.body = builder.body;
-		this.score = builder.score;
+		this.aPlusCount = builder.aPlusCount;
+		this.aPlusUsers = builder.aPlusUsers;
 		this.commentCount = builder.commentCount;
 		this.comments = builder.comments;
+
+		if( this.commentCount != this.comments.length )
+		{
+			throw new IllegalStateException(
+					"Comment count does not match the number of comments." );
+		}
 	}
 
 	/**
@@ -54,16 +62,6 @@ public class BlogPost extends Item
 	}
 
 	/**
-	 * Gets the {@link Date} that this blog post was published.
-	 * 
-	 * @return the publish <code>Date</code>
-	 */
-	public Date getPostedAt()
-	{
-		return postedAt;
-	}
-
-	/**
 	 * Gets the text body of the blog post.
 	 * 
 	 * @return the post body as a <code>String</code>
@@ -84,16 +82,6 @@ public class BlogPost extends Item
 	}
 
 	/**
-	 * Gets the A+ count (score) of this post.
-	 * 
-	 * @return the count as an <code>int</code>
-	 */
-	public int getScore()
-	{
-		return score;
-	}
-
-	/**
 	 * Gets the number of comments or <code>Comment</code> objects associated
 	 * with this blog post.
 	 * 
@@ -104,6 +92,31 @@ public class BlogPost extends Item
 		return commentCount;
 	}
 
+	/**
+	 * Gets the {@link Date} that this blog post was published.
+	 * 
+	 * @return the publish <code>Date</code>
+	 */
+	public Date getPostedDate()
+	{
+		return postedDate;
+	}
+
+	/**
+	 * Gets the A+ count (score) of this post.
+	 * 
+	 * @return the count as an <code>int</code>
+	 */
+	public int getaPlusCount()
+	{
+		return aPlusCount;
+	}
+
+	public User[] getaPlusUsers()
+	{
+		return aPlusUsers;
+	}
+
 	public static class Builder
 	{
 		/* Required Attributes */
@@ -111,36 +124,33 @@ public class BlogPost extends Item
 		private String title;
 		private boolean featured;
 		private String author;
-		private Date postedAt;
+		private Date postedDate;
 		private String body;
-		private int score;
+		private int aPlusCount;
+		private User[] aPlusUsers;
 		private int commentCount = 0;
 
 		/* Optional Attributes */
 		private Comment[] comments;
 
 		public Builder( int id, String title, boolean featured, String author,
-				Date postedAt, String body, int score )
+				Date postedDate, String body, int aPlusScore,
+				User[] aPlusUsers, int commentCount )
 		{
 			this.id = id;
 			this.title = title;
 			this.featured = featured;
 			this.author = author;
-			this.postedAt = postedAt;
+			this.postedDate = postedDate;
 			this.body = body;
-			this.score = score;
-		}
-
-		public Builder setCommentCount( int commentCount )
-		{
+			this.aPlusCount = aPlusScore;
+			this.aPlusUsers = aPlusUsers;
 			this.commentCount = commentCount;
-			return this;
 		}
 
 		public Builder setComments( Comment[] comments )
 		{
 			this.comments = comments;
-			this.commentCount = comments.length;
 			return this;
 		}
 
