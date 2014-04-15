@@ -82,7 +82,7 @@ public class Document extends Item implements Parcelable
 	 */
 	public String getFileName()
 	{
-		// TODO Add error handling.;
+		// TODO: There are several cases where this fails to the filename.
 		return this.documentURL.substring( documentURL.lastIndexOf( "/" ) + 1 );
 	}
 
