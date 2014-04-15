@@ -75,6 +75,21 @@ public class CascadeDataSource implements CourseDataSource,
         return stream;
     }
 
+    private void closeStream(InputStream inputStream)
+    {
+        if (inputStream != null)
+        {
+            try
+            {
+                inputStream.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public List<Assignment> getAssignmentsForCourse(int courseId)
     {
@@ -91,6 +106,8 @@ public class CascadeDataSource implements CourseDataSource,
         {
             e.printStackTrace();
         }
+
+        closeStream(stream);
 
         return data;
     }
@@ -112,6 +129,8 @@ public class CascadeDataSource implements CourseDataSource,
             e.printStackTrace();
         }
 
+        closeStream(stream);
+
         return data;
     }
 
@@ -132,6 +151,8 @@ public class CascadeDataSource implements CourseDataSource,
             e.printStackTrace();
         }
 
+        closeStream(stream);
+
         return data;
     }
 
@@ -151,6 +172,8 @@ public class CascadeDataSource implements CourseDataSource,
         {
             e.printStackTrace();
         }
+
+        closeStream(stream);
 
         return data;
     }
@@ -173,6 +196,8 @@ public class CascadeDataSource implements CourseDataSource,
             e.printStackTrace();
         }
 
+        closeStream(stream);
+
         return data;
     }
 
@@ -192,6 +217,8 @@ public class CascadeDataSource implements CourseDataSource,
         {
             e.printStackTrace();
         }
+
+        closeStream(stream);
 
         return data;
     }
@@ -213,6 +240,8 @@ public class CascadeDataSource implements CourseDataSource,
             e.printStackTrace();
         }
 
+        closeStream(stream);
+
         return data;
     }
 
@@ -233,6 +262,8 @@ public class CascadeDataSource implements CourseDataSource,
             e.printStackTrace();
         }
 
+        closeStream(stream);
+
         return data;
     }
 
@@ -252,6 +283,8 @@ public class CascadeDataSource implements CourseDataSource,
         {
             e.printStackTrace();
         }
+
+        closeStream(stream);
 
         return data;
     }

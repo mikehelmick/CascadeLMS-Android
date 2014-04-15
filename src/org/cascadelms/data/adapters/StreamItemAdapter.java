@@ -3,10 +3,12 @@ package org.cascadelms.data.adapters;
 import java.text.SimpleDateFormat;
 
 import org.cascadelms.R;
+import org.cascadelms.data.loaders.ImageViewDownloadTask;
 import org.cascadelms.data.models.StreamItem;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +19,14 @@ import android.widget.TextView;
 
 public class StreamItemAdapter extends ArrayAdapter<StreamItem>
 {
+    private static final int CACHE_SIZE = 20 * 1024 * 1024;
+    private static LruCache<String, Bitmap> mImageMemCache;
+
 	public StreamItemAdapter( Context context )
 	{
 		super( context, R.layout.list_item_socialstream_post );
+
+        mImageMemCache = new LruCache<String, Bitmap>(CACHE_SIZE);
 	}
 
 	@Override
@@ -61,18 +68,23 @@ public class StreamItemAdapter extends ArrayAdapter<StreamItem>
 
 			String authorAvatarURL = this.getItem( position ).getAuthor()
 					.getGravatarURL();
-			Drawable authorAvatar = null;
-			/*
-			 * TODO: The Stream Item class can only provide the URL to fetch the
-			 * author's avatar. The drawable needs to be loaded here.
-			 */
+            ImageView authorAvatar = (ImageView) convertView
+                    .findViewById( R.id.socialstream_avatar );
+            authorAvatar.setImageDrawable(null);
 
-			if( authorAvatar != null )
-			{
-				ImageView avatarImage = (ImageView) convertView
-						.findViewById( R.id.socialstream_avatar );
-				avatarImage.setImageDrawable( authorAvatar );
-			}
+            Bitmap cachedBitmap = mImageMemCache.get(authorAvatarURL);
+
+            if (cachedBitmap != null)
+            {
+                authorAvatar.setImageBitmap(cachedBitmap);
+            }
+            else
+            {
+                ImageViewDownloadTask downloadTask = new ImageViewDownloadTask(authorAvatar,
+                        mImageMemCache);
+
+                downloadTask.execute(authorAvatarURL);
+            }
 		}
 
 		return convertView;
