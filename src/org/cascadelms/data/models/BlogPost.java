@@ -1,5 +1,6 @@
 package org.cascadelms.data.models;
 
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -34,7 +35,7 @@ public class BlogPost extends Item
 		this.commentCount = builder.commentCount;
 		this.comments = builder.comments;
 
-		if( this.commentCount != this.comments.length )
+		if( this.comments != null && this.commentCount != this.comments.length )
 		{
 			throw new IllegalStateException(
 					"Comment count does not match the number of comments." );
@@ -158,5 +159,63 @@ public class BlogPost extends Item
 		{
 			return new BlogPost( this );
 		}
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + aPlusCount;
+		result = prime * result + Arrays.hashCode( aPlusUsers );
+		result = prime * result + ( ( author == null ) ? 0 : author.hashCode() );
+		result = prime * result + ( ( body == null ) ? 0 : body.hashCode() );
+		result = prime * result + commentCount;
+		result = prime * result + Arrays.hashCode( comments );
+		result = prime * result + ( featured ? 1231 : 1237 );
+		result = prime * result
+				+ ( ( postedDate == null ) ? 0 : postedDate.hashCode() );
+		return result;
+	}
+
+	@Override
+	public boolean equals( Object obj )
+	{
+		if( this == obj )
+			return true;
+		if( obj == null )
+			return false;
+		if( getClass() != obj.getClass() )
+			return false;
+		BlogPost other = (BlogPost) obj;
+		if( aPlusCount != other.aPlusCount )
+			return false;
+		if( !Arrays.equals( aPlusUsers, other.aPlusUsers ) )
+			return false;
+		if( author == null )
+		{
+			if( other.author != null )
+				return false;
+		} else if( !author.equals( other.author ) )
+			return false;
+		if( commentCount != other.commentCount )
+			return false;
+		if( !Arrays.equals( comments, other.comments ) )
+			return false;
+		if( featured != other.featured )
+			return false;
+		if( postedDate == null )
+		{
+			if( other.postedDate != null )
+				return false;
+		} else if( !postedDate.equals( other.postedDate ) )
+			return false;
+		if( body == null )
+		{
+			if( other.body != null )
+				return false;
+		} else if( !body.equals( other.body ) )
+			return false;
+		return true;
 	}
 }
