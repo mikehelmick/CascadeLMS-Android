@@ -483,8 +483,14 @@ public class XMLParser
 		boolean gradesReleased = Boolean.parseBoolean( this
 				.getChildTextOrThrow( assignmentElement,
 						NAME_ASSIGNMENT_GRADE_RELEASED ) );
-		double pointsPossible = Double.parseDouble( this.getChildTextOrThrow(
-				assignmentElement, NAME_ASSIGNMENT_POINTS_POSSIBLE ) );
+		double pointsPossible = 0;
+
+        Element pointsPossibleElement = assignmentElement.getChild(NAME_ASSIGNMENT_POINTS_POSSIBLE);
+
+        if (pointsPossibleElement != null && !pointsPossibleElement.getText().isEmpty())
+        {
+            pointsPossible = Double.parseDouble(pointsPossibleElement.getText());
+        }
 
 		return new Assignment.Builder( id, title, category, openDate, dueDate,
 				closeDate, gradesReleased, pointsPossible ).build();
@@ -589,10 +595,19 @@ public class XMLParser
 			}
 		} catch( ParseException e )
 		{
-			String extension = this.getChildTextOrThrow( documentElement,
-					NAME_DOCUMENT_EXTENSION );
-			int size = Integer.parseInt( this.getChildTextOrThrow(
-					documentElement, NAME_DOCUMENT_SIZE ) );
+            String extension = "";
+            int size = 0;
+
+            Element extensionElement = documentElement.getChild(NAME_DOCUMENT_EXTENSION);
+
+            if (extensionElement != null)
+			    extension = extensionElement.getText();
+
+            Element sizeElement = documentElement.getChild(NAME_DOCUMENT_SIZE);
+
+            if (sizeElement != null && !sizeElement.getText().isEmpty())
+                size = Integer.parseInt(sizeElement.getText());
+
 			String documentURL = this.getChildTextOrThrow( documentElement,
 					NAME_DOCUMENT_URL );
 			return org.cascadelms.data.models.Document.Builder.getFileBuilder(
