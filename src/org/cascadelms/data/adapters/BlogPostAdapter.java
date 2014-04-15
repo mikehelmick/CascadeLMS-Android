@@ -6,6 +6,7 @@ import org.cascadelms.R;
 import org.cascadelms.data.models.BlogPost;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,7 @@ public class BlogPostAdapter extends ArrayAdapter<BlogPost>
 					.getPostedDate() ) );
 			TextView summaryLabel = (TextView) convertView
 					.findViewById( R.id.courseblog_description );
-			summaryLabel.setText( this.getItem( position ).getBody() );
+            summaryLabel.setText(Html.fromHtml(this.getItem(position).getBody()) );
 			TextView scoreLabel = (TextView) convertView
 					.findViewById( R.id.courseblog_aplus_count );
 			scoreLabel.setText( Integer.toString( this.getItem( position )
