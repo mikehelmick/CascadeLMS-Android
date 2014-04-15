@@ -32,6 +32,29 @@ public class Grade
 		this.pointsPossible = pointsPossible;
 	}
 
+	/**
+	 * A constructor with no pointsEarned parameter.
+	 * 
+	 * @param assignmentId
+	 * @param assignmentTitle
+	 * @param assignmentCategory
+	 * @param postDate
+	 * @param gradeType
+	 * @param pointsPossible
+	 */
+	public Grade( int assignmentId, String assignmentTitle,
+			Category assignmentCategory, Date postDate, Type gradeType,
+			double pointsPossible )
+	{
+		this.assignmentId = assignmentId;
+		this.assignmentTitle = assignmentTitle;
+		this.assignmentCategory = assignmentCategory;
+		this.postDate = postDate;
+		this.gradeType = gradeType;
+		this.pointsEarned = Double.NaN;
+		this.pointsPossible = pointsPossible;
+	}
+
 	public int getAssignmentId()
 	{
 		return assignmentId;
@@ -88,6 +111,18 @@ public class Grade
 	 */
 	public enum Type
 	{
-		SCORE
+		SCORE;
+
+		public static Type fromString( String string )
+		{
+			for ( Type type : Type.values() )
+			{
+				if( type.name().equalsIgnoreCase( string ) )
+				{
+					return type;
+				}
+			}
+			throw new IllegalArgumentException( "No Type named " + string );
+		}
 	}
 }

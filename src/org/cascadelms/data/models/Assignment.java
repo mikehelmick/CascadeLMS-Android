@@ -39,40 +39,42 @@ public class Assignment extends Item
 		this.pointsPossible = builder.pointsPossible;
 
 		/* Validates the Data */
-		if( this.title == null )
-		{
-			throw new IllegalStateException( "Assignment title cannot be null." );
-		}
-		if( this.openDate == null )
-		{
-			throw new IllegalStateException(
-					"Assignment open date cannot be null." );
-		}
-		if( this.dueDate == null )
-		{
-			throw new IllegalStateException(
-					"Assignment due date cannot be null." );
-		}
-		if( this.closeDate == null )
-		{
-			throw new IllegalStateException(
-					"Assignment close date cannot be null." );
-		}
-		if( this.pointsPossible <= 0 )
-		{
-			throw new IllegalStateException(
-					"Assignment points possible must be greater than zero." );
-		}
-		if( this.dueDate.before( this.openDate ) )
-		{
-			throw new IllegalStateException(
-					"Assignment cannot be due before it is available." );
-		}
-		if( this.closeDate.before( this.dueDate ) )
-		{
-			throw new IllegalStateException(
-					"Assignment cannot close before it is due." );
-		}
+		// FIXME: Validation of Assignments turned off until fixed.
+		// if( this.title == null )
+		// {
+		// throw new IllegalStateException( "Assignment title cannot be null."
+		// );
+		// }
+		// if( this.openDate == null )
+		// {
+		// throw new IllegalStateException(
+		// "Assignment open date cannot be null." );
+		// }
+		// if( this.dueDate == null )
+		// {
+		// throw new IllegalStateException(
+		// "Assignment due date cannot be null." );
+		// }
+		// if( this.closeDate == null )
+		// {
+		// throw new IllegalStateException(
+		// "Assignment close date cannot be null." );
+		// }
+		// if( this.pointsPossible <= 0 )
+		// {
+		// throw new IllegalStateException(
+		// "Assignment points possible must be greater than zero." );
+		// }
+		// if( this.dueDate.before( this.openDate ) )
+		// {
+		// throw new IllegalStateException(
+		// "Assignment cannot be due before it is available." );
+		// }
+		// if( this.closeDate.before( this.dueDate ) )
+		// {
+		// throw new IllegalStateException(
+		// "Assignment cannot close before it is due." );
+		// }
 	}
 
 	/**
@@ -381,6 +383,18 @@ public class Assignment extends Item
 	 */
 	public enum Category
 	{
-		ASSIGNMENT
+		ASSIGNMENT;
+
+		public static Category fromString( String string )
+		{
+			for ( Category cat : Category.values() )
+			{
+				if( cat.name().equalsIgnoreCase( string ) )
+				{
+					return cat;
+				}
+			}
+			throw new IllegalArgumentException( "No Category named " + string );
+		}
 	}
 }
