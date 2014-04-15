@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.cascadelms.R;
+import org.cascadelms.SimpleOAuth;
 import org.cascadelms.data.adapters.DocumentAdapter;
 import org.cascadelms.data.loaders.DocumentsLoader;
 import org.cascadelms.data.loaders.LoaderCodes;
 import org.cascadelms.data.models.Course;
 import org.cascadelms.data.models.Document;
+import org.cascadelms.data.sources.AuthTokenInfo;
 import org.cascadelms.data.sources.CascadeDataSource;
 
 import android.annotation.SuppressLint;
@@ -53,7 +55,7 @@ public class DocumentsFragment extends ListFragment implements
 	 * Creates a new instance of <code>DocumentsFragment</code> using the
 	 * specified course id.
 	 * 
-	 * @param courseId
+	 * @param course
 	 *            the database id of the course to pull data from.
 	 * @return a <code>DocumentsFragment</code> instance
 	 */
@@ -272,9 +274,12 @@ public class DocumentsFragment extends ListFragment implements
 	{
 		if( isDownloadManagerAvailable( this.getActivity() ) )
 		{
+            AuthTokenInfo tokenInfo = new AuthTokenInfo(getActivity());
+
 			DownloadManager.Request request = new DownloadManager.Request(
 					Uri.parse( document.getDocumentURL().toString() ) );
 			request.setTitle( document.getTitle() );
+            request.addRequestHeader(SimpleOAuth.OAUTH_TOKEN, tokenInfo.getAuthToken());
 
 			// in order for this if to run, you must use the android 3.2 to
 			// compile
