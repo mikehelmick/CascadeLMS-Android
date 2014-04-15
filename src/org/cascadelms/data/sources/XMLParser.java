@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.cascadelms.data.models.Assignment;
+import org.cascadelms.data.models.Assignment.Category;
 import org.cascadelms.data.models.BlogPost;
 import org.cascadelms.data.models.Comment;
 import org.cascadelms.data.models.Course;
@@ -43,6 +44,7 @@ public class XMLParser
 	private static final String NAME_COURSE_TERM_ID = "id";
 	private static final String NAME_COURSE_TERM_SEMESTER = "semester";
 	private static final String NAME_COURSE_CURRENT_FLAG = "current";
+	private static final String NAME_COURSE_OVERVIEW = "course_overview";
 
 	/* Document Constants */
 	private static final String NAME_DOCUMENTS = "documents";
@@ -79,12 +81,35 @@ public class XMLParser
 	private static final String NAME_BLOG_POST_BODY = "body";
 	private static final String NAME_BLOG_POST_APLUS_COUNT = "aplus_count";
 	private static final String NAME_BLOG_POST_APLUS_USERS = "aplus_users";
-
-    /* Comment Constants */
+	
+	/* Comment Constants */
     private static final String NAME_COMMENT = "comment";
     private static final String NAME_COMMENT_USER = "user";
     private static final String NAME_COMMENT_CREATED_AT = "created_at";
     private static final String NAME_COMMENT_BODY = "body_html";
+
+	/* Assignments Constants */
+	private static final String NAME_ASSIGNMENT = "assignment";
+	private static final String NAME_ASSIGNMENTS = "assignments";
+	private static final String NAME_ASSIGNMENT_TITLE = "title";
+	private static final String NAME_ASSIGNMENT_CATEGORY = "category";
+	private static final String NAME_ASSIGNMENT_OPEN_DATE = "open_date";
+	private static final String NAME_ASSIGNMENT_DUE_DATE = "due_date";
+	private static final String NAME_ASSIGNMENT_CLOSE_DATE = "close_date";
+	private static final String NAME_ASSIGNMENT_GRADE_RELEASED = "grades_released";
+	private static final String NAME_ASSIGNMENT_POINTS_POSSIBLE = "points_possible";
+
+	/* Grades Constants */
+	private static final String NAME_GRADE = "grade";
+	private static final String NAME_GRADES = "grades";
+	private static final String NAME_GRADE_ASSIGNMENT_ID = "assignment_id";
+	private static final String NAME_GRADE_ASSIGNMENT_NAME = "assignment";
+	private static final String NAME_GRADE_CATEGORY = "category";
+	private static final String NAME_GRADE_POST_DATE = "date";
+	private static final String NAME_GRADE_TYPE = "grade_type";
+	private static final String NAME_GRADE_POINTS_EARNED = "grade";
+	private static final String NAME_GRADE_POINTS_POSSIBLE = "points_possible";
+	private static final String NAME_GRADE_PERCENTAGE = "percentage";
 
 	private static SAXBuilder builder;
 
@@ -273,13 +298,42 @@ public class XMLParser
 	}
 
 	public static List<Assignment> parseAssignments( InputStream xmlStream )
+			throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+		List<Assignment> assignments = new ArrayList<Assignment>();
+
+		XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+		parser.assertElementName( parser.getRootElement(), NAME_ASSIGNMENTS );
+		/*
+		 * Gets the container element for assignments and parses each
+		 * assignment.
+		 */
+		for ( Element assignmentElement : parser.getRootElement().getChildren() )
+		{
+			assignments.add( parser.parseAssignment( assignmentElement ) );
+		}
+		return assignments;
 	}
 
 	public static List<Grade> parseGrades( InputStream xmlStream )
+			throws ParseException
 	{
-		throw new RuntimeException( "Method Stub" ); // TODO
+		List<Grade> grades = new ArrayList<Grade>();
+
+		XMLParser parser = new XMLParser( xmlStream );
+
+		/* Ensures the root element of the XML is correct. */
+		parser.assertElementName( parser.getRootElement(), NAME_GRADES );
+		/*
+		 * Gets the container element for grades and parses each grade.
+		 */
+		for ( Element gradeElement : parser.getRootElement().getChildren() )
+		{
+			grades.add( parser.parseGrade( gradeElement ) );
+		}
+		return grades;
 	}
 
 	public static StreamItem parseFeedPost( InputStream xmlStream )
@@ -405,9 +459,35 @@ public class XMLParser
                 aPlusUsers, commentCount, body, bodyHTML).build();
 	}
 
-	private Assignment parseAssignment( Element element )
+	private Assignment parseAssignment( Element assignmentElement )
+			throws ParseException
 	{
-		throw new RuntimeException( "Unimplemented method." ); // TODO
+		this.assertElementName( assignmentElement, NAME_ASSIGNMENT );
+
+		int id = Integer.parseInt( this.getChildTextOrThrow( assignmentElement,
+				NAME_ID ) );
+		String title = this.getChildTextOrThrow( assignmentElement,
+				NAME_ASSIGNMENT_TITLE );
+		Assignment.Category category = Category.fromString( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_CATEGORY ) );
+		Date openDate = XMLParser.dateFromAlternateDateString( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_OPEN_DATE ) );
+		Date dueDate = XMLParser.dateFromAlternateDateString( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_DUE_DATE ) );
+		Date closeDate = XMLParser.dateFromAlternateDateString( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_CLOSE_DATE ) );
+		boolean gradesReleased = Boolean.parseBoolean( this
+				.getChildTextOrThrow( assignmentElement,
+						NAME_ASSIGNMENT_GRADE_RELEASED ) );
+		double pointsPossible = Double.parseDouble( this.getChildTextOrThrow(
+				assignmentElement, NAME_ASSIGNMENT_POINTS_POSSIBLE ) );
+
+		return new Assignment.Builder( id, title, category, openDate, dueDate,
+				closeDate, gradesReleased, pointsPossible ).build();
 	}
 
 	private BlogPost parseBlogPost( Element postElement ) throws ParseException
@@ -437,6 +517,37 @@ public class XMLParser
 
 		return new BlogPost.Builder( id, title, featured, authorName, postDate,
 				body, aPlusCount, aPlusUsers, commentCount ).build();
+	}
+
+	private Grade parseGrade( Element gradeElement ) throws ParseException
+	{
+		this.assertElementName( gradeElement, NAME_GRADE );
+
+		int assignmentId = Integer.parseInt( this.getChildTextOrThrow(
+				gradeElement, NAME_GRADE_ASSIGNMENT_ID ) );
+		String assignmentTitle = this.getChildTextOrThrow( gradeElement,
+				NAME_GRADE_ASSIGNMENT_NAME );
+		Assignment.Category category = Category.fromString( this
+				.getChildTextOrThrow( gradeElement, NAME_GRADE_CATEGORY ) );
+		Date postDate = XMLParser.dateFromAlternateDateString( this
+				.getChildTextOrThrow( gradeElement, NAME_GRADE_POST_DATE ) );
+		Grade.Type type = Grade.Type.fromString( this.getChildTextOrThrow(
+				gradeElement, NAME_GRADE_TYPE ) );
+		String pointsEarnedString = this.getChildTextOrThrow( gradeElement,
+				NAME_GRADE_POINTS_EARNED );
+		double pointsPossible = Double.parseDouble( this.getChildTextOrThrow(
+				gradeElement, NAME_GRADE_POINTS_POSSIBLE ) );
+		/* Points earned may not exist. */
+		try
+		{
+			double pointsEarned = Double.parseDouble( pointsEarnedString );
+			return new Grade( assignmentId, assignmentTitle, category,
+					postDate, type, pointsEarned, pointsPossible );
+		} catch( NumberFormatException e )
+		{
+			return new Grade( assignmentId, assignmentTitle, category,
+					postDate, type, pointsPossible );
+		}
 	}
 
 	private Comment parseComment( Element element )
