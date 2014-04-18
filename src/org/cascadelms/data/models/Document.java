@@ -20,6 +20,7 @@ public class Document extends Item implements Parcelable
 	private final String extension;
 	private final long fileSize;
 	private final String documentURL;
+    private final boolean isExternal;
 
 	/* Constants */
 	private static final int ROOT_ID = -1;
@@ -32,6 +33,7 @@ public class Document extends Item implements Parcelable
 		this.extension = builder.extension;
 		this.fileSize = builder.fileSize;
 		this.documentURL = builder.documentURL;
+        isExternal = builder.isExternal;
 
 		/* Check validity of the data. */
 		if( this.isFolder )
@@ -51,6 +53,11 @@ public class Document extends Item implements Parcelable
 				throw new IllegalStateException(
 						"A Document folder cannot have a document URL." );
 			}
+            if( this.isExternal )
+            {
+                throw new IllegalStateException(
+                        "A Document folder must always be internal." );
+            }
 		}
 
 	}
@@ -107,6 +114,17 @@ public class Document extends Item implements Parcelable
 		return this.isFolder;
 	}
 
+    /**
+     * Returns whether this document's URL refers to a third-party site.
+     *
+     * @return <code>true</code> if this document's URL is external to the Cascade installation.
+     *         <code>false</code> if the document is hosted on Cascade.
+     */
+    public boolean isExternal()
+    {
+        return this.isExternal;
+    }
+
 	public static Document rootDocument()
 	{
 		return new Document( Builder.getFolderBuilder( ROOT_ID, "Root" ) );
@@ -135,6 +153,7 @@ public class Document extends Item implements Parcelable
 		private String extension;
 		private long fileSize;
 		private String documentURL;
+        private boolean isExternal;
 
 		/**
 		 * Construct a <code>Builder</code> instance for building a
@@ -145,13 +164,14 @@ public class Document extends Item implements Parcelable
 		 * @param extension
 		 * @param fileSize
 		 * @param documentURL
+         * @param isExternal
 		 * @return
 		 */
 		public static Builder getFileBuilder( int id, String title,
-				String extension, long fileSize, String documentURL )
+				String extension, long fileSize, String documentURL, boolean isExternal )
 		{
 			return new Builder( id, title, false, extension, fileSize,
-					documentURL );
+					documentURL, isExternal );
 		}
 
 		/**
@@ -164,11 +184,11 @@ public class Document extends Item implements Parcelable
 		 */
 		public static Builder getFolderBuilder( int id, String title )
 		{
-			return new Builder( id, title, true, null, 0, null );
+			return new Builder( id, title, true, null, 0, null, false );
 		}
 
 		private Builder( int id, String title, boolean isFolder,
-				String extension, long fileSize, String documentURL )
+				String extension, long fileSize, String documentURL, boolean isExternal )
 		{
 			this.id = id;
 			this.title = title;
@@ -176,6 +196,7 @@ public class Document extends Item implements Parcelable
 			this.extension = extension;
 			this.fileSize = fileSize;
 			this.documentURL = documentURL;
+            this.isExternal = isExternal;
 		}
 
 		public Document build()
@@ -202,6 +223,7 @@ public class Document extends Item implements Parcelable
 		dest.writeString( extension );
 		dest.writeLong( fileSize );
 		dest.writeString( documentURL.toString() );
+        dest.writeByte( (byte) ( isExternal ? 1 : 0 ) );
 	}
 
 	public static Parcelable.Creator<Document> CREATOR = new Parcelable.Creator<Document>()
@@ -215,6 +237,7 @@ public class Document extends Item implements Parcelable
 			String extension = source.readString();
 			long fileSize = source.readLong();
 			String urlString = source.readString();
+            boolean isExternal = ( source.readByte() != 0 );
 
 			/* Builds the Document */
 			if( isFolder )
@@ -223,7 +246,7 @@ public class Document extends Item implements Parcelable
 			} else
 			{
 				return Builder.getFileBuilder( id, title, extension, fileSize,
-						urlString ).build();
+						urlString, isExternal ).build();
 			}
 		}
 
@@ -276,6 +299,7 @@ public class Document extends Item implements Parcelable
 				+ ( ( extension == null ) ? 0 : extension.hashCode() );
 		result = prime * result + (int) ( fileSize ^ ( fileSize >>> 32 ) );
 		result = prime * result + ( isFolder ? 1231 : 1237 );
+        result = prime * result + ( isExternal ? 1249 : 1259 );
 		return result;
 	}
 
@@ -305,6 +329,8 @@ public class Document extends Item implements Parcelable
 			return false;
 		if( isFolder != other.isFolder )
 			return false;
+        if( isExternal != other.isExternal )
+            return false;
 		return true;
 	}
 }

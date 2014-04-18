@@ -272,38 +272,47 @@ public class DocumentsFragment extends ListFragment implements
 	// TODO Will need another way to download files on lower API levels.
 	public void downloadFile( Document document )
 	{
-		if( isDownloadManagerAvailable( this.getActivity() ) )
-		{
-            AuthTokenInfo tokenInfo = new AuthTokenInfo(getActivity());
+        if ( !document.isExternal() )
+        {
+            if (isDownloadManagerAvailable(this.getActivity()))
+            {
+                AuthTokenInfo tokenInfo = new AuthTokenInfo(getActivity());
 
-			DownloadManager.Request request = new DownloadManager.Request(
-					Uri.parse( document.getDocumentURL().toString() ) );
-			request.setTitle( document.getTitle() );
-            request.addRequestHeader(SimpleOAuth.OAUTH_TOKEN, tokenInfo.getAuthToken());
+                DownloadManager.Request request = new DownloadManager.Request(
+                        Uri.parse(document.getDocumentURL().toString()));
+                request.setTitle(document.getTitle());
+                request.addRequestHeader(SimpleOAuth.OAUTH_TOKEN, tokenInfo.getAuthToken());
 
-			// in order for this if to run, you must use the android 3.2 to
-			// compile
-			// your app
-			if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB )
-			{
-				request.allowScanningByMediaScanner();
-				request.setNotificationVisibility( DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED );
-			}
+                // in order for this if to run, you must use the android 3.2 to
+                // compile
+                // your app
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                {
+                    request.allowScanningByMediaScanner();
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                }
 
 			/* Removes the first '/' from the URL's file string. */
-			request.setDestinationInExternalPublicDir(
-					Environment.DIRECTORY_DOWNLOADS, document.getFileName() );
+                request.setDestinationInExternalPublicDir(
+                        Environment.DIRECTORY_DOWNLOADS, document.getFileName());
 
-			// get download service and enqueue file
-			DownloadManager manager = (DownloadManager) this.getActivity()
-					.getSystemService( Context.DOWNLOAD_SERVICE );
-			manager.enqueue( request );
-		} else
-		{
-			Toast.makeText( this.getActivity(),
-					"DownloadManager is not available.", Toast.LENGTH_LONG )
-					.show();
-		}
+                // get download service and enqueue file
+                DownloadManager manager = (DownloadManager) this.getActivity()
+                        .getSystemService(Context.DOWNLOAD_SERVICE);
+                manager.enqueue(request);
+            } else
+            {
+                Toast.makeText(this.getActivity(),
+                        "DownloadManager is not available.", Toast.LENGTH_LONG)
+                        .show();
+            }
+        }
+        else
+        {
+            // Open external URLs in the user's default browser.
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(document.getDocumentURL()));
+            startActivity(intent);
+        }
 	}
 
 	/**

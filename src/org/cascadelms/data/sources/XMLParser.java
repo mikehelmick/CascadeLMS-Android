@@ -53,6 +53,7 @@ public class XMLParser
 	private static final String NAME_DOCUMENT_EXTENSION = "extension";
 	private static final String NAME_DOCUMENT_SIZE = "size";
 	private static final String NAME_DOCUMENT_URL = "document_url";
+    private static final String NAME_DOCUMENT_URL_EXTERNAL = "url";
 	private static final String NAME_DOCUMENT_FOLDER = "folder";
 
 	/* Social Feed Constants */
@@ -597,6 +598,7 @@ public class XMLParser
 		{
             String extension = "";
             int size = 0;
+            boolean isExternal = false;
 
             Element extensionElement = documentElement.getChild(NAME_DOCUMENT_EXTENSION);
 
@@ -605,13 +607,24 @@ public class XMLParser
 
             Element sizeElement = documentElement.getChild(NAME_DOCUMENT_SIZE);
 
-            if (sizeElement != null && !sizeElement.getText().isEmpty())
+            if (sizeElement != null && !sizeElement.getText().equals(""))
                 size = Integer.parseInt(sizeElement.getText());
 
-			String documentURL = this.getChildTextOrThrow( documentElement,
-					NAME_DOCUMENT_URL );
+			String documentURL = null;
+
+            Element urlElement = documentElement.getChild(NAME_DOCUMENT_URL);
+
+            if (urlElement != null)
+                documentURL = urlElement.getText();
+            else
+            {
+                urlElement = this.getChildElementOrThrow(
+                        documentElement, NAME_DOCUMENT_URL_EXTERNAL );
+                documentURL = urlElement.getText();
+                isExternal = true;
+            }
 			return org.cascadelms.data.models.Document.Builder.getFileBuilder(
-					id, title, extension, size, documentURL ).build();
+					id, title, extension, size, documentURL, isExternal ).build();
 		}
 	}
 
