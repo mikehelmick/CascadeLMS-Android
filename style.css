@@ -1,0 +1,150 @@
+
+html, body
+{
+    margin : 0;
+    padding : 0;
+    font : normal normal normal 12pt Droid Sans, Verdana, sans-serif;
+    color : #0B0E10;
+    background-color : #FFFFFF;
+}
+
+a:link, a:active
+{
+    color : #498DB4;
+}
+
+a:visited
+{
+    color : #4863B4;
+}
+
+a img
+{
+    border : 0px none;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+    font-weight : normal;
+    font-variant : small-caps;
+}
+
+#content p
+{
+    margin-bottom : 1.5em;
+    line-height : 1.5;
+}
+
+#content li p
+{
+    margin-bottom : 1em;
+    line-height : 1.5em;
+}
+
+#content ul
+{
+    margin-bottom : 2em;
+}
+
+#container
+{
+    padding : 0px 0px;
+    margin : 0px auto;
+}
+
+#page
+{
+    background-color : #FAFEFF;
+    min-width : 960px;
+    margin : 0px auto;
+}
+
+#header
+{
+    margin : auto;
+    min-width : 960px;
+    height : 500px;
+    background-image : url("logo.png");
+    background-position : top center;
+    background-repeat : no-repeat;
+}
+
+#navbar
+{
+    margin-top : 10px;
+    font-size : 16pt;
+    font-variant : small-caps;
+    color : #FAFAF7;
+    background-color : #6AA84F;
+}
+
+#navbar a:link, #navbar a:visited, #navbar a:active,
+#navbar a:hover, #navbar a:focus
+{
+    text-decoration : none;
+    color : #FAFAF7;
+}
+
+#navbar a:hover, #navbar a:focus
+{
+    background-color : #81CC60;
+}
+
+#navbar li a
+{
+    padding : 10px 15px;
+}
+
+#navbar li
+{
+    list-style-type : none;
+    display : inline;
+    float : left;
+    padding : 10px 0px;
+    margin : 0px 10px;
+}
+
+#navbar ul
+{
+    padding : 0px 10px;
+    margin : 0px auto;
+    max-width : 960px;
+    overflow : hidden;
+    background-color : #6AA84F;
+}
+
+#content
+{
+    padding : 50px 100px;
+    margin : 0px auto;
+    max-width : 960px;
+}
+
+.content-body
+{
+    padding-bottom : 20px;
+}
+
+.content-body img
+{
+    display : block;
+    margin : 0px auto;
+    padding : 15px 0px;
+}
+
+#footer
+{
+    padding-top : 1px;    /* Foil margin collapsing */
+    padding-bottom : 1px;
+    margin-top : 10px;
+    text-align : center;
+    color : #2E2F32;
+    background-color : #CCCFD0;
+}
+
+#footer p
+{
+    font-size : 8pt;
+    line-height : 20pt;
+    margin-bottom : 1em;
+}
