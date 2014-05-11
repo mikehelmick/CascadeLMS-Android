@@ -10,20 +10,20 @@ import android.support.v4.content.AsyncTaskLoader;
 
 public class GradesLoader extends AsyncTaskLoader<List<Grade>>
 {
-	private GradesDataSource dataSource;
-	private int courseId;
+    private GradesDataSource dataSource;
+    private int courseId;
 
-	public GradesLoader( Context context, GradesDataSource dataSource,
-			int courseId )
-	{
-		super( context );
-		this.dataSource = dataSource;
-		this.courseId = courseId;
-	}
+    public GradesLoader(Context context, GradesDataSource dataSource,
+                        int courseId)
+    {
+        super(context);
+        this.dataSource = dataSource;
+        this.courseId = courseId;
+    }
 
-	@Override
-	public List<Grade> loadInBackground()
-	{
-		return this.dataSource.getGradesForCourse( courseId );
-	}
+    @Override
+    public List<Grade> loadInBackground()
+    {
+        return this.dataSource.getGradesForCourse(courseId);
+    }
 }

@@ -22,137 +22,137 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class AssignmentsFragment extends ListFragment implements
-		LoaderCallbacks<List<Assignment>>
+        LoaderCallbacks<List<Assignment>>
 {
-	private AssignmentsDataSource assigmentsDataSource;
-	private AssignmentsAdapter adapter;
-	private TextView emptyView;
+    private AssignmentsDataSource assigmentsDataSource;
+    private AssignmentsAdapter adapter;
+    private TextView emptyView;
 
-	/* Constants */
-	private static final String ARGS_COURSE = "org.cascade.args_course";
+    /* Constants */
+    private static final String ARGS_COURSE = "org.cascade.args_course";
 
-	public static AssignmentsFragment newInstance( Course course )
-	{
-		Bundle args = new Bundle();
-		args.putParcelable( ARGS_COURSE, course );
-		AssignmentsFragment fragment = new AssignmentsFragment();
-		fragment.setArguments( args );
-		return fragment;
-	}
+    public static AssignmentsFragment newInstance(Course course)
+    {
+        Bundle args = new Bundle();
+        args.putParcelable(ARGS_COURSE, course);
+        AssignmentsFragment fragment = new AssignmentsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-	@Override
-	public void onCreate( Bundle savedInstanceState )
-	{
-		/* Creates the data source and begins loading. */
-		this.assigmentsDataSource = CascadeDataSource.getInstance();
-		this.adapter = new AssignmentsAdapter( this.getActivity() );
-		this.setListAdapter( adapter );
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        /* Creates the data source and begins loading. */
+        this.assigmentsDataSource = CascadeDataSource.getInstance();
+        this.adapter = new AssignmentsAdapter(this.getActivity());
+        this.setListAdapter(adapter);
 
-		super.onCreate( savedInstanceState );
-	}
+        super.onCreate(savedInstanceState);
+    }
 
-	@Override
-	public View onCreateView( LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState )
-	{
-		super.onCreateView( inflater, container, savedInstanceState );
-		View view = inflater.inflate( R.layout.fragment_assignments, container,
-				false );
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
+    {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_assignments, container,
+                false);
 
-		emptyView = (TextView) view
-				.findViewById( R.id.fragment_assignments_empty );
-		( (ListView) view.findViewById( android.R.id.list ) )
-				.setEmptyView( emptyView );
-		return view;
-	}
+        emptyView = (TextView) view
+                .findViewById(R.id.fragment_assignments_empty);
+        ((ListView) view.findViewById(android.R.id.list))
+                .setEmptyView(emptyView);
+        return view;
+    }
 
-	@Override
-	public void onViewCreated( View view, Bundle savedInstanceState )
-	{
-		this.getActivity().getSupportLoaderManager()
-				.initLoader( LoaderCodes.LOADER_CODE_ASSIGNMENTS, null, this )
-				.forceLoad();
-		super.onViewCreated( view, savedInstanceState );
-	}
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        this.getActivity().getSupportLoaderManager()
+                .initLoader(LoaderCodes.LOADER_CODE_ASSIGNMENTS, null, this)
+                .forceLoad();
+        super.onViewCreated(view, savedInstanceState);
+    }
 
-	@Override
-	public void setEmptyText( CharSequence text )
-	{
+    @Override
+    public void setEmptyText(CharSequence text)
+    {
 		/*
 		 * Subclasses using custom layouts must override this method to operate
 		 * on the correct TextView.
 		 */
-		emptyView.setText( text );
-	}
+        emptyView.setText(text);
+    }
 
-	@Override
-	public Loader<List<Assignment>> onCreateLoader( int id, Bundle args )
-	{
-		switch( id )
-		{
-			case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
-			{
-				this.setEmptyText( this
-						.getString( R.string.fragment_assignments_list_loading_message ) );
-				return new AssignmentsLoader( this.getActivity(),
-						assigmentsDataSource, this.getCourse().getId() );
-			}
-			default:
-			{
-				return null;
-			}
-		}
-	}
+    @Override
+    public Loader<List<Assignment>> onCreateLoader(int id, Bundle args)
+    {
+        switch (id)
+        {
+            case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
+            {
+                this.setEmptyText(this
+                        .getString(R.string.fragment_assignments_list_loading_message));
+                return new AssignmentsLoader(this.getActivity(),
+                        assigmentsDataSource, this.getCourse().getId());
+            }
+            default:
+            {
+                return null;
+            }
+        }
+    }
 
-	@Override
-	public void onLoadFinished( Loader<List<Assignment>> loader,
-			List<Assignment> data )
-	{
-		switch( loader.getId() )
-		{
-			case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
-			{
+    @Override
+    public void onLoadFinished(Loader<List<Assignment>> loader,
+                               List<Assignment> data)
+    {
+        switch (loader.getId())
+        {
+            case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
+            {
                 if (data != null)
-                    this.adapter.setData( data );
+                    this.adapter.setData(data);
                 else
                     Toast.makeText(getActivity(), R.string.fragment_assignments_list_failed,
                             Toast.LENGTH_SHORT).show();
-				this.setEmptyText( this
-						.getString( R.string.fragment_assignments_list_empty_message ) );
-				break;
-			}
-		}
+                this.setEmptyText(this
+                        .getString(R.string.fragment_assignments_list_empty_message));
+                break;
+            }
+        }
 
-	}
+    }
 
-	@Override
-	public void onLoaderReset( Loader<List<Assignment>> loader )
-	{
-		switch( loader.getId() )
-		{
-			case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
-			{
-				this.adapter.clear();
-				break;
-			}
-		}
-	}
+    @Override
+    public void onLoaderReset(Loader<List<Assignment>> loader)
+    {
+        switch (loader.getId())
+        {
+            case LoaderCodes.LOADER_CODE_ASSIGNMENTS:
+            {
+                this.adapter.clear();
+                break;
+            }
+        }
+    }
 
-	public interface AssignmentsDataSource
-	{
-		public List<Assignment> getAssignmentsForCourse( int courseId );
-	}
+    public interface AssignmentsDataSource
+    {
+        public List<Assignment> getAssignmentsForCourse(int courseId);
+    }
 
-	/**
-	 * Retrieves the {@link Course} provided as an argument to this Fragment.
-	 * The value cannot be stored, because the Fragment may be recreated by the
-	 * FragmentManager at any time.
-	 * 
-	 * @return the <code>Course</code>
-	 */
-	private Course getCourse()
-	{
-		return this.getArguments().getParcelable( ARGS_COURSE );
-	}
+    /**
+     * Retrieves the {@link Course} provided as an argument to this Fragment.
+     * The value cannot be stored, because the Fragment may be recreated by the
+     * FragmentManager at any time.
+     *
+     * @return the <code>Course</code>
+     */
+    private Course getCourse()
+    {
+        return this.getArguments().getParcelable(ARGS_COURSE);
+    }
 
 }

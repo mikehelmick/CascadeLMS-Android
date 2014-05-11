@@ -21,9 +21,9 @@ public class StreamDetailActivity extends CascadeActivity implements
     private StreamItemDetailAdapter adapter;
 
     @Override
-    public void onCreate( Bundle savedInstanceState )
+    public void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate( savedInstanceState );
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stream_detail);
 
         /* Gets the Course data provided by the Intent that started this. */
@@ -37,7 +37,7 @@ public class StreamDetailActivity extends CascadeActivity implements
         this.getSupportLoaderManager()
                 .initLoader(LoaderCodes.LOADER_CODE_STREAM_DETAIL, null, this).forceLoad();
 
-        ListView streamList = (ListView) findViewById( android.R.id.list );
+        ListView streamList = (ListView) findViewById(android.R.id.list);
 
         if (streamList != null)
         {
@@ -61,14 +61,14 @@ public class StreamDetailActivity extends CascadeActivity implements
     }
 
     @Override
-    public Loader<StreamItem> onCreateLoader( int id, Bundle args )
+    public Loader<StreamItem> onCreateLoader(int id, Bundle args)
     {
-        switch( id )
+        switch (id)
         {
             case LoaderCodes.LOADER_CODE_STREAM_DETAIL:
             {
-                return new StreamItemDetailLoader( this,
-                        streamDataSource, postId );
+                return new StreamItemDetailLoader(this,
+                        streamDataSource, postId);
             }
             default:
             {
@@ -78,10 +78,10 @@ public class StreamDetailActivity extends CascadeActivity implements
     }
 
     @Override
-    public void onLoadFinished( Loader<StreamItem> loader,
-                                StreamItem data )
+    public void onLoadFinished(Loader<StreamItem> loader,
+                               StreamItem data)
     {
-        switch( loader.getId() )
+        switch (loader.getId())
         {
             case LoaderCodes.LOADER_CODE_STREAM_DETAIL:
             {
@@ -94,9 +94,9 @@ public class StreamDetailActivity extends CascadeActivity implements
     }
 
     @Override
-    public void onLoaderReset( Loader<StreamItem> loader )
+    public void onLoaderReset(Loader<StreamItem> loader)
     {
-        switch( loader.getId() )
+        switch (loader.getId())
         {
             case LoaderCodes.LOADER_CODE_STREAM_DETAIL:
             {

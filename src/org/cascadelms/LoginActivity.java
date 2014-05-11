@@ -31,79 +31,79 @@ import org.cascadelms.data.sources.AuthTokenInfo;
  */
 public class LoginActivity extends FragmentActivity
 {
-	/**
-	 * Keep track of the login task to ensure we can cancel it if requested.
-	 */
-	private OAuthPhaseOneTask mAuthOneTask = null;
-	private OAuthPhaseTwoTask mAuthTwoTask = null;
+    /**
+     * Keep track of the login task to ensure we can cancel it if requested.
+     */
+    private OAuthPhaseOneTask mAuthOneTask = null;
+    private OAuthPhaseTwoTask mAuthTwoTask = null;
 
-	// OAuth object
-	private SimpleOAuth mOauth = null;
+    // OAuth object
+    private SimpleOAuth mOauth = null;
 
-	// UI references.
-	private WebView mLoginWebView;
-	private View mLoginStatusView;
+    // UI references.
+    private WebView mLoginWebView;
+    private View mLoginStatusView;
 
     // Stored OAuth data.
     AuthTokenInfo mTokenInfo = null;
 
-	@Override
-	protected void onCreate( Bundle savedInstanceState )
-	{
-		super.onCreate( savedInstanceState );
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		setContentView( R.layout.activity_login );
+        setContentView(R.layout.activity_login);
 
         mTokenInfo = new AuthTokenInfo(this);
 
         String schoolUrl = mTokenInfo.getCascadeUrl();
 
-		if( schoolUrl != null )
-		{
-			mOauth = new SimpleOAuth( ConsumerSecretsProvider.getConsumerKey(),
-					ConsumerSecretsProvider.getConsumerSecret(), schoolUrl
-							+ "/oauth/request_token", schoolUrl
-							+ "/oauth/access_token", schoolUrl
-							+ "/oauth/authorize" );
+        if (schoolUrl != null)
+        {
+            mOauth = new SimpleOAuth(ConsumerSecretsProvider.getConsumerKey(),
+                    ConsumerSecretsProvider.getConsumerSecret(), schoolUrl
+                    + "/oauth/request_token", schoolUrl
+                    + "/oauth/access_token", schoolUrl
+                    + "/oauth/authorize"
+            );
 
-			mLoginWebView = (WebView) findViewById( R.id.login_view );
-			mLoginStatusView = findViewById( R.id.login_status );
+            mLoginWebView = (WebView) findViewById(R.id.login_view);
+            mLoginStatusView = findViewById(R.id.login_status);
 
-			mAuthOneTask = new OAuthPhaseOneTask();
-			mAuthOneTask.execute( (Void) null );
-		}
-        else
-			showAuthError( "No school URL provided." );
-	}
+            mAuthOneTask = new OAuthPhaseOneTask();
+            mAuthOneTask.execute((Void) null);
+        } else
+            showAuthError("No school URL provided.");
+    }
 
-	@Override
-	protected void onStop()
-	{
-		if( mAuthOneTask != null )
-			mAuthOneTask.cancel( true );
-		if( mAuthTwoTask != null )
-			mAuthTwoTask.cancel( true );
+    @Override
+    protected void onStop()
+    {
+        if (mAuthOneTask != null)
+            mAuthOneTask.cancel(true);
+        if (mAuthTwoTask != null)
+            mAuthTwoTask.cancel(true);
 
-		super.onStop();
-	}
+        super.onStop();
+    }
 
-	/**
-	 * Opens the WebView so the user can authorize the app.
-	 */
-	@TargetApi( Build.VERSION_CODES.HONEYCOMB_MR2 )
-	private void showLogin()
-	{
-		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs to fade-out
-		// the progress spinner.
-		if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2 )
-		{
-			int shortAnimTime = getResources().getInteger(
-					android.R.integer.config_shortAnimTime );
+    /**
+     * Opens the WebView so the user can authorize the app.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showLogin()
+    {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-out
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
+        {
+            int shortAnimTime = getResources().getInteger(
+                    android.R.integer.config_shortAnimTime);
 
-			mLoginStatusView.setVisibility( View.VISIBLE );
-			mLoginStatusView.animate().setDuration( shortAnimTime ).alpha(0)
-					.setListener(new AnimatorListenerAdapter()
+            mLoginStatusView.setVisibility(View.VISIBLE);
+            mLoginStatusView.animate().setDuration(shortAnimTime).alpha(0)
+                    .setListener(new AnimatorListenerAdapter()
                     {
                         @Override
                         public void onAnimationEnd(Animator animation)
@@ -112,9 +112,9 @@ public class LoginActivity extends FragmentActivity
                         }
                     });
 
-			mLoginWebView.setVisibility( View.VISIBLE );
-			mLoginWebView.animate().setDuration( shortAnimTime ).alpha(1)
-					.setListener(new AnimatorListenerAdapter()
+            mLoginWebView.setVisibility(View.VISIBLE);
+            mLoginWebView.animate().setDuration(shortAnimTime).alpha(1)
+                    .setListener(new AnimatorListenerAdapter()
                     {
                         @Override
                         public void onAnimationEnd(Animator animation)
@@ -122,60 +122,60 @@ public class LoginActivity extends FragmentActivity
                             mLoginWebView.setVisibility(View.VISIBLE);
                         }
                     });
-		} else
-		{
-			// The ViewPropertyAnimator APIs are not available, so simply show
-			// and hide the relevant UI components.
-			mLoginStatusView.setVisibility( View.GONE );
-			mLoginWebView.setVisibility( View.VISIBLE );
-		}
+        } else
+        {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mLoginStatusView.setVisibility(View.GONE);
+            mLoginWebView.setVisibility(View.VISIBLE);
+        }
 
-		mLoginWebView.setWebViewClient( new WebViewClient()
-		{
-			@Override
-			public boolean shouldOverrideUrlLoading( WebView view, String url )
-			{
-				// Check for the callback URL.
-				if( url.startsWith( "cascade://androidapp" ) )
-				{
-					mAuthTwoTask = new OAuthPhaseTwoTask();
-					mAuthTwoTask.execute( (Void) null );
+        mLoginWebView.setWebViewClient(new WebViewClient()
+        {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url)
+            {
+                // Check for the callback URL.
+                if (url.startsWith("cascade://androidapp"))
+                {
+                    mAuthTwoTask = new OAuthPhaseTwoTask();
+                    mAuthTwoTask.execute((Void) null);
 
-					return true;
-				}
+                    return true;
+                }
 
-				return false;
-			}
-		} );
+                return false;
+            }
+        });
 
-		CookieManager cookieManager = CookieManager.getInstance();
-		cookieManager.removeAllCookie();
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();
 
-		WebSettings settings = mLoginWebView.getSettings();
-		settings.setSaveFormData( false );
-		settings.setSavePassword( false );
+        WebSettings settings = mLoginWebView.getSettings();
+        settings.setSaveFormData(false);
+        settings.setSavePassword(false);
 
-		mLoginWebView.loadUrl( mOauth.getAuthorizeUrl() );
-	}
+        mLoginWebView.loadUrl(mOauth.getAuthorizeUrl());
+    }
 
-	/*
-	 * Displays the specified error and returns to the Select School screen when
-	 * dismissed.
-	 */
-	private void showAuthError( final String message )
-	{
-		runOnUiThread( new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-						LoginActivity.this );
+    /*
+     * Displays the specified error and returns to the Select School screen when
+     * dismissed.
+     */
+    private void showAuthError(final String message)
+    {
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                        LoginActivity.this);
 
-				dialogBuilder
-						.setTitle("Authentication failed")
-						.setMessage(message)
-						.setPositiveButton(android.R.string.ok,
+                dialogBuilder
+                        .setTitle("Authentication failed")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok,
                                 new DialogInterface.OnClickListener()
                                 {
                                     @Override
@@ -190,46 +190,46 @@ public class LoginActivity extends FragmentActivity
                                         finish();
                                     }
                                 }
-                        ).setCancelable( false ).show();
-			}
-		} );
-	}
+                        ).setCancelable(false).show();
+            }
+        });
+    }
 
-	/* Phase one: Retrieves the request token. If successful, opens the WebView. */
-	public class OAuthPhaseOneTask extends AsyncTask<Void, Void, Boolean>
-	{
-		@Override
-		protected Boolean doInBackground( Void... params )
-		{
-			Boolean success = true;
-			Log.i( getLocalClassName(), "Starting OAuth." );
+    /* Phase one: Retrieves the request token. If successful, opens the WebView. */
+    public class OAuthPhaseOneTask extends AsyncTask<Void, Void, Boolean>
+    {
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            Boolean success = true;
+            Log.i(getLocalClassName(), "Starting OAuth.");
 
-			try
-			{
-				mOauth.getRequestToken();
-			} catch( IOException e )
-			{
-				success = false;
-				showAuthError( e.getLocalizedMessage() );
-				e.printStackTrace();
-			}
+            try
+            {
+                mOauth.getRequestToken();
+            } catch (IOException e)
+            {
+                success = false;
+                showAuthError(e.getLocalizedMessage());
+                e.printStackTrace();
+            }
 
-			return success;
-		}
+            return success;
+        }
 
-		@Override
-		protected void onPostExecute( final Boolean success )
-		{
-			mAuthOneTask = null;
+        @Override
+        protected void onPostExecute(final Boolean success)
+        {
+            mAuthOneTask = null;
 
-			if( success )
-			{
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-						LoginActivity.this );
+            if (success)
+            {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                        LoginActivity.this);
 
-				dialogBuilder
-						.setMessage(R.string.desc_login_instructions)
-						.setPositiveButton(android.R.string.ok,
+                dialogBuilder
+                        .setMessage(R.string.desc_login_instructions)
+                        .setPositiveButton(android.R.string.ok,
                                 new DialogInterface.OnClickListener()
                                 {
                                     @Override
@@ -240,72 +240,72 @@ public class LoginActivity extends FragmentActivity
                                         showLogin();
                                     }
                                 }
-                        ).setCancelable( false ).show();
-			}
-		}
+                        ).setCancelable(false).show();
+            }
+        }
 
-		@Override
-		protected void onCancelled()
-		{
-			mAuthOneTask = null;
-			Toast.makeText( getApplicationContext(),
-					R.string.toast_login_cancel, Toast.LENGTH_SHORT ).show();
-			finish();
-		}
-	}
+        @Override
+        protected void onCancelled()
+        {
+            mAuthOneTask = null;
+            Toast.makeText(getApplicationContext(),
+                    R.string.toast_login_cancel, Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
 
-	/* Phase two: Does the token exchange. If successful, completes login. */
-	public class OAuthPhaseTwoTask extends AsyncTask<Void, Void, Boolean>
-	{
-		@Override
-		protected Boolean doInBackground( Void... params )
-		{
-			Boolean success = true;
+    /* Phase two: Does the token exchange. If successful, completes login. */
+    public class OAuthPhaseTwoTask extends AsyncTask<Void, Void, Boolean>
+    {
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            Boolean success = true;
 
-			try
-			{
-				mOauth.exchangeToken();
-			} catch( IOException e )
-			{
-				success = false;
-				showAuthError( e.getLocalizedMessage() );
-				e.printStackTrace();
-			}
+            try
+            {
+                mOauth.exchangeToken();
+            } catch (IOException e)
+            {
+                success = false;
+                showAuthError(e.getLocalizedMessage());
+                e.printStackTrace();
+            }
 
-			return success;
-		}
+            return success;
+        }
 
-		@Override
-		protected void onPostExecute( final Boolean success )
-		{
-			mAuthTwoTask = null;
+        @Override
+        protected void onPostExecute(final Boolean success)
+        {
+            mAuthTwoTask = null;
 
-			if( success )
-			{
-				CookieManager cookieManager = CookieManager.getInstance();
-				cookieManager.removeAllCookie();
+            if (success)
+            {
+                CookieManager cookieManager = CookieManager.getInstance();
+                cookieManager.removeAllCookie();
 
                 mTokenInfo.setAuthToken(mOauth.getOAuthToken());
 
-				Toast.makeText( getApplicationContext(), R.string.toast_login,
-						Toast.LENGTH_SHORT ).show();
+                Toast.makeText(getApplicationContext(), R.string.toast_login,
+                        Toast.LENGTH_SHORT).show();
 
-				Intent intent = new Intent( LoginActivity.this,
-						StreamActivity.class );
-				intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK
-						| IntentCompat.FLAG_ACTIVITY_CLEAR_TASK );
-				startActivity( intent );
-				finish();
-			}
-		}
+                Intent intent = new Intent(LoginActivity.this,
+                        StreamActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        }
 
-		@Override
-		protected void onCancelled()
-		{
-			mAuthTwoTask = null;
-			Toast.makeText( getApplicationContext(),
-					R.string.toast_login_cancel, Toast.LENGTH_SHORT ).show();
-			finish();
-		}
-	}
+        @Override
+        protected void onCancelled()
+        {
+            mAuthTwoTask = null;
+            Toast.makeText(getApplicationContext(),
+                    R.string.toast_login_cancel, Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
 }

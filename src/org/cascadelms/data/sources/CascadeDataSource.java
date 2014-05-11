@@ -33,12 +33,12 @@ public class CascadeDataSource implements CourseDataSource,
 
     private CascadeDataSource()
     {
-		/* Private constructor */
+        /* Private constructor */
     }
 
     public static CascadeDataSource getInstance()
     {
-        if( instance == null )
+        if (instance == null)
         {
             instance = new CascadeDataSource();
         }
@@ -62,12 +62,10 @@ public class CascadeDataSource implements CourseDataSource,
             request.connect();
 
             stream = request.getInputStream();
-        }
-        catch (MalformedURLException e)
+        } catch (MalformedURLException e)
         {
             e.printStackTrace();
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -82,8 +80,7 @@ public class CascadeDataSource implements CourseDataSource,
             try
             {
                 inputStream.close();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 e.printStackTrace();
             }
@@ -101,8 +98,7 @@ public class CascadeDataSource implements CourseDataSource,
         {
             if (stream != null)
                 data = XMLParser.parseAssignments(stream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -123,8 +119,7 @@ public class CascadeDataSource implements CourseDataSource,
         {
             if (stream != null)
                 data = XMLParser.parseBlogPosts(stream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -145,8 +140,7 @@ public class CascadeDataSource implements CourseDataSource,
         {
             if (stream != null)
                 data = XMLParser.parseCourseList(stream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -167,8 +161,7 @@ public class CascadeDataSource implements CourseDataSource,
         {
             if (stream != null)
                 data = XMLParser.parseDocuments(stream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -190,8 +183,7 @@ public class CascadeDataSource implements CourseDataSource,
         {
             if (stream != null)
                 data = XMLParser.parseDocuments(stream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -212,8 +204,7 @@ public class CascadeDataSource implements CourseDataSource,
         {
             if (stream != null)
                 data = XMLParser.parseGrades(stream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -234,8 +225,7 @@ public class CascadeDataSource implements CourseDataSource,
         {
             if (stream != null)
                 data = XMLParser.parseFeed(stream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -256,8 +246,7 @@ public class CascadeDataSource implements CourseDataSource,
         {
             if (stream != null)
                 data = XMLParser.parseCourseFeed(stream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -278,8 +267,7 @@ public class CascadeDataSource implements CourseDataSource,
         {
             if (stream != null)
                 data = XMLParser.parseFeedPost(stream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }

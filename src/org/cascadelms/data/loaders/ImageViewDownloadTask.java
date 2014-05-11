@@ -63,12 +63,10 @@ public class ImageViewDownloadTask extends AsyncTask<String, Void, Bitmap>
             mCache.put(strings[0], bitmap);
 
             stream.close();
-        }
-        catch (MalformedURLException e)
+        } catch (MalformedURLException e)
         {
             e.printStackTrace();
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
