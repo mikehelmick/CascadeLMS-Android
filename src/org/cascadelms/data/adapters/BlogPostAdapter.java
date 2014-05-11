@@ -32,7 +32,7 @@ public class BlogPostAdapter extends ArrayAdapter<BlogPost>
 
 		if( convertView != null )
 		{
-			SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM d, k:m a" );
+			SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM d, h:mm a" );
 
 			TextView titleLabel = (TextView) convertView
 					.findViewById( R.id.courseblog_title );
