@@ -12,7 +12,7 @@
     <!-- Login page -->
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
-    
+
     <!-- Buttons/Menu items/Action text -->
     <string name="action_next">Next</string>
     <string name="action_login">Log in</string>
@@ -24,7 +24,7 @@
         <item quantity="one">%d comment</item>
         <item quantity="other">%d comments</item>
     </plurals>
-    
+
     <!-- Content strings -->
     <string name="desc_select_school">Select your school from the list:</string>
     <string name="desc_enter_school_url">Or enter your school\'s Cascade URL:</string>

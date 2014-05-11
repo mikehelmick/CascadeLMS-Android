@@ -25,33 +25,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SocialStreamFragment extends ListFragment implements
-		LoaderCallbacks<List<StreamItem>>
+        LoaderCallbacks<List<StreamItem>>
 {
-	private StreamDataSource streamDataSource;
+    private StreamDataSource streamDataSource;
     private StreamItemAdapter adapter;
     private TextView emptyView;
 
-	private static final String ARGS_COURSE = "org.cascadelms.args_course";
+    private static final String ARGS_COURSE = "org.cascadelms.args_course";
     public static final String ARGS_POSTID = "org.cascadelms.extras.postid";
 
-	public static SocialStreamFragment newInstance( Course course )
-	{
-		Bundle args = new Bundle();
-		args.putParcelable( ARGS_COURSE, course );
-		SocialStreamFragment fragment = new SocialStreamFragment();
-		fragment.setArguments( args );
-		return fragment;
-	}
+    public static SocialStreamFragment newInstance(Course course)
+    {
+        Bundle args = new Bundle();
+        args.putParcelable(ARGS_COURSE, course);
+        SocialStreamFragment fragment = new SocialStreamFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-	@Override
-	public void onCreate( Bundle savedInstanceState )
-	{
-		/* Initializes a data source and begins loading. */
-		this.streamDataSource = CascadeDataSource.getInstance();
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        /* Initializes a data source and begins loading. */
+        this.streamDataSource = CascadeDataSource.getInstance();
         this.adapter = new StreamItemAdapter(getActivity());
 
-		super.onCreate( savedInstanceState );
-	}
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
@@ -61,85 +61,85 @@ public class SocialStreamFragment extends ListFragment implements
         if (this.getCourse() == null)
             /* This call initializes a Loader to load all StreamItems. */
             this.getActivity().getSupportLoaderManager()
-                .initLoader( LoaderCodes.LOADER_CODE_TOTAL_STREAM, null, this ).forceLoad();
+                    .initLoader(LoaderCodes.LOADER_CODE_TOTAL_STREAM, null, this).forceLoad();
         else
 		/*
 		 * This call initializes a Loader to load only stream items for this
 		 * Fragment's Course
 		 */
             this.getActivity().getSupportLoaderManager()
-                .initLoader(LoaderCodes.LOADER_CODE_COURSE_STREAM, null, this).forceLoad();
+                    .initLoader(LoaderCodes.LOADER_CODE_COURSE_STREAM, null, this).forceLoad();
 
-        this.getListView().setAdapter( adapter );
+        this.getListView().setAdapter(adapter);
         this.getListView().setOnItemClickListener(new SocialStreamItemClickListener());
         super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState )
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
     {
-        super.onCreateView( inflater, container, savedInstanceState );
+        super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate( R.layout.fragment_socialstream, null );
+        View view = inflater.inflate(R.layout.fragment_socialstream, null);
         this.emptyView = (TextView) view
-                .findViewById( R.id.fragment_socialstream_empty );
-        ( (ListView) view.findViewById( android.R.id.list ) )
-                .setEmptyView( emptyView );
+                .findViewById(R.id.fragment_socialstream_empty);
+        ((ListView) view.findViewById(android.R.id.list))
+                .setEmptyView(emptyView);
 
         return view;
     }
 
     private class SocialStreamItemClickListener implements
-			AdapterView.OnItemClickListener
-	{
-		@Override
-		public void onItemClick( AdapterView<?> parent, View view,
-				int position, long id )
-		{
+            AdapterView.OnItemClickListener
+    {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view,
+                                int position, long id)
+        {
             StreamItem post = adapter.getItem(position);
-			goToPostDetail(post);
-		}
-	}
+            goToPostDetail(post);
+        }
+    }
 
-	private void goToPostDetail( StreamItem parentPost )
-	{
-        Intent intent = new Intent( this.getActivity(), StreamDetailActivity.class );
-        intent.putExtra( ARGS_POSTID, parentPost.getId() );
-        this.startActivity( intent );
-	}
+    private void goToPostDetail(StreamItem parentPost)
+    {
+        Intent intent = new Intent(this.getActivity(), StreamDetailActivity.class);
+        intent.putExtra(ARGS_POSTID, parentPost.getId());
+        this.startActivity(intent);
+    }
 
-	@Override
-	public Loader<List<StreamItem>> onCreateLoader( int id, Bundle args )
-	{
-		switch( id )
-		{
-			case LoaderCodes.LOADER_CODE_COURSE_STREAM:
-			{
-				return new CourseStreamItemLoader( this.getActivity(),
-						streamDataSource, this.getCourse().getId() );
-			}
-			case LoaderCodes.LOADER_CODE_TOTAL_STREAM:
-			{
-				return new CourseStreamItemLoader( this.getActivity(),
-						streamDataSource );
-			}
-			default:
-			{
-				return null;
-			}
-		}
-	}
+    @Override
+    public Loader<List<StreamItem>> onCreateLoader(int id, Bundle args)
+    {
+        switch (id)
+        {
+            case LoaderCodes.LOADER_CODE_COURSE_STREAM:
+            {
+                return new CourseStreamItemLoader(this.getActivity(),
+                        streamDataSource, this.getCourse().getId());
+            }
+            case LoaderCodes.LOADER_CODE_TOTAL_STREAM:
+            {
+                return new CourseStreamItemLoader(this.getActivity(),
+                        streamDataSource);
+            }
+            default:
+            {
+                return null;
+            }
+        }
+    }
 
-	@Override
-	public void onLoadFinished( Loader<List<StreamItem>> loader,
-			List<StreamItem> data )
-	{
-		switch( loader.getId() )
-		{
-			case LoaderCodes.LOADER_CODE_COURSE_STREAM:
-			case LoaderCodes.LOADER_CODE_TOTAL_STREAM:
-			{
+    @Override
+    public void onLoadFinished(Loader<List<StreamItem>> loader,
+                               List<StreamItem> data)
+    {
+        switch (loader.getId())
+        {
+            case LoaderCodes.LOADER_CODE_COURSE_STREAM:
+            case LoaderCodes.LOADER_CODE_TOTAL_STREAM:
+            {
                 adapter.clear();
                 if (data != null)
                     adapter.addAll(data);
@@ -147,48 +147,48 @@ public class SocialStreamFragment extends ListFragment implements
                     Toast.makeText(getActivity(), R.string.fragment_socialstream_list_failed,
                             Toast.LENGTH_SHORT).show();
                 this.emptyView
-                        .setText( R.string.fragment_socialstream_list_empty_message );
-				break;
-			}
-		}
+                        .setText(R.string.fragment_socialstream_list_empty_message);
+                break;
+            }
+        }
 
-	}
+    }
 
-	@Override
-	public void onLoaderReset( Loader<List<StreamItem>> loader )
-	{
-		switch( loader.getId() )
-		{
-			case LoaderCodes.LOADER_CODE_COURSE_STREAM:
-			case LoaderCodes.LOADER_CODE_TOTAL_STREAM:
-			{
+    @Override
+    public void onLoaderReset(Loader<List<StreamItem>> loader)
+    {
+        switch (loader.getId())
+        {
+            case LoaderCodes.LOADER_CODE_COURSE_STREAM:
+            case LoaderCodes.LOADER_CODE_TOTAL_STREAM:
+            {
                 adapter.clear();
-				break;
-			}
-		}
-	}
+                break;
+            }
+        }
+    }
 
-	public interface StreamDataSource
-	{
-		public List<StreamItem> getAllStreamItems();
+    public interface StreamDataSource
+    {
+        public List<StreamItem> getAllStreamItems();
 
-		public List<StreamItem> getStreamItemsForCourse( int courseId );
+        public List<StreamItem> getStreamItemsForCourse(int courseId);
 
-        public StreamItem getStreamItemDetail( long postId );
-	}
+        public StreamItem getStreamItemDetail(long postId);
+    }
 
-	/**
-	 * Retrieves the {@link Course} provided as an argument to this Fragment.
-	 * The value cannot be stored, because the Fragment may be recreated by the
-	 * FragmentManager at any time.
-	 * 
-	 * @return the <code>Course</code>
-	 */
+    /**
+     * Retrieves the {@link Course} provided as an argument to this Fragment.
+     * The value cannot be stored, because the Fragment may be recreated by the
+     * FragmentManager at any time.
+     *
+     * @return the <code>Course</code>
+     */
     private Course getCourse()
     {
         if (this.getArguments() == null)
             return null;
         else
-            return this.getArguments().getParcelable( ARGS_COURSE );
+            return this.getArguments().getParcelable(ARGS_COURSE);
     }
 }

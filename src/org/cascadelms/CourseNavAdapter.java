@@ -16,43 +16,43 @@ import android.widget.TextView;
  */
 public class CourseNavAdapter extends ArrayAdapter<Course>
 {
-	public CourseNavAdapter( Context context )
-	{
-		super( context, android.R.layout.simple_list_item_1 );
-	}
+    public CourseNavAdapter(Context context)
+    {
+        super(context, android.R.layout.simple_list_item_1);
+    }
 
-	@Override
-	public View getView( int position, View convertView, ViewGroup parent )
-	{
-		/* Inflates a new view if the adapter doesn't provide one to reuse. */
-		if( convertView == null )
-		{
-			convertView = LayoutInflater.from( this.getContext() ).inflate(
-					android.R.layout.simple_list_item_1, parent, false );
-		}
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
+        /* Inflates a new view if the adapter doesn't provide one to reuse. */
+        if (convertView == null)
+        {
+            convertView = LayoutInflater.from(this.getContext()).inflate(
+                    android.R.layout.simple_list_item_1, parent, false);
+        }
 
         if (convertView != null)
         {
             TextView label = (TextView) convertView
                     .findViewById(android.R.id.text1);
-            label.setText( this.getItem( position ).getTitle() );
+            label.setText(this.getItem(position).getTitle());
         }
 
-		return convertView;
-	}
+        return convertView;
+    }
 
-	/**
-	 * Gets all the Courses currently in the adapter.
-	 * 
-	 * @return an <code>ArrayList</code> of Courses
-	 */
-	public ArrayList<Course> getAllCourses()
-	{
-		ArrayList<Course> courses = new ArrayList<Course>();
-		for ( int i = 0; i < this.getCount(); i++ )
-		{
-			courses.add( this.getItem( i ) );
-		}
-		return courses;
-	}
+    /**
+     * Gets all the Courses currently in the adapter.
+     *
+     * @return an <code>ArrayList</code> of Courses
+     */
+    public ArrayList<Course> getAllCourses()
+    {
+        ArrayList<Course> courses = new ArrayList<Course>();
+        for (int i = 0; i < this.getCount(); i++)
+        {
+            courses.add(this.getItem(i));
+        }
+        return courses;
+    }
 }

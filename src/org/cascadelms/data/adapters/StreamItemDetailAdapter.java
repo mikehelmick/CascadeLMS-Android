@@ -24,128 +24,128 @@ public class StreamItemDetailAdapter extends BaseAdapter
     private static final int CACHE_SIZE = 20 * 1024 * 1024;
     private static LruCache<String, Bitmap> mImageMemCache;
 
-	Context context;
-	StreamItem item;
+    Context context;
+    StreamItem item;
 
-	public StreamItemDetailAdapter( Context context )
-	{
-		this.context = context;
+    public StreamItemDetailAdapter(Context context)
+    {
+        this.context = context;
 
         mImageMemCache = new LruCache<String, Bitmap>(CACHE_SIZE);
-	}
+    }
 
-	public void setItem( StreamItem item )
-	{
-		this.item = item;
-	}
+    public void setItem(StreamItem item)
+    {
+        this.item = item;
+    }
 
-	@Override
-	public int getCount()
-	{
-		if( item == null )
-			return 0;
-		else if( item.getComments() == null )
-			return 1;
-		return 1 + item.getComments().length;
-	}
+    @Override
+    public int getCount()
+    {
+        if (item == null)
+            return 0;
+        else if (item.getComments() == null)
+            return 1;
+        return 1 + item.getComments().length;
+    }
 
-	@Override
-	public Object getItem( int position )
-	{
-		if( position == 0 )
-			return item;
-		else if( item != null && item.getComments() != null )
-			return item.getComments()[position - 1];
-		return null;
-	}
+    @Override
+    public Object getItem(int position)
+    {
+        if (position == 0)
+            return item;
+        else if (item != null && item.getComments() != null)
+            return item.getComments()[position - 1];
+        return null;
+    }
 
-	@Override
-	public long getItemId( int position )
-	{
-		return position;
-	}
+    @Override
+    public long getItemId(int position)
+    {
+        return position;
+    }
 
-	@Override
-	public View getView( int position, View convertView, ViewGroup parent )
-	{
-		if( item == null )
-			return null;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
+        if (item == null)
+            return null;
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM d" );
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d");
 
-		if( position == 0 )
-		{
-			/* Inflates a new view if the adapter doesn't provide one to reuse. */
-			// if (convertView == null)
-			{
-				convertView = LayoutInflater.from( context ).inflate(
-						R.layout.list_item_socialstream_post, parent, false );
-			}
+        if (position == 0)
+        {
+            /* Inflates a new view if the adapter doesn't provide one to reuse. */
+            // if (convertView == null)
+            {
+                convertView = LayoutInflater.from(context).inflate(
+                        R.layout.list_item_socialstream_post, parent, false);
+            }
 
-			if( convertView != null )
-			{
-				TextView dateLabel = (TextView) convertView
-						.findViewById( R.id.socialstream_date_course );
-				dateLabel.setText( dateFormat.format( item.getPostDate() ) );
-				TextView authorLabel = (TextView) convertView
-						.findViewById( R.id.socialstream_author );
-				authorLabel.setText( item.getAuthor().getName() );
-				TextView summaryLabel = (TextView) convertView
-						.findViewById( R.id.socialstream_description );
-                summaryLabel.setText(Html.fromHtml( item.getBody() ) );
-				TextView scoreLabel = (TextView) convertView
-						.findViewById( R.id.socialstream_aplus_count );
-				scoreLabel.setText( Integer.toString( item.getAPlusCount() ) );
-				TextView commentLabel = (TextView) convertView
-						.findViewById( R.id.socialstream_comment_count );
+            if (convertView != null)
+            {
+                TextView dateLabel = (TextView) convertView
+                        .findViewById(R.id.socialstream_date_course);
+                dateLabel.setText(dateFormat.format(item.getPostDate()));
+                TextView authorLabel = (TextView) convertView
+                        .findViewById(R.id.socialstream_author);
+                authorLabel.setText(item.getAuthor().getName());
+                TextView summaryLabel = (TextView) convertView
+                        .findViewById(R.id.socialstream_description);
+                summaryLabel.setText(Html.fromHtml(item.getBody()));
+                TextView scoreLabel = (TextView) convertView
+                        .findViewById(R.id.socialstream_aplus_count);
+                scoreLabel.setText(Integer.toString(item.getAPlusCount()));
+                TextView commentLabel = (TextView) convertView
+                        .findViewById(R.id.socialstream_comment_count);
 
-				int commentCount = item.getCommentCount();
+                int commentCount = item.getCommentCount();
 
-				commentLabel.setText( convertView.getResources()
-						.getQuantityString( R.plurals.comments, commentCount,
-								commentCount ) );
+                commentLabel.setText(convertView.getResources()
+                        .getQuantityString(R.plurals.comments, commentCount,
+                                commentCount));
 
                 String authorAvatarURL = item.getAuthor()
                         .getGravatarURL();
                 ImageView authorAvatar = (ImageView) convertView
-                        .findViewById( R.id.socialstream_avatar );
+                        .findViewById(R.id.socialstream_avatar);
 
                 setAvatar(authorAvatarURL, authorAvatar);
-			}
-		} else
-		{
-			// TODO: Reenable convertView
-			// if (convertView == null)
-			{
-				convertView = LayoutInflater.from( context ).inflate(
-						R.layout.list_item_socialstream_comment, parent, false );
-			}
+            }
+        } else
+        {
+            // TODO: Reenable convertView
+            // if (convertView == null)
+            {
+                convertView = LayoutInflater.from(context).inflate(
+                        R.layout.list_item_socialstream_comment, parent, false);
+            }
 
-			if( convertView != null )
-			{
-				Comment comment = item.getComments()[position - 1];
+            if (convertView != null)
+            {
+                Comment comment = item.getComments()[position - 1];
 
-				TextView dateLabel = (TextView) convertView
-						.findViewById( R.id.socialstream_date );
-				dateLabel.setText( dateFormat.format( comment.getCreatedAt() ) );
-				TextView authorLabel = (TextView) convertView
-						.findViewById( R.id.socialstream_author );
-				authorLabel.setText( comment.getAuthor().getName() );
-				TextView summaryLabel = (TextView) convertView
-						.findViewById( R.id.socialstream_description );
-                summaryLabel.setText(Html.fromHtml( comment.getBody() ) );
+                TextView dateLabel = (TextView) convertView
+                        .findViewById(R.id.socialstream_date);
+                dateLabel.setText(dateFormat.format(comment.getCreatedAt()));
+                TextView authorLabel = (TextView) convertView
+                        .findViewById(R.id.socialstream_author);
+                authorLabel.setText(comment.getAuthor().getName());
+                TextView summaryLabel = (TextView) convertView
+                        .findViewById(R.id.socialstream_description);
+                summaryLabel.setText(Html.fromHtml(comment.getBody()));
 
                 String authorAvatarURL = comment.getAuthor()
                         .getGravatarURL();
                 ImageView authorAvatar = (ImageView) convertView
-                        .findViewById( R.id.socialstream_avatar );
+                        .findViewById(R.id.socialstream_avatar);
 
                 setAvatar(authorAvatarURL, authorAvatar);
-			}
-		}
+            }
+        }
 
-		return convertView;
-	}
+        return convertView;
+    }
 
     private void setAvatar(String authorAvatarURL, ImageView authorAvatar)
     {
@@ -157,8 +157,7 @@ public class StreamItemDetailAdapter extends BaseAdapter
         {
             authorAvatar.setImageBitmap(cachedBitmap);
             authorAvatar.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        }
-        else
+        } else
         {
             ImageViewDownloadTask downloadTask = new ImageViewDownloadTask(authorAvatar,
                     mImageMemCache);

@@ -10,17 +10,17 @@ import android.support.v4.content.AsyncTaskLoader;
 
 public class CourseLoader extends AsyncTaskLoader<List<Course>>
 {
-	private CourseDataSource dataSource;
+    private CourseDataSource dataSource;
 
-	public CourseLoader( Context context, CourseDataSource dataSource )
-	{
-		super( context );
-		this.dataSource = dataSource;
-	}
+    public CourseLoader(Context context, CourseDataSource dataSource)
+    {
+        super(context);
+        this.dataSource = dataSource;
+    }
 
-	@Override
-	public List<Course> loadInBackground()
-	{
-		return dataSource.getAvailableCourses();
-	}
+    @Override
+    public List<Course> loadInBackground()
+    {
+        return dataSource.getAvailableCourses();
+    }
 }

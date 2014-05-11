@@ -13,30 +13,30 @@ import java.util.List;
  */
 public class StreamItemDetailLoader extends AsyncTaskLoader<StreamItem>
 {
-	private StreamDataSource dataSource;
-	private int postId;
+    private StreamDataSource dataSource;
+    private int postId;
 
-	/**
-	 * This constructor creates a Loader to load a more detailed StreamItem for the
-	 * given post id.
-	 *
-	 * @param context
-	 * @param dataSource
-	 * @param postId
-	 */
-	public StreamItemDetailLoader(Context context,
+    /**
+     * This constructor creates a Loader to load a more detailed StreamItem for the
+     * given post id.
+     *
+     * @param context
+     * @param dataSource
+     * @param postId
+     */
+    public StreamItemDetailLoader(Context context,
                                   StreamDataSource dataSource, int postId)
-	{
-		super( context );
-		this.dataSource = dataSource;
-		this.postId = postId;
-	}
+    {
+        super(context);
+        this.dataSource = dataSource;
+        this.postId = postId;
+    }
 
-	@Override
-	public StreamItem loadInBackground()
-	{
-		{
-			return this.dataSource.getStreamItemDetail( postId );
-		}
-	}
+    @Override
+    public StreamItem loadInBackground()
+    {
+        {
+            return this.dataSource.getStreamItemDetail(postId);
+        }
+    }
 }

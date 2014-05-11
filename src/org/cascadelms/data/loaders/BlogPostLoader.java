@@ -11,20 +11,20 @@ import android.support.v4.content.AsyncTaskLoader;
 
 public class BlogPostLoader extends AsyncTaskLoader<List<BlogPost>>
 {
-	private BlogDataSource dataSource;
-	private int courseId;
+    private BlogDataSource dataSource;
+    private int courseId;
 
-	public BlogPostLoader( Context context, BlogDataSource dataSource,
-			int courseId )
-	{
-		super( context );
-		this.dataSource = dataSource;
-		this.courseId = courseId;
-	}
+    public BlogPostLoader(Context context, BlogDataSource dataSource,
+                          int courseId)
+    {
+        super(context);
+        this.dataSource = dataSource;
+        this.courseId = courseId;
+    }
 
-	@Override
-	public List<BlogPost> loadInBackground()
-	{
-		return this.dataSource.getBlogPostsForCourse( courseId );
-	}
+    @Override
+    public List<BlogPost> loadInBackground()
+    {
+        return this.dataSource.getBlogPostsForCourse(courseId);
+    }
 }

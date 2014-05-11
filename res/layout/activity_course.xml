@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_course_drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".CourseActivity" >
+                                        xmlns:tools="http://schemas.android.com/tools"
+                                        android:id="@+id/activity_course_drawer_layout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        tools:context=".CourseActivity">
 
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/activity_course_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
     </android.support.v4.view.ViewPager>
 
     <ListView
@@ -19,6 +19,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="?android:attr/colorBackground"
-        android:choiceMode="singleChoice" />
+        android:choiceMode="singleChoice"/>
 
 </android.support.v4.widget.DrawerLayout>

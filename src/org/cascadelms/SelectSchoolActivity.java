@@ -29,7 +29,8 @@ public class SelectSchoolActivity extends FragmentActivity
     private EditText mSchoolUrl;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         dataSource = FakeDataSource.getInstance();
         adapter = new SchoolsAdapter(this);
         super.onCreate(savedInstanceState);
@@ -40,11 +41,12 @@ public class SelectSchoolActivity extends FragmentActivity
                 new View.OnClickListener()
                 {
                     @Override
-                    public void onClick( View view )
+                    public void onClick(View view)
                     {
                         confirmSchool();
                     }
-                } );
+                }
+        );
 
         final Spinner spinner = (Spinner) findViewById(R.id.school_spinner);
 
@@ -87,16 +89,16 @@ public class SelectSchoolActivity extends FragmentActivity
 
         tokenInfo.setCascadeUrl(mSchoolUrl.getText().toString());
 
-        Intent intent = new Intent( SelectSchoolActivity.this,
-                LoginActivity.class );
+        Intent intent = new Intent(SelectSchoolActivity.this,
+                LoginActivity.class);
 
-        startActivity( intent );
+        startActivity(intent);
     }
 
     @Override
     public Loader<List<School>> onCreateLoader(int id, Bundle args)
     {
-        switch( id )
+        switch (id)
         {
             case LoaderCodes.LOADER_CODE_SCHOOLS:
             {
@@ -110,7 +112,7 @@ public class SelectSchoolActivity extends FragmentActivity
     @Override
     public void onLoadFinished(Loader<List<School>> loader, List<School> data)
     {
-        switch( loader.getId() )
+        switch (loader.getId())
         {
             case LoaderCodes.LOADER_CODE_SCHOOLS:
             {
@@ -125,7 +127,7 @@ public class SelectSchoolActivity extends FragmentActivity
     @Override
     public void onLoaderReset(Loader<List<School>> loader)
     {
-        switch( loader.getId() )
+        switch (loader.getId())
         {
             case LoaderCodes.LOADER_CODE_SCHOOLS:
             {
