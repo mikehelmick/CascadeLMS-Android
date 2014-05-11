@@ -41,7 +41,7 @@ public class StreamItemAdapter extends ArrayAdapter<StreamItem>
 
 		if( convertView != null )
 		{
-			SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM d, K:m a" );
+			SimpleDateFormat dateFormat = new SimpleDateFormat( "MMM d, h:mm a" );
 
 			TextView dateLabel = (TextView) convertView
 					.findViewById( R.id.socialstream_date_course );
