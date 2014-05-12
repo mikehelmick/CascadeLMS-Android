@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Application information -->
+    <string name="app_name">Cascade LMS</string>
+
+    <!-- Titles -->
+    <string name="title_activity_login">Log in to Cascade LMS</string>
+    <string name="title_activity_select_school">Select School</string>
+    <string name="title_activity_stream_detail">View Post</string>
+
+    <!-- Login page -->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+
+    <!-- Buttons/Menu items/Action text -->
+    <string name="action_next">Next</string>
+    <string name="action_login">Log in</string>
+    <string name="action_logout">Log out</string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+    <string name="action_settings">Settings</string>
+    <plurals name="comments">
+        <item quantity="one">%d comment</item>
+        <item quantity="other">%d comments</item>
+    </plurals>
+
+    <!-- Content strings -->
+    <string name="desc_select_school">Select your school from the list:</string>
+    <string name="desc_enter_school_url">Or enter your school\'s Cascade URL:</string>
+    <string name="desc_login_instructions">A web browser will now open.\n\nPlease log into Cascade LMS and check the \"Authorize access\" box, then click \"Save changes\".</string>
+
+    <!-- Toasts -->
+    <string name="toast_login_cancel">Login cancelled by user!</string>
+    <string name="toast_login_fail">Login failed!</string>
+    <string name="toast_login">Successfully logged in!</string>
+    <string name="toast_logout">Successfully logged out!</string>
+    <string name="text_username">Username</string>
+    <string name="text_password">Password</string>
+
+    <!-- Main Fragments -->
+    <string name="fragment_socialstream">Social Stream</string>
+    <string name="fragment_courseblog">Course Blog</string>
+    <string name="fragment_documents">Documents</string>
+    <string name="fragment_assignments">Assignments</string>
+    <string name="fragment_grades">Grades</string>
+
+    <!-- Social Stream Fragment -->
+    <string name="fragment_socialstream_list_loading_message">Loading Social Stream&#8230;</string>
+    <string name="fragment_socialstream_list_empty_message">No posts yet. Be the first!</string>
+    <string name="fragment_socialstream_list_failed">Failed to get Social Stream!</string>
+
+    <!-- Course Blog Fragment -->
+    <string name="fragment_courseblog_list_loading_message">Loading Course Blog&#8230;</string>
+    <string name="fragment_courseblog_list_empty_message">No blog posts for this course</string>
+    <string name="fragment_courseblog_list_failed">Failed to get Course Blog!</string>
+
+    <!-- Documents Fragment -->
+    <string name="fragment_documents_list_loading_message">Loading Documents&#8230;</string>
+    <string name="fragment_documents_list_empty_message">No documents for this course</string>
+    <string name="fragment_documents_list_failed">Failed to get Documents!</string>
+    <string name="fragment_documents_list_divider_folders">FOLDERS</string>
+    <string name="fragment_documents_list_divider_files">FILES</string>
+
+    <!-- Assignments Fragment -->
+    <string name="fragment_assignments_list_loading_message">Loading Assignments&#8230;</string>
+    <string name="fragment_assignments_list_empty_message">No assignments for this course</string>
+    <string name="fragment_assignments_list_failed">Failed to get Assignments!</string>
+    <string name="fragment_assignments_list_divider_closed">CLOSED</string>
+    <string name="fragment_assignments_list_divider_past">PAST DUE</string>
+    <string name="fragment_assignments_list_divider_current">CURRENT</string>
+    <string name="fragment_assignments_list_divider_upcoming">UPCOMING</string>
+    <string name="list_item_assignment_points" formatted="false">%s/%s</string>
+    <string name="list_item_assignment_no_points" formatted="false">-/%s</string>
+    <string name="list_item_assignment_upcoming_date" formatted="false">Available %1$tm/%1$td</string>
+    <string name="list_item_assignment_due_date" formatted="false">Due %1$tm/%1$td</string>
+    <string name="list_item_assignment_close_date" formatted="false">Closes %1$tm/%1$td</string>
+    <string name="list_item_assignment_closed">Closed</string>
+
+    <!-- Grades Fragment -->
+    <string name="fragment_grades_list_loading_message">Loading Grades&#8230;</string>
+    <string name="fragment_grades_list_empty_message">No grades for this course</string>
+    <string name="fragment_grades_list_failed">Failed to get Grades!</string>
+    <string name="course_navigation_home">Home</string>
+
+    <!-- Stream Activity -->
+    <string name="activity_stream_drawer_title">Courses</string>
+    <string name="course_list_failed">Failed to get course list!</string>
+
+</resources>

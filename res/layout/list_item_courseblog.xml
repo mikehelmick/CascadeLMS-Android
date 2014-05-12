@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:background="@drawable/background_post">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:padding="5dp"
+        android:text="Blog Post"
+        android:id="@+id/courseblog_title"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:id="@+id/courseblog_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Michael Helmick"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView
+            android:id="@+id/courseblog_date_course"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:gravity="right"
+            android:padding="5dp"
+            android:paddingRight="10dp"
+            android:text="Feb 4 / Senior Design II"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/courseblog_description"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:singleLine="false"
+        android:text="Hi, everyone. This is a test post!\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eros justo, tristique quis lectus sed, feugiat dictum nulla. Integer tristique quis lectus a porttitor. Ut vel accumsan tortor."/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp">
+
+        <Button
+            android:id="@+id/courseblog_aplus_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="A+"
+            android:focusable="false"/>
+
+        <TextView
+            android:id="@+id/courseblog_aplus_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="11"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp">
+
+            <ImageView
+                style="@style/SocialStreamAvatarSmall"
+                android:id="@+id/courseblog_commentor1"
+                android:contentDescription="User avatar"/>
+
+            <ImageView
+                style="@style/SocialStreamAvatarSmall"
+                android:id="@+id/courseblog_commentor2"
+                android:contentDescription="User avatar"/>
+
+            <ImageView
+                style="@style/SocialStreamAvatarSmall"
+                android:id="@+id/courseblog_commentor3"
+                android:contentDescription="User avatar"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/courseblog_comment_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:gravity="right"
+            android:paddingLeft="10dp"
+            android:text="2 comments"/>
+
+    </LinearLayout>
+
+</LinearLayout>
